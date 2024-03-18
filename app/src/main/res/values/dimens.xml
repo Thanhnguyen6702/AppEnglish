@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_news_height">120dp</dimen>
+    <dimen name="item_news_height">180dp</dimen>
+    <dimen name="item_news_width">200dp</dimen>
+    <dimen name="padding_small">16dp</dimen>
+</resources>
