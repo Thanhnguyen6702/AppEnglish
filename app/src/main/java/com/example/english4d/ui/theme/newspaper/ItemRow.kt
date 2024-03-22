@@ -1,5 +1,6 @@
 package com.example.english4d.ui.theme.newspaper
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,19 +25,22 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
-import com.example.english4d.data.NewsItem
+import com.example.english4d.data.news.NewsItem
+import com.example.english4d.navigation.Screen
 
 @Composable
 fun HorizontalScrollRow(
+    navController: NavController,
     title: String,
     listItem: List<NewsItem>,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_small))
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_hight))
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -45,21 +49,25 @@ fun HorizontalScrollRow(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight))
             )
             Text(
                 text = stringResource(id = R.string.more),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight))
             )
         }
         LazyRow(
-            //  modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+            //  modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_hight))
         ) {
             items(listItem) {
                 ItemRow(
                     it,
-                    modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
+                    modifier = Modifier
+                        .padding(end = dimensionResource(id = R.dimen.padding_hight))
+                        .clickable {
+                            navController.navigate(Screen.ReadNews.passData(topic=title,href=it.href))
+                        }
                 )
             }
         }
@@ -79,7 +87,7 @@ fun ItemRow(
             ) // Thiết lập kích thước cho Card
     ) {
         Card(
-            elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.padding_small))
+            elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.padding_hight))
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(item.image).build(),
@@ -95,7 +103,7 @@ fun ItemRow(
                     .clip(MaterialTheme.shapes.small)
             )
         }
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_hight)))
         Text(
             text = item.title,
             style = MaterialTheme.typography.bodyMedium,

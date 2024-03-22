@@ -1,6 +1,5 @@
 package com.example.english4d.ui.theme.newspaper
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -35,12 +34,27 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.english4d.R
-import com.example.english4d.data.NewsTopic
+import com.example.english4d.data.news.NewsTopic
 import kotlinx.coroutines.delay
 
 @Composable
+fun NewsScreen(
+    navController: NavController
+) {
+    val newsViewmodel: NewsViewmodel = viewModel(factory = NewsViewmodel.Factory)
+    val newsUiState = newsViewmodel.newsUiState
+    PaperLayout(
+        navController = navController,
+        newsUiState = newsUiState
+    )
+}
+
+@Composable
 fun PaperLayout(
+    navController: NavController,
     newsUiState: NewsUiState
 ) {
     when (newsUiState) {
@@ -52,10 +66,10 @@ fun PaperLayout(
             ) {
                 LoadingScreen()
             }
-
         }
+
         is NewsUiState.Success -> {
-            val listTopic:List<NewsTopic> = listOf(
+            val listTopic: List<NewsTopic> = listOf(
                 newsUiState.travel,
                 newsUiState.education,
                 newsUiState.business,
@@ -63,33 +77,36 @@ fun PaperLayout(
                 newsUiState.trend,
                 newsUiState.world
             )
-            ResultScreen(listTopic)
-            Log.e("loiroi","2")
+            ResultScreen(navController = navController,listTopic = listTopic)
         }
+
         else -> {
             ErrorScreen()
-            Log.e("loiroi","3")
         }
     }
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResultScreen(listTopic: List<NewsTopic>) {
+fun ResultScreen(
+    navController: NavController,
+    listTopic: List<NewsTopic>
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(title = {
-                Text(text = stringResource(id = R.string.news),
-                    style = MaterialTheme.typography.headlineMedium)
+                Text(
+                    text = stringResource(id = R.string.news),
+                    style = MaterialTheme.typography.headlineMedium
+                )
             })
         }
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {
-            items(listTopic){items->
-                HorizontalScrollRow(items.title,listItem = items.listItem)
+            items(listTopic) { items ->
+                HorizontalScrollRow(navController = navController,items.title, listItem = items.listItem)
             }
         }
     }
@@ -99,6 +116,7 @@ fun ResultScreen(listTopic: List<NewsTopic>) {
 fun ErrorScreen() {
 
 }
+
 @Composable
 fun LoadingScreen(
     modifier: Modifier = Modifier,
@@ -121,10 +139,10 @@ fun LoadingScreen(
                 animationSpec = infiniteRepeatable(
                     animation = keyframes {
                         durationMillis = 1200
-                        0.0f at 0 with LinearOutSlowInEasing
-                        1.0f at 300 with LinearOutSlowInEasing
-                        0.0f at 600 with LinearOutSlowInEasing
-                        0.0f at 1200 with LinearOutSlowInEasing
+                        0.0f at 0 using LinearOutSlowInEasing
+                        1.0f at 300 using LinearOutSlowInEasing
+                        0.0f at 600 using LinearOutSlowInEasing
+                        0.0f at 1200 using LinearOutSlowInEasing
                     },
                     repeatMode = RepeatMode.Restart
                 )

@@ -1,7 +1,8 @@
 package com.example.english4d.ui.theme.newspaper
 
-import com.example.english4d.data.NewsItem
-import com.example.english4d.data.NewsTopic
+import com.example.english4d.data.news.NewsContent
+import com.example.english4d.data.news.NewsItem
+import com.example.english4d.data.news.NewsTopic
 
 sealed interface NewsUiState {
     data class Success(
@@ -20,3 +21,6 @@ sealed interface NewsUiState {
     object Loading : NewsUiState
     object Error : NewsUiState
 }
+data class ContentUiState(
+    val contentNews: List<NewsContent> = listOf(NewsContent("",""))
+)

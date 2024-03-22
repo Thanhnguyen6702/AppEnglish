@@ -1,4 +1,4 @@
-package com.example.english4d.data
+package com.example.english4d.data.news
 
 import org.jsoup.Jsoup
 import java.io.IOException
@@ -23,7 +23,7 @@ class NewsCrawl {
 
                     val thumbElement = element.selectFirst("div.thumb_size.thumb_left")
                     val image = thumbElement?.selectFirst("img")?.attr("src") ?: ""
-                    if (title ==""||href==""||image=="") return@forEach
+                    if (title == "" || href == "" || image == "") return@forEach
                     contentList.add(NewsItem(title = title, image = image, href = href))
                 }
 
@@ -33,6 +33,33 @@ class NewsCrawl {
         } catch (e: IOException) {
             e.printStackTrace()
             return null
+        }
+    }
+
+    suspend fun getContent(url: String): List<NewsContent> {
+        try {
+            // Connect to data
+            val doc = Jsoup.connect(url).get()
+            // Thẻ chứa thông tin cần crawl
+            val div = doc.selectFirst("div.fck_detail")
+            val contentList = mutableListOf<NewsContent>()
+
+            // Duyệt qua tất cả các phần tử con của div
+            div?.children()?.forEach { element ->
+                // Kiểm tra nếu phần tử là thẻ p có class là "nomal"
+                if (element.tagName() == "p" && element.hasClass("Normal")) {
+                    contentList.add(NewsContent("text",element.text()))
+                } else if (element.tagName() == "table") {
+                    // Nếu là một bảng, lặp qua các ảnh trong bảng và thêm vào danh sách
+                    element.select("td img").forEach { imageElement ->
+                        contentList.add(NewsContent("image", imageElement.attr("src")))
+                    }
+                }
+            }
+            return contentList.toList()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return listOf(NewsContent("",""))
         }
     }
 }

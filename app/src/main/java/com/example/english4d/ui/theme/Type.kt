@@ -43,5 +43,23 @@ val Typography = Typography(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Bold,
         fontSize = 10.sp
-    )
+    ),
+    labelMedium = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp
+    ),
+
 )
+object TypeText {
+    val bodyMedium: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    )
+    val headLarge: TextStyle = TextStyle(
+        fontFamily = AbrilFatface,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    )
+}

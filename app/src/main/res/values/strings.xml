@@ -2,4 +2,11 @@
     <string name="app_name">English4D</string>
     <string name="more">Xem thêm</string>
     <string name="news">Tin tức</string>
+    <string name="welcome">Hãy tiếp tục ôn tập,\nBạn đã tích lũy được</string>
+    <string name="leaft">Leaft</string>
+    <string name="bough">Bough</string>
+    <string name="tree">Tree</string>
+    <string name="unfam_word">Từ chưa thuộc</string>
+    <string name="fam_word">Từ đã thuộc</string>
+    <string name="almost_word">Từ sắp thuộc</string>
 </resources>
