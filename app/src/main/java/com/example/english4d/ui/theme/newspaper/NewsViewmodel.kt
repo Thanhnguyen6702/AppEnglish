@@ -14,6 +14,9 @@ import com.example.english4d.data.news.NewsContent
 import com.example.english4d.data.news.NewsItem
 import com.example.english4d.data.news.NewsRepository
 import com.example.english4d.data.news.NewsTopic
+import com.example.english4d.data.news.Question
+import com.example.english4d.model.GenerateContent
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,7 +25,11 @@ import kotlinx.coroutines.withContext
 class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
     var newsUiState: NewsUiState by mutableStateOf(NewsUiState.Loading)
         private set
-    var newsContent: ContentUiState by mutableStateOf(ContentUiState())
+    var dataNews: ContentUiState by mutableStateOf(ContentUiState())
+        private set
+    var questionUiState: QuestionUiState by mutableStateOf(QuestionUiState())
+        private set
+
     init {
         getListTopic()
     }
@@ -30,9 +37,11 @@ class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
     private fun NewsUiState.Success.updateState(update: NewsUiState.Success.() -> NewsUiState.Success): NewsUiState {
         return update(this)
     }
-    private fun ContentUiState.updateState(contenNews: List<NewsContent>): ContentUiState{
-        return this.copy(contentNews = contenNews)
+
+    private fun ContentUiState.updateState(data: List<NewsContent>): ContentUiState {
+        return this.copy(contentNews = data)
     }
+
     private fun getListTopic() {
         viewModelScope.launch {
             newsUiState = NewsUiState.Loading
@@ -92,14 +101,36 @@ class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
             }
         }
     }
-     fun getNewsPaper(url:String){
-    viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            val contenNews = newsRepository.getContentNews(url)
-            newsContent.updateState(contenNews)
+
+    fun getNewsPaper(url: String) {
+        viewModelScope.launch {
+            dataNews = withContext(Dispatchers.IO) {
+                val contenNews = newsRepository.getContentNews(url)
+                dataNews.updateState(contenNews)
+            }
+            getListQuestion()
         }
     }
-}
+
+    private fun getListQuestion() {
+        val contentNews = dataNews.contentNews.filter { it.type == "text" }.map { it.content }
+            .joinToString(separator = "")
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val generateQuestion = GenerateContent()
+                    val dataQuestion = generateQuestion.response(contentNews)
+                    val gson = Gson()
+                    val listQuestion =
+                        gson.fromJson(dataQuestion, Array<Question>::class.java).toList()
+                    questionUiState = QuestionUiState(listQuestion = listQuestion)
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -109,4 +140,5 @@ class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
             }
         }
     }
+
 }

@@ -41,9 +41,10 @@ class NewsCrawl {
             // Connect to data
             val doc = Jsoup.connect(url).get()
             // Thẻ chứa thông tin cần crawl
+            val image = doc.selectFirst(".thumb_detail_top img")?.attr("src")?:""
             val div = doc.selectFirst("div.fck_detail")
             val contentList = mutableListOf<NewsContent>()
-
+            contentList.add(NewsContent("image",image))
             // Duyệt qua tất cả các phần tử con của div
             div?.children()?.forEach { element ->
                 // Kiểm tra nếu phần tử là thẻ p có class là "nomal"

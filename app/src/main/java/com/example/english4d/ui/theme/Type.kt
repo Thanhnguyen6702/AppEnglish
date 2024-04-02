@@ -62,4 +62,9 @@ object TypeText {
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp
     )
+    val bodyLage: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp
+    )
 }

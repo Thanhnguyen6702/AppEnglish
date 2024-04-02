@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -77,5 +78,17 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended:1.6.3")
     //NavController
     implementation ("androidx.navigation:navigation-compose:2.7.7")
+    //Gemini
+    implementation("com.google.ai.client.generativeai:generativeai:0.2.2")
+    //serialization
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    //Gson
+    implementation ("com.google.code.gson:gson:2.10.1")
+
+}
+secrets {
+    // The plugin defaults to "local.properties"
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "secrets.defaults.properties"
 
 }

@@ -9,4 +9,5 @@
     <string name="unfam_word">Từ chưa thuộc</string>
     <string name="fam_word">Từ đã thuộc</string>
     <string name="almost_word">Từ sắp thuộc</string>
+    <string name="loading_question">Đang tạo câu hỏi</string>
 </resources>

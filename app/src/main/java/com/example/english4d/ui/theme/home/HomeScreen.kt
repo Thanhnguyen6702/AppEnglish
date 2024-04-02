@@ -39,7 +39,7 @@ fun HomeScreen(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = stringResource(id = R.string.welcome), style = TypeText.headLarge)
+            Text(text = stringResource(id = R.string.welcome), style = MaterialTheme.typography.titleLarge)
             Text(text = "1500 từ", style = TypeText.headLarge)
         }
         LayoutInfo(
