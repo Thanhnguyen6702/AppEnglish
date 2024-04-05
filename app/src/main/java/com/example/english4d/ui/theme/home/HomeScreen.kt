@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Newspaper
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -37,10 +39,14 @@ fun HomeScreen(
 ) {
     Column {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = stringResource(id = R.string.welcome), style = MaterialTheme.typography.titleLarge)
-            Text(text = "1500 từ", style = TypeText.headLarge)
+            Text(text = stringResource(id = R.string.welcome), style = TypeText.titleLarge)
+            Text(text = "1500 từ", style = TypeText.titleLarge, modifier = Modifier.padding(end = dimensionResource(
+                id = R.dimen.padding_small
+            )))
         }
         LayoutInfo(
             modifier = Modifier
@@ -144,5 +150,5 @@ fun ButtonNews(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTest() {
-    ButtonNews(onClick = {})
+   HomeScreen(navController = NavController(LocalContext.current))
 }

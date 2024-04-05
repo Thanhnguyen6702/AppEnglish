@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
 }
 
 android {
@@ -84,6 +86,15 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     //Gson
     implementation ("com.google.code.gson:gson:2.10.1")
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Retrofit with Kotlin serialization Converter
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    //Room
+    implementation("androidx.room:room-runtime:2.5.0")
+    ksp("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
 
 }
 secrets {

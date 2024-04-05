@@ -10,4 +10,5 @@
     <dimen name="size_loading_medium">10dp</dimen>
     <dimen name="height_item">120dp</dimen>
     <dimen name="travel_distance">10dp</dimen>
+    <dimen name="size_icon_splash">100dp</dimen>
 </resources>

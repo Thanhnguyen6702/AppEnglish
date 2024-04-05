@@ -140,5 +140,4 @@ class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
             }
         }
     }
-
 }
