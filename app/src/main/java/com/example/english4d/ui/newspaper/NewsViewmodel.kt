@@ -1,4 +1,4 @@
-package com.example.english4d.ui.theme.newspaper
+package com.example.english4d.ui.newspaper
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

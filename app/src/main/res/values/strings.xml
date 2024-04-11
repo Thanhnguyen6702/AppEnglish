@@ -11,4 +11,10 @@
     <string name="almost_word">Từ sắp thuộc</string>
     <string name="loading_question">Đang tạo câu hỏi</string>
     <string name="wellcome_splash">Learn english every day</string>
+    <string name="noti_revise1">Giờ học đã đến</string>
+    <string name="noti_revise2">Ôn tập ngay để nhớ từ dài hạn</string>
+    <string name="revise">Ôn tập</string>
+    <string name="learn_vocab">Học từ mới</string>
+    <string name="noti_learn_vocab">Học từ vựng mỗi ngày</string>
+    <string name="change_topic">Đổi chủ đề</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.english4d.ui.theme.newspaper
+package com.example.english4d.ui.newspaper
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,8 +28,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
 import com.example.english4d.data.news.NewsContent
+import com.example.english4d.ui.animation.LoadingScreen
 import com.example.english4d.ui.theme.TypeText
-import com.example.english4d.ui.theme.animation.LoadingScreen
 
 @Composable
 fun ReadNewsScreen(
@@ -110,7 +110,7 @@ fun ItemLayout(
         else -> {
             Text(
                 text = item.content,
-                style = TypeText.bodyLage,
+                style = TypeText.h4,
                 modifier = modifier,
                 color = Color.Black
             )
@@ -124,7 +124,7 @@ fun LoadingQuestion(){
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.height(dimensionResource(id = R.dimen.height_item))
     ) {
-        Text(text = stringResource(id = R.string.loading_question), style = TypeText.bodyMedium, modifier = Modifier.padding(
+        Text(text = stringResource(id = R.string.loading_question), style = TypeText.h6, modifier = Modifier.padding(
             dimensionResource(id = R.dimen.padding_hight)))
         LoadingScreen(
             circleSize = dimensionResource(id = R.dimen.size_loading_medium),

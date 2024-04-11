@@ -1,4 +1,4 @@
-package com.example.english4d.ui.theme.newspaper
+package com.example.english4d.ui.newspaper
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
 import com.example.english4d.data.news.NewsTopic
-import com.example.english4d.ui.theme.animation.LoadingScreen
+import com.example.english4d.ui.animation.LoadingScreen
 
 @Composable
 fun NewsScreen(

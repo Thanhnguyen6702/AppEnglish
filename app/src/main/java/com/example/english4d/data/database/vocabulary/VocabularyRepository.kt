@@ -11,6 +11,10 @@ interface VocabularyRepository {
    //get review data
    suspend fun getRevise(): List<Vocabulary>
    //get new Vocabulary
-   suspend fun getNewVocabulary(): List<Vocabulary>
+   suspend fun getNewVocabulary(topicID: Int?): List<Vocabulary>
+
+   suspend fun getTopic(topicID: Int): Topics
+   suspend fun getDefinition(id: Int): List<Definitions>
+   suspend fun getExample(id: Int): List<Examples>
 }
 

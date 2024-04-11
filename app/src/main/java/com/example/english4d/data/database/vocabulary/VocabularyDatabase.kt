@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-@Database(entities = [Vocabulary::class, Topics::class, Statistic::class, Theme::class], version = 1, exportSchema = false)
+@Database(entities = [Vocabulary::class, Topics::class, Statistic::class, Theme::class,Definitions::class,Examples::class], version = 1, exportSchema = false)
 abstract class VocabularyDatabase : RoomDatabase(){
     abstract fun vocabularyDao(): VocabularyDao
     abstract fun statisticDao(): StatisticDao
     abstract fun topicDao(): TopicsDAO
     abstract fun themeDao(): ThemeDao
+    abstract fun definitionsDao(): DefinitionsDao
+    abstract fun examplesDao():ExamplesDao
     companion object{
         @Volatile
         private var Instance: VocabularyDatabase? = null

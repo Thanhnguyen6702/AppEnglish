@@ -31,3 +31,15 @@ data class ThemeAPI(
     @SerialName(value = "title")
     val title: String
 )
+
+@Serializable
+data class DefinitionsAPI(
+    val id_vocab: Int,
+    val definition: String,
+    val partofspeech: String
+)
+@Serializable
+data class ExamplesAPI(
+    val id_vocab: Int,
+    val example: String
+)

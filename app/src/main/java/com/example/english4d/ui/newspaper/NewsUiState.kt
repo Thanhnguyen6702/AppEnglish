@@ -1,4 +1,4 @@
-package com.example.english4d.ui.theme.newspaper
+package com.example.english4d.ui.newspaper
 
 import com.example.english4d.data.news.NewsContent
 import com.example.english4d.data.news.NewsItem

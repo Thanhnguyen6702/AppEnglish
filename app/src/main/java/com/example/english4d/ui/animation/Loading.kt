@@ -1,4 +1,4 @@
-package com.example.english4d.ui.theme.animation
+package com.example.english4d.ui.animation
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing

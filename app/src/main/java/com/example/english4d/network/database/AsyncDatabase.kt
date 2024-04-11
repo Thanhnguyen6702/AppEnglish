@@ -1,6 +1,8 @@
 package com.example.english4d.network.database
 
 import android.content.Context
+import com.example.english4d.data.database.vocabulary.Definitions
+import com.example.english4d.data.database.vocabulary.Examples
 import com.example.english4d.data.database.vocabulary.Theme
 import com.example.english4d.data.database.vocabulary.Topics
 import com.example.english4d.data.database.vocabulary.Vocabulary
@@ -37,9 +39,13 @@ class AsyncDatabase(private val context: Context) : DataContainer {
             val listThemes = dataRepository.getThemes()
             val listTopics = dataRepository.getTopics()
             val listVocab = dataRepository.getVocabulary()
+            val listExample = dataRepository.getExamples()
+            val listDefinition = dataRepository.getDefinitions()
             asyncTheme(listThemes = listThemes, context = context)
             asyscTopics(listTopics = listTopics, context = context)
             asyncVocabularies(listVocab = listVocab, context = context)
+            asyncExamples(listExample = listExample, context = context)
+            asyncDefinitions(listDefinition = listDefinition, context = context)
         }
     }
 }
@@ -77,6 +83,26 @@ suspend fun asyncVocabularies(listVocab: List<VocabularyAPI>, context: Context) 
                 pronunciation = vocab.pronunciation,
                 image = vocab.image,
                 id_topic = vocab.id_topic
+            )
+        )
+    }
+}
+
+suspend fun asyncExamples(listExample: List<ExamplesAPI>, context: Context) {
+    val examplesDao = VocabularyDatabase.getDatabase(context).examplesDao()
+    for (example in listExample) {
+        examplesDao.insertExamples(Examples(id_vocab = example.id_vocab, example = example.example))
+    }
+}
+
+suspend fun asyncDefinitions(listDefinition: List<DefinitionsAPI>, context: Context) {
+    val definitionsDao = VocabularyDatabase.getDatabase(context).definitionsDao()
+    for (definition in listDefinition) {
+        definitionsDao.insertDefinitions(
+            Definitions(
+                id_vocab = definition.id_vocab,
+                definition = definition.definition,
+                partofspeech = definition.partofspeech
             )
         )
     }

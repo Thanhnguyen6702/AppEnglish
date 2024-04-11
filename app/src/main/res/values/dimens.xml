@@ -11,4 +11,9 @@
     <dimen name="height_item">120dp</dimen>
     <dimen name="travel_distance">10dp</dimen>
     <dimen name="size_icon_splash">100dp</dimen>
+    <dimen name="height_card_home">250dp</dimen>
+    <dimen name="size_icon_medium">150dp</dimen>
+    <dimen name="elevation">20dp</dimen>
+    <dimen name="button_choose_width">120dp</dimen>
+    <dimen name="button_choose_height">160dp</dimen>
 </resources>

@@ -19,7 +19,7 @@ data class Vocabulary (
     val vietnamese: String,
     val pronunciation: String,
     val image: String,
-    val id_topic: Int
+    val id_topic: Int,
 )
 
 @Entity(tableName = "Statistic",
@@ -35,7 +35,9 @@ data class Statistic(
     val unlearned: Int = 0 ,
     val learning: Int = 0 ,
     val master: Int = 0,
-    val id_vocab: Int
+    val id_vocab: Int,
+    val check_day: Int = 3211,
+    val isStudy : Int = 0
 )
 @Entity(tableName = "Topic",
     foreignKeys = [ForeignKey(
@@ -57,4 +59,27 @@ data class Theme(
     @PrimaryKey(autoGenerate = false)
     val id: Int ,
     val title: String
+)
+@Entity(tableName = "Definitions",
+    foreignKeys = [ForeignKey(
+        entity = Vocabulary::class,
+        parentColumns = ["id"],
+        childColumns = ["id_vocab"],
+        onDelete = ForeignKey.CASCADE
+    )])
+data class Definitions(
+    val id_vocab: Int,
+    val definition: String,
+    val partofspeech: String
+)
+@Entity(tableName = "Examples",
+    foreignKeys = [ForeignKey(
+        entity = Vocabulary::class,
+        parentColumns = ["id"],
+        childColumns = ["id_vocab"],
+        onDelete = ForeignKey.CASCADE
+    )])
+data class Examples(
+    val id_vocab: Int,
+    val example : String
 )

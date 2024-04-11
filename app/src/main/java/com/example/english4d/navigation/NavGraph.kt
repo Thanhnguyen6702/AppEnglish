@@ -6,10 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.english4d.ui.theme.animation.SplashScreen
-import com.example.english4d.ui.theme.home.HomeScreen
-import com.example.english4d.ui.theme.newspaper.NewsScreen
-import com.example.english4d.ui.theme.newspaper.ReadNewsScreen
+import com.example.english4d.ui.animation.SplashScreen
+import com.example.english4d.ui.home.HomeScreen
+import com.example.english4d.ui.newspaper.NewsScreen
+import com.example.english4d.ui.newspaper.ReadNewsScreen
+import com.example.english4d.ui.vocabulary.NewVocabularyScreen
 
 @Composable
 fun SetupNavGraph(
@@ -34,14 +35,24 @@ fun SetupNavGraph(
                 navArgument(READNEWS_ARGUMENT_TOPIC) {
                     type = NavType.StringType
                 },
-                navArgument(READNEWA_ARGUMENT_HREF) {
+                navArgument(READNEWS_ARGUMENT_HREF) {
                     type = NavType.StringType
                 }
             )
         ) {
             val topic = it.arguments?.getString(READNEWS_ARGUMENT_TOPIC).toString()
-            val url = it.arguments?.getString(READNEWA_ARGUMENT_HREF).toString()
+            val url = it.arguments?.getString(READNEWS_ARGUMENT_HREF).toString()
             ReadNewsScreen(topic = topic, url = url)
+        }
+        composable(route = Screen.NewVocab.route,
+            arguments = listOf(
+                navArgument(NEWVOCAB_ARGUMENT){
+                    type = NavType.IntType
+                }
+            )
+        ){
+            val id = it.arguments?.getInt(NEWVOCAB_ARGUMENT)
+            NewVocabularyScreen(id,navController = navController)
         }
     }
 }

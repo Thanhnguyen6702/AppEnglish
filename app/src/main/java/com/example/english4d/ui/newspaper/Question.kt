@@ -1,4 +1,4 @@
-package com.example.english4d.ui.theme.newspaper
+package com.example.english4d.ui.newspaper
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +36,7 @@ fun QuestionLayout(
         val listQuestion = questions.options
         val listSelection = remember { mutableStateListOf("", "", "", "") }
         Text(
-            text = questions.question, style = TypeText.bodyMedium, modifier = Modifier.padding(
+            text = questions.question, style = TypeText.h6, modifier = Modifier.padding(
                 start = dimensionResource(
                     id = R.dimen.padding_small
                 )
@@ -82,9 +82,9 @@ fun ItemQuestion(
 ) {
     var style: TextStyle
     when (status) {
-        Status.UNCHECK -> style = TypeText.bodyMedium
-        Status.CORRECT -> style = TypeText.bodyMedium.copy(color = Color.Green)
-        Status.UNCORRECT -> style = TypeText.bodyMedium.copy(color = Color.Red)
+        Status.UNCHECK -> style = TypeText.h6
+        Status.CORRECT -> style = TypeText.h6.copy(color = Color.Green)
+        Status.UNCORRECT -> style = TypeText.h6.copy(color = Color.Red)
     }
     Row(
         modifier = Modifier,

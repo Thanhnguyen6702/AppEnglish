@@ -9,4 +9,8 @@ interface ApiAsyncDatabase {
     suspend fun getTopics(): List<TopicsAPI>
     @GET("getTheme.php")
     suspend fun getTheme(): List<ThemeAPI>
+    @GET("getDefinitions.php")
+    suspend fun getDefinitions():List<DefinitionsAPI>
+    @GET("getExamples.php")
+    suspend fun getExamples():List<ExamplesAPI>
 }

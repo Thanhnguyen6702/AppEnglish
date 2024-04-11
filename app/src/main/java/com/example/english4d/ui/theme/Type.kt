@@ -50,26 +50,67 @@ val Typography = Typography(
         fontSize = 32.sp
     ),
 
-)
-object TypeText {
-    val bodyMedium: TextStyle = TextStyle(
-        fontFamily = Montserrat,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
     )
+object TypeText {
+
     val headLarge: TextStyle = TextStyle(
         fontFamily = AbrilFatface,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp
     )
-    val bodyLage: TextStyle = TextStyle(
+    val h1: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 48.sp
+    )
+    val h2: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 36.sp
+    )
+    val h3: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    )
+    val h4: TextStyle = TextStyle(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp
     )
-    val titleLarge: TextStyle = TextStyle(
+    val h5: TextStyle = TextStyle(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp
+        fontSize = 18.sp
+    )
+    val h6: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    )
+    val h7: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
+    )
+    val h8: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    )
+    val h9: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp
+    )
+    val h10: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 8.sp
+    )
+    val bodyLarge: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp
     )
 }
