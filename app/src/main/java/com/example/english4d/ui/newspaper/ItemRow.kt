@@ -1,5 +1,6 @@
 package com.example.english4d.ui.newspaper
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -66,7 +67,7 @@ fun HorizontalScrollRow(
                     modifier = Modifier
                         .padding(end = dimensionResource(id = R.dimen.padding_hight))
                         .clickable {
-                            navController.navigate(Screen.ReadNews.passData(topic=title,href=it.href))
+                            navController.navigate(Screen.ReadNews.passData(topic=title,href= Uri.encode(it.href)))
                         }
                 )
             }

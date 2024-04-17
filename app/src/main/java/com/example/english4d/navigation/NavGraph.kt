@@ -10,6 +10,7 @@ import com.example.english4d.ui.animation.SplashScreen
 import com.example.english4d.ui.home.HomeScreen
 import com.example.english4d.ui.newspaper.NewsScreen
 import com.example.english4d.ui.newspaper.ReadNewsScreen
+import com.example.english4d.ui.topic.TopicScreen
 import com.example.english4d.ui.vocabulary.NewVocabularyScreen
 
 @Composable
@@ -23,8 +24,15 @@ fun SetupNavGraph(
         composable(route = Screen.Splash.route){
             SplashScreen(navController = navController)
         }
-        composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController)
+        composable(route = Screen.Home.route, arguments = listOf(
+            navArgument(HOME_ARGUMENT){
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            }
+        )) {
+            val id = it.arguments?.getString(HOME_ARGUMENT)?.toIntOrNull()
+            HomeScreen(id = id,navController = navController)
         }
         composable(route = Screen.NewsTopic.route) {
             NewsScreen(navController = navController)
@@ -52,7 +60,10 @@ fun SetupNavGraph(
             )
         ){
             val id = it.arguments?.getInt(NEWVOCAB_ARGUMENT)
-            NewVocabularyScreen(id,navController = navController)
+            NewVocabularyScreen(id = id,navController = navController)
+        }
+        composable(route = Screen.TopicsVocab.route){
+            TopicScreen(navController = navController)
         }
     }
 }

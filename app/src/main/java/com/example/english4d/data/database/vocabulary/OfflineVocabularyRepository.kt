@@ -1,5 +1,6 @@
 package com.example.english4d.data.database.vocabulary
 
+import com.example.english4d.ui.topic.ItemTopic
 import kotlinx.coroutines.flow.Flow
 
 class OfflineVocabularyRepository(
@@ -22,5 +23,8 @@ class OfflineVocabularyRepository(
     override suspend fun getTopic(topicID: Int): Topics = topicsDAO.getTopic(topicID)
     override suspend fun getDefinition(id: Int): List<Definitions> = definitionsDao.getDefinitions(id)
     override suspend fun getExample(id: Int): List<Examples>  = examplesDao.getExamples(id)
+    override suspend fun getItemTopic(): List<ItemTopic> = topicsDAO.getItemTopic()
+    override suspend fun getCompletionRate(topicID: Int): CompletionRate = vocabularyDao.getCompletionRate(topicID)
+    override suspend fun insertStatistic(statistic: Statistic) = statisticDao.insertStatistic(statistic)
 
 }

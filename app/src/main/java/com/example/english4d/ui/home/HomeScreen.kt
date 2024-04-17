@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,7 @@ import com.example.english4d.ui.theme.TypeText
 
 @Composable
 fun HomeScreen(
+    id: Int? = null,
     navController: NavController,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -56,6 +58,7 @@ fun HomeScreen(
         modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
     ) {
         val homeUiState by viewModel.uiState.collectAsState()
+        if(id != null) viewModel.changeTopic(id)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -76,7 +79,7 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .height(120.dp)
         )
-        CardStudy(homeUiState)
+        CardStudy(homeUiState = homeUiState, navController = navController)
         ButtonNews(onClick = {
             navController.navigate(Screen.NewsTopic.route)
         })
@@ -128,7 +131,10 @@ fun LayoutInfo(
                 ),
                 modifier = Modifier.size(dimensionResource(id = R.dimen.size_icon_home))
             )
-            Text(text = homeUiState.learning.size.toString(), style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = homeUiState.learning.size.toString(),
+                style = MaterialTheme.typography.labelMedium
+            )
             Text(text = stringResource(id = R.string.almost_word), style = TypeText.h6)
         }
         Column(
@@ -143,7 +149,10 @@ fun LayoutInfo(
                 ),
                 modifier = Modifier.size(dimensionResource(id = R.dimen.size_icon_home))
             )
-            Text(text = homeUiState.master.size.toString(), style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = homeUiState.master.size.toString(),
+                style = MaterialTheme.typography.labelMedium
+            )
             Text(text = stringResource(id = R.string.fam_word), style = TypeText.h6)
         }
     }
@@ -179,7 +188,8 @@ fun ButtonNews(
 
 @Composable
 fun CardStudy(
-    homeUiState: HomeUiState
+    homeUiState: HomeUiState,
+    navController: NavController
 ) {
     if (homeUiState.isRevise) {
         Box(
@@ -297,14 +307,14 @@ fun CardStudy(
                         )
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { navController.navigate(Screen.NewVocab.passID(homeUiState.newVocab.first.id)) },
                         modifier = Modifier.padding(
                             start = dimensionResource(id = R.dimen.padding_hight),
                             bottom = dimensionResource(id = R.dimen.padding_hight)
                         ),
                         colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orande_red)),
                         elevation = ButtonDefaults.buttonElevation(
-                             defaultElevation = dimensionResource(id = R.dimen.elevation)
+                            defaultElevation = dimensionResource(id = R.dimen.elevation)
                         )
                     ) {
                         Text(text = stringResource(id = R.string.learn_vocab))
@@ -317,7 +327,11 @@ fun CardStudy(
                     modifier = Modifier.fillMaxHeight()
                 ) {
                     Row(
-                        modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_medium)),
+                        modifier = Modifier
+                            .padding(top = dimensionResource(id = R.dimen.padding_medium))
+                            .clickable {
+                                navController.navigate(route = Screen.TopicsVocab.route)
+                            },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(

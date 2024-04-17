@@ -19,6 +19,7 @@ class HomeViewModel(
     init {
         updateLayout()
     }
+
     private fun updateLayout() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -39,16 +40,26 @@ class HomeViewModel(
                 }
                 launch {
                     val listRevise = vocabularyRepository.getRevise()
-                    _uiState.value = _uiState.value.copy(revise = listRevise, isRevise = listRevise.isNotEmpty())
+                    _uiState.value =
+                        _uiState.value.copy(revise = listRevise, isRevise = listRevise.isNotEmpty())
                 }
                 launch {
                     val listVocab = vocabularyRepository.getNewVocabulary(null)
                     val minID = listVocab.minOf { it.id }
                     val topic = vocabularyRepository.getTopic(minID)
                     val listNewVocab = listVocab.filter { it.id == minID }
-                    _uiState.value = _uiState.value.copy(newVocab = Pair(topic,listNewVocab))
+                    _uiState.value = _uiState.value.copy(newVocab = Pair(topic, listNewVocab))
                 }
             }
         }
+    }
+
+    fun changeTopic(id: Int) {
+        viewModelScope.launch {
+            val listVocab = vocabularyRepository.getNewVocabulary(id)
+            val topic = vocabularyRepository.getTopic(id)
+            _uiState.value = _uiState.value.copy(newVocab = Pair(topic, listVocab))
+        }
+
     }
 }

@@ -31,7 +31,7 @@ data class Vocabulary (
     )])
 data class Statistic(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val unlearned: Int = 0 ,
     val learning: Int = 0 ,
     val master: Int = 0,
@@ -39,7 +39,7 @@ data class Statistic(
     val check_day: Int = 3211,
     val isStudy : Int = 0
 )
-@Entity(tableName = "Topic",
+@Entity(tableName = "Topics",
     foreignKeys = [ForeignKey(
         entity = Theme::class,
         parentColumns = ["id"],
@@ -68,6 +68,8 @@ data class Theme(
         onDelete = ForeignKey.CASCADE
     )])
 data class Definitions(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val id_vocab: Int,
     val definition: String,
     val partofspeech: String
@@ -80,6 +82,8 @@ data class Definitions(
         onDelete = ForeignKey.CASCADE
     )])
 data class Examples(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val id_vocab: Int,
     val example : String
 )

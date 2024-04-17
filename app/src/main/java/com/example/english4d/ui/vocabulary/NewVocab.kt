@@ -1,5 +1,7 @@
 package com.example.english4d.ui.vocabulary
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.HelpCenter
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -19,19 +24,21 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -39,6 +46,7 @@ import com.example.english4d.R
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewVocabularyScreen(
@@ -47,7 +55,13 @@ fun NewVocabularyScreen(
     viewmodel: NewVocabViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val newVocabViewModel by viewmodel.uiState.collectAsState()
-    viewmodel.updateLayout(id?:1)
+    var isDefinitionExpanded by remember {
+        mutableStateOf(false)
+    }
+    var isExampleExpanded by remember {
+        mutableStateOf(false)
+    }
+    viewmodel.updateLayout(id ?: 1)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,7 +83,8 @@ fun NewVocabularyScreen(
             Column(
                 modifier = Modifier
                     .padding(it)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -106,29 +121,76 @@ fun NewVocabularyScreen(
                             horizontal = dimensionResource(id = R.dimen.padding_medium),
                         )
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
                     ) {
-                        Text(
-                            text = "Example", style = TypeText.h6, modifier = Modifier.padding(
-                                dimensionResource(id = R.dimen.padding_small)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Example", style = TypeText.h6, modifier = Modifier.padding(
+                                    dimensionResource(id = R.dimen.padding_small)
+
+                                )
                             )
-                        )
-                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = "ArrowDown")
+                            IconButton(onClick = {
+                                isExampleExpanded = !isExampleExpanded
+                                viewmodel.getExamples()
+                            }) {
+                                Icon(
+                                    Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "ArrowDown"
+                                )
+                            }
+                        }
+                        if (isExampleExpanded) {
+                            LazyColumn {
+                                items(newVocabViewModel.examples) {
+                                    ItemExpanded(text = it.example)
+                                }
+                            }
+                        }
                     }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Defination", style = TypeText.h6, modifier = Modifier.padding(
-                                dimensionResource(id = R.dimen.padding_small)
+                    Column {
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Defination",
+                                style = TypeText.h6,
+                                modifier = Modifier.padding(
+                                    dimensionResource(id = R.dimen.padding_small)
+                                )
                             )
-                        )
-                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = "ArrowDown")
+                            IconButton(onClick = {
+                                isDefinitionExpanded = !isDefinitionExpanded
+                                viewmodel.getDefinitions()
+                            }) {
+
+                                Icon(
+                                    Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "ArrowDown"
+                                )
+                            }
+                        }
+                        if (isDefinitionExpanded) {
+                            LazyColumn {
+                                items(newVocabViewModel.definitions) {
+                                    ItemExpanded(text = it.definition)
+                                }
+                            }
+                        }
                     }
                 }
             }
-            BottomBarNewVocab(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_hight)))
+            BottomBarNewVocab(
+                onReset = {
+                    isDefinitionExpanded = false
+                    isExampleExpanded = false
+                },
+                viewmodel = viewmodel,
+                modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_small))
+            )
         }
     }
 
@@ -136,8 +198,11 @@ fun NewVocabularyScreen(
 
 @Composable
 fun BottomBarNewVocab(
+    onReset: () -> Unit,
+    viewmodel: NewVocabViewModel,
     modifier: Modifier = Modifier
 ) {
+    val newVocabUiState by viewmodel.uiState.collectAsState()
     Column(
         modifier = modifier
     ) {
@@ -150,42 +215,51 @@ fun BottomBarNewVocab(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.HelpCenter,
-                    contentDescription = "Don't Know",
-                    tint = colorResource(
-                        id = R.color.gray_50
-                    ),
-                    modifier = Modifier.size(36.dp, 36.dp)
-                )
+                IconButton(onClick = {
+                    viewmodel.setStatus(StatusVocab.UNLEARNED)
+                }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.HelpCenter,
+                        contentDescription = "Don't Know",
+                        tint = if (newVocabUiState.statusVocab == StatusVocab.UNLEARNED)
+                            colorResource(id = R.color.orande_red)
+                        else colorResource(id = R.color.gray_50),
+                        modifier = Modifier.size(36.dp, 36.dp)
+                    )
+                }
                 Text(text = "Không biết")
 
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    Icons.Default.Warning,
-                    contentDescription = "Don't Know",
-                    tint = colorResource(
-                        id = R.color.gray_50
-                    ),
-                    modifier = Modifier.size(36.dp, 36.dp)
-                )
+                IconButton(onClick = { viewmodel.setStatus(StatusVocab.UNCERTAIN) }) {
+                    Icon(
+                        Icons.Default.Warning,
+                        contentDescription = "Don't Know",
+                        tint = if (newVocabUiState.statusVocab == StatusVocab.UNCERTAIN)
+                            colorResource(id = R.color.orange_50)
+                        else colorResource(id = R.color.gray_50),
+                        modifier = Modifier.size(36.dp, 36.dp)
+                    )
+                }
                 Text(text = "Không chắc")
 
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    Icons.Default.CheckBox,
-                    contentDescription = "Don't Know",
-                    tint = colorResource(
-                        id = R.color.gray_50
-                    ),
-                    modifier = Modifier.size(36.dp, 36.dp)
-                )
+
+                IconButton(onClick = { viewmodel.setStatus(StatusVocab.MASTER) }) {
+                    Icon(
+                        Icons.Default.CheckBox,
+                        contentDescription = "Don't Know",
+                        tint = if (newVocabUiState.statusVocab == StatusVocab.MASTER)
+                            colorResource(id = R.color.green_100)
+                        else colorResource(id = R.color.gray_50),
+                        modifier = Modifier.size(36.dp, 36.dp)
+                    )
+                }
                 Text(text = "Đã biết")
 
             }
@@ -196,24 +270,50 @@ fun BottomBarNewVocab(
         ) {
             Icon(
                 Icons.Default.ArrowBackIosNew, contentDescription = "Arrow Back",
-                modifier = Modifier.size(36.dp, 36.dp)
+                modifier = Modifier
+                    .size(36.dp, 36.dp)
+                    .clickable {
+                        viewmodel.backVocab()
+                        onReset()
+                    }
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    viewmodel.updateStatistic()
+                    onReset()
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700))
             ) {
                 Text(text = "Done")
             }
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "Arrow Forward",
-                modifier = Modifier.size(36.dp, 36.dp),
+                modifier = Modifier
+                    .size(36.dp, 36.dp)
+                    .clickable {
+                        viewmodel.nextVocab()
+                        onReset()
+                    },
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+
 @Composable
-fun PreviewNewVocab() {
-    NewVocabularyScreen(id = 1, navController = NavHostController(LocalContext.current))
+fun ItemExpanded(text: String, modifier: Modifier = Modifier) {
+
+    Row {
+        Icon(
+            Icons.Default.Add, contentDescription = "icon", modifier = modifier.padding(
+                vertical = dimensionResource(id = R.dimen.padding_medium)
+            )
+        )
+        Text(
+            text = text, style = TypeText.h6, modifier = modifier.padding(
+                horizontal = dimensionResource(id = R.dimen.padding_medium),
+                vertical = dimensionResource(id = R.dimen.padding_medium)
+            )
+        )
+    }
 }

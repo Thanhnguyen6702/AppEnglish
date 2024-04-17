@@ -8,6 +8,7 @@
     <dimen name="padding_hight">16dp</dimen>
     <dimen name="size_icon_home">36dp</dimen>
     <dimen name="size_loading_medium">10dp</dimen>
+    <dimen name="size_image_item">50dp</dimen>
     <dimen name="height_item">120dp</dimen>
     <dimen name="travel_distance">10dp</dimen>
     <dimen name="size_icon_splash">100dp</dimen>
@@ -16,4 +17,6 @@
     <dimen name="elevation">20dp</dimen>
     <dimen name="button_choose_width">120dp</dimen>
     <dimen name="button_choose_height">160dp</dimen>
+    <dimen name="size_item_topic_height">130dp</dimen>
+    <dimen name="size_item_topic_width">210dp</dimen>
 </resources>

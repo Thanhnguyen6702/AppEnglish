@@ -13,18 +13,20 @@ interface AppContainer {
     val vocabularyRepository: VocabularyRepository
 }
 
-class DataAppContainer(private val context: Context): AppContainer{
-    val newsCrawl = NewsCrawl()
+class DataAppContainer(context: Context): AppContainer{
+    private val newsCrawl = NewsCrawl()
     override val newsRepository: NewsRepository by lazy {
         NetworkNewsRepository(newsCrawl)
     }
-    val vocabDatabase = VocabularyDatabase.getDatabase(context)
+    private val vocabDatabase = VocabularyDatabase.getDatabase(context)
     override val vocabularyRepository: OfflineVocabularyRepository by lazy {
         OfflineVocabularyRepository(
             vocabularyDao = vocabDatabase.vocabularyDao(),
             statisticDao = vocabDatabase.statisticDao(),
             topicsDAO = vocabDatabase.topicDao(),
-            themeDao = vocabDatabase.themeDao()
+            themeDao = vocabDatabase.themeDao(),
+            definitionsDao = vocabDatabase.definitionsDao(),
+            examplesDao = vocabDatabase.examplesDao()
         )
     }
 }

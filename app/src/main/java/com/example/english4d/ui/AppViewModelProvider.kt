@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.english4d.NewsApplication
 import com.example.english4d.ui.home.HomeViewModel
+import com.example.english4d.ui.topic.TopicViewModel
 import com.example.english4d.ui.vocabulary.NewVocabViewModel
 
 
@@ -18,6 +19,11 @@ object AppViewModelProvider {
        }
         initializer {
             NewVocabViewModel(
+                dataApplication().container.vocabularyRepository
+            )
+        }
+        initializer {
+            TopicViewModel(
                 dataApplication().container.vocabularyRepository
             )
         }

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.english4d.ui.topic.ItemTopic
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,12 +28,21 @@ interface VocabularyDao{
     suspend fun getRevise(): List<Vocabulary>
 
     @Query("SELECT Vocabulary.* FROM Vocabulary " +
-            "INNER JOIN Topic ON Vocabulary.id_topic = Topic.id " +
+            "INNER JOIN Topics ON Vocabulary.id_topic = Topics.id " +
             "LEFT JOIN Statistic ON Vocabulary.id = Statistic.id_vocab " +
-            "WHERE (:topicID IS NULL OR Topic.id = :topicID) AND " +
+            "WHERE (:topicID IS NULL OR Topics.id = :topicID) AND " +
             "Statistic.id_vocab IS NULL")
     suspend fun getNewVocab(topicID: Int?): List<Vocabulary>
 
+    @Query("SELECT " +
+            "Topics.id, "+
+            "COUNT(Vocabulary.id) AS totalVocabulary, " +
+            "SUM(CASE WHEN Statistic.id_vocab IS NULL THEN 1 ELSE 0 END) AS unlearnedVocabulary " +
+            "FROM Vocabulary " +
+            "INNER JOIN Topics ON Vocabulary.id_topic = Topics.id " +
+            "LEFT JOIN Statistic ON Vocabulary.id = Statistic.id_vocab " +
+            "WHERE Topics.id = :topicID")
+    suspend fun getCompletionRate(topicID: Int):CompletionRate
 
 
 }
@@ -40,7 +50,7 @@ interface VocabularyDao{
 @Dao
 interface StatisticDao{
     @Insert
-    suspend fun insertUnLearned(statistic: Statistic)
+    suspend fun insertStatistic(statistic: Statistic)
     @Query("UPDATE Statistic SET unlearned = 0,learning = CASE WHEN check_day = 0 THEN 0 ELSE 1 END," +
             " master = CASE WHEN check_day = 0 THEN 1 ELSE 0 END ")
     suspend fun updateStatistic()
@@ -62,8 +72,12 @@ interface StatisticDao{
 interface TopicsDAO{
     @Insert
     suspend fun insertTopic(topics: Topics)
-    @Query("SELECT * FROM Topic WHERE id = :id")
+    @Query("SELECT * FROM Topics WHERE id = :id")
     suspend fun getTopic(id: Int): Topics
+
+    @Query("SELECT Topics.id,Topics.image,Topics.topic,Theme.title,Topics.id_theme FROM Topics " +
+            "INNER JOIN Theme ON Topics.id_theme = Theme.id")
+    suspend fun getItemTopic(): List<ItemTopic>
 }
 
 @Dao

@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            val asyncDatabase = AsyncDatabase(LocalContext.current)
 //            asyncDatabase.startAsyncDatabase()
-             LayoutEnglish()
+            LayoutEnglish()
         }
 
     }
