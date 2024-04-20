@@ -222,7 +222,7 @@ fun BottomBarNewVocab(
                         Icons.AutoMirrored.Filled.HelpCenter,
                         contentDescription = "Don't Know",
                         tint = if (newVocabUiState.statusVocab == StatusVocab.UNLEARNED)
-                            colorResource(id = R.color.orande_red)
+                            colorResource(id = R.color.orange_red)
                         else colorResource(id = R.color.gray_50),
                         modifier = Modifier.size(36.dp, 36.dp)
                     )

@@ -2,7 +2,7 @@
     <string name="app_name">English4D</string>
     <string name="more">Xem thêm</string>
     <string name="news">Tin tức</string>
-    <string name="welcome">Hãy tiếp tục ôn tập,\nBạn đã tích lũy được</string>
+    <string name="welcome">Chào mừng bạn trở lại\nHãy tiếp tục ôn tập</string>
     <string name="leaft">Leaft</string>
     <string name="bough">Bough</string>
     <string name="tree">Tree</string>
@@ -14,7 +14,14 @@
     <string name="noti_revise1">Giờ học đã đến</string>
     <string name="noti_revise2">Ôn tập ngay để nhớ từ dài hạn</string>
     <string name="revise">Ôn tập</string>
+    <string name="revise_again">Ôn tập lại sau</string>
+    <string name="continue_revise">Tiếp tục ôn tập</string>
     <string name="learn_vocab">Học từ mới</string>
     <string name="noti_learn_vocab">Học từ vựng mỗi ngày</string>
     <string name="change_topic">Đổi chủ đề</string>
+    <string name="question_text">Chọn nghĩa đúng của từ</string>
+    <string name="question_sound">Chọn từ mà bạn nghe thấy</string>
+    <string name="finish">Đã hoàn thành</string>
+    <string name="number_finish">Chúc mừng bạn đã hoàn thành được %d từ</string>
+    <string name="day">%d ngày</string>
 </resources>

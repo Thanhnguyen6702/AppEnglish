@@ -111,6 +111,11 @@ object TypeText {
     val bodyLarge: TextStyle = TextStyle(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Bold,
-        fontSize = 32.sp
+        fontSize = 28.sp
+    )
+    val bodyMedium: TextStyle = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
     )
 }

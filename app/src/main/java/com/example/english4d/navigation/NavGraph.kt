@@ -1,22 +1,32 @@
 package com.example.english4d.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.english4d.ui.animation.SplashScreen
+import com.example.english4d.ui.AppViewModelProvider
+import com.example.english4d.ui.Splash.SplashScreen
 import com.example.english4d.ui.home.HomeScreen
 import com.example.english4d.ui.newspaper.NewsScreen
 import com.example.english4d.ui.newspaper.ReadNewsScreen
 import com.example.english4d.ui.topic.TopicScreen
+import com.example.english4d.ui.vocabulary.FinishScreen
 import com.example.english4d.ui.vocabulary.NewVocabularyScreen
+import com.example.english4d.ui.vocabulary.ReviseScreen
+import com.example.english4d.ui.vocabulary.ReviseViewModel
 
 @Composable
 fun SetupNavGraph(
     navController: NavHostController
 ) {
+    var reviseViewModel by remember { mutableStateOf<ReviseViewModel?>(null) }
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route
@@ -64,6 +74,13 @@ fun SetupNavGraph(
         }
         composable(route = Screen.TopicsVocab.route){
             TopicScreen(navController = navController)
+        }
+        composable(route = Screen.ReviseVocab.route){
+            reviseViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            ReviseScreen(navController = navController, viewModel = reviseViewModel!!)
+        }
+        composable(route = Screen.FinishVocab.route){
+            FinishScreen(navController = navController,viewModel = reviseViewModel!!)
         }
     }
 }

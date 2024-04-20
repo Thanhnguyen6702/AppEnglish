@@ -1,4 +1,4 @@
-package com.example.english4d.ui.animation
+package com.example.english4d.ui.Splash
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.Animatable
@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,17 +22,21 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
 import com.example.english4d.navigation.Screen
+import com.example.english4d.ui.AppViewModelProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("RememberReturnType")
 @Composable
 fun SplashScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: SplashViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     val offsetIconY =
         remember { Animatable(-300f) } // Sử dụng giá trị âm để hình ảnh bắt đầu ở trên cùng của màn hình
     val offsetTextY = remember { Animatable(500f) }
@@ -59,7 +65,7 @@ fun SplashScreen(
         }
 
         delay(3000L)
-        navController.navigate(Screen.Home.route)
+        if (uiState.updated) navController.navigate(Screen.Home.route)
     }
 
     Column(

@@ -1,7 +1,13 @@
 package com.example.english4d.ui.home
 
+import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.english4d.PreferencesManager
+import com.example.english4d.data.database.vocabulary.VocabularyDatabase
 import com.example.english4d.data.database.vocabulary.VocabularyRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,10 +21,6 @@ class HomeViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
-
-    init {
-        updateLayout()
-    }
 
     private fun updateLayout() {
         viewModelScope.launch {
@@ -59,6 +61,24 @@ class HomeViewModel(
             val listVocab = vocabularyRepository.getNewVocabulary(id)
             val topic = vocabularyRepository.getTopic(id)
             _uiState.value = _uiState.value.copy(newVocab = Pair(topic, listVocab))
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateStatistic(context: Context) {
+        Log.e("hiihih","bị gọi")
+        val sharedPreferences = PreferencesManager(context)
+        if (!sharedPreferences.isNewDay()) {
+            val statisticDao = VocabularyDatabase.getDatabase(context).statisticDao()
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    statisticDao.updateIsStudyAndCheckDay()
+                    updateLayout()
+                }
+            }
+            sharedPreferences.saveCurrentDate()
+        } else {
+            updateLayout()
         }
 
     }

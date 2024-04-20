@@ -28,4 +28,6 @@ sealed class Screen(val route: String) {
         }
     }
     object TopicsVocab: Screen(route = "topic_vocab")
+    object  ReviseVocab: Screen(route = "revise_vocab")
+    object FinishVocab: Screen(route = "finish_vocab")
 }
