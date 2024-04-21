@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.english4d.NewsApplication
+import com.example.english4d.DataApplication
 import com.example.english4d.ui.Splash.SplashViewModel
 import com.example.english4d.ui.home.HomeViewModel
 import com.example.english4d.ui.topic.TopicViewModel
@@ -40,5 +40,5 @@ object AppViewModelProvider {
     }
 }
 
-fun CreationExtras.dataApplication(): NewsApplication =
-    (this[AndroidViewModelFactory.APPLICATION_KEY] as NewsApplication)
+fun CreationExtras.dataApplication(): DataApplication =
+    (this[AndroidViewModelFactory.APPLICATION_KEY] as DataApplication)

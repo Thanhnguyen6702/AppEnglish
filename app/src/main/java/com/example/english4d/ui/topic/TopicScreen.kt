@@ -1,9 +1,9 @@
 package com.example.english4d.ui.topic
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,7 +15,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,11 +25,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,19 +44,20 @@ import com.example.english4d.navigation.Screen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TopicScreen(
     topicViewModel: TopicViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController
 ) {
-    Scaffold { paddingValues ->
+    Scaffold {
         val topicUiState by topicViewModel.uiState.collectAsState()
         LazyColumn(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
         ) {
             items(topicUiState.listTopic) {
                 ItemThemeLayout(
-                   navController,
+                    navController,
                     title = it.first,
                     listTopic = it.second,
                     completionRates = topicUiState.completionRates
@@ -79,7 +84,7 @@ fun ItemThemeLayout(
             )
     ) {
         Text(
-            text = title, style = TypeText.headLarge, modifier = Modifier.padding(
+            text = title, style = TypeText.bodyMedium, modifier = Modifier.padding(
                 bottom = dimensionResource(
                     id = R.dimen.padding_hight
                 )
@@ -87,7 +92,11 @@ fun ItemThemeLayout(
         )
         LazyRow {
             items(listTopic) {
-                ItemTopicLayout(navController = navController,itemTopic = it, completionRate = completionRates[it.id]!!)
+                ItemTopicLayout(
+                    navController = navController,
+                    itemTopic = it,
+                    completionRate = completionRates[it.id]!!
+                )
             }
         }
     }
@@ -100,7 +109,7 @@ fun ItemTopicLayout(
     itemTopic: ItemTopic,
     completionRate: CompletionRate
 ) {
-    Box(
+    Surface(
         modifier = modifier
             .size(
                 width = dimensionResource(id = R.dimen.size_item_topic_width),
@@ -108,49 +117,43 @@ fun ItemTopicLayout(
                     id = R.dimen.size_item_topic_height
                 )
             )
-            .padding(all = dimensionResource(id = R.dimen.padding_small))
-            .clip(RoundedCornerShape(20.dp))
-            .background(color = colorResource(id = R.color.white))
-            .shadow(
-                elevation = 5.dp,
-                shape = RoundedCornerShape(20.dp),
-                clip = false,
-            )
-            .clickable { navController.navigate(Screen.Home.passData(itemTopic.id)) }
-
+            .padding(end = dimensionResource(id = R.dimen.padding_medium))
+            .clickable { navController.navigate(Screen.Home.passData(itemTopic.id)) },
+        tonalElevation = 10.dp,
+        shape = MaterialTheme.shapes.large,
+        color = colorResource(id = R.color.white)
     ) {
         Column(
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = dimensionResource(id = R.dimen.padding_medium),
-                        start = dimensionResource(id = R.dimen.padding_medium),
-                        end = dimensionResource(id = R.dimen.padding_small)
-                    )
-            ) {
-                Text(text = itemTopic.id.toString() + ". ", style = TypeText.h7)
-                Text(text = itemTopic.topic, style = TypeText.h7)
-            }
+            Text(text = itemTopic.topic, style = TypeText.h7.copy(fontWeight = FontWeight.Medium),modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = dimensionResource(id = R.dimen.padding_hight),
+                    top = dimensionResource(id = R.dimen.padding_medium),
+                    end = dimensionResource(id = R.dimen.padding_hight)
+
+                ))
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                Column(
+                    horizontalAlignment = Alignment.Start,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                        .padding(
+                            start = dimensionResource(id = R.dimen.padding_hight),
+                            end = dimensionResource(id = R.dimen.padding_medium),
+                            bottom = dimensionResource(id = R.dimen.padding_hight)
+                        )
                 ) {
                     Text(
-                        text = completionRate.unlearnedVocabulary.toString(),
-                        style = TypeText.h8,
+                        text = stringResource(id = R.string.number_word,completionRate.totalVocabulary),
+                        style = TypeText.h7.copy(color = colorResource(id = R.color.gray_100)),
                         modifier = Modifier.padding(
                             end = dimensionResource(
-                                id = R.dimen.padding_medium
+                                id = R.dimen.padding_small
                             )
                         )
                     )
@@ -161,7 +164,7 @@ fun ItemTopicLayout(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(itemTopic.image).build(), contentDescription = null,
                     placeholder = painterResource(id = R.drawable.loading_img),
-                    modifier = Modifier.size(80.dp, 80.dp)
+                    modifier = Modifier.size(60.dp, 60.dp)
                 )
             }
         }
@@ -185,7 +188,7 @@ fun ProgressBarCustom(progress: Float = 0f) {
 @Composable
 fun PreviewItem1() {
     ItemTopicLayout1(
-        itemTopic = ItemTopic("Vocabulary", 10, "HIHIHI", "", 1),
+        itemTopic = ItemTopic("Vocabulary", 10, "Hoạt động hằng ngày nhé", "", 1),
         completionRate = CompletionRate(1, 10, 10)
     )
 }
@@ -196,18 +199,13 @@ fun ItemTopicLayout1(
     itemTopic: ItemTopic,
     completionRate: CompletionRate
 ) {
-    Box(
+    Surface(
+        color = Color.Green,
         modifier = modifier
-            .size(width = 200.dp, height = 120.dp)
-            .padding(all = dimensionResource(id = R.dimen.padding_small))
-            .clip(RoundedCornerShape(20.dp))
-            .background(color = colorResource(id = R.color.white))
-            .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(20.dp),
-                clip = false,
-                spotColor = colorResource(id = R.color.gray_10)
-            )
+            .size(width = 160.dp, height = 130.dp)
+            .padding(all = dimensionResource(id = R.dimen.padding_small)),
+        tonalElevation = 10.dp,
+        shape = MaterialTheme.shapes.large
 
 
     ) {
@@ -215,31 +213,30 @@ fun ItemTopicLayout1(
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+            Text(text = itemTopic.topic, style = TypeText.h7.copy(fontWeight = FontWeight.Medium),modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = dimensionResource(id = R.dimen.padding_hight),
+                    top = dimensionResource(id = R.dimen.padding_medium),
+                    end = dimensionResource(id = R.dimen.padding_hight)
+
+                ))
             Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = dimensionResource(
-                            id = R.dimen.padding_medium
-                        )
-                    )
+                verticalAlignment = Alignment.Bottom
             ) {
-                Text(text = itemTopic.id.toString() + ". ", style = TypeText.h7)
-                Text(text = itemTopic.topic, style = TypeText.h7)
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                Column(
+                    horizontalAlignment = Alignment.Start,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                        .padding(
+                            start = dimensionResource(id = R.dimen.padding_hight),
+                            end = dimensionResource(id = R.dimen.padding_medium),
+                            bottom = dimensionResource(id = R.dimen.padding_hight)
+                        )
                 ) {
                     Text(
-                        text = completionRate.unlearnedVocabulary.toString(),
-                        style = TypeText.h8,
+                        text = completionRate.unlearnedVocabulary.toString() + " từ",
+                        style = TypeText.h7.copy(color = colorResource(id = R.color.gray_100)),
                         modifier = Modifier.padding(
                             end = dimensionResource(
                                 id = R.dimen.padding_small
@@ -253,7 +250,7 @@ fun ItemTopicLayout1(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(itemTopic.image).build(), contentDescription = null,
                     placeholder = painterResource(id = R.drawable.loading_img),
-                    modifier = Modifier.size(80.dp, 80.dp)
+                    modifier = Modifier.size(70.dp, 70.dp)
                 )
             }
         }

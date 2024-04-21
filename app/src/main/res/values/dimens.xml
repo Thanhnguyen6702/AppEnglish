@@ -17,6 +17,6 @@
     <dimen name="elevation">20dp</dimen>
     <dimen name="button_choose_width">120dp</dimen>
     <dimen name="button_choose_height">160dp</dimen>
-    <dimen name="size_item_topic_height">130dp</dimen>
-    <dimen name="size_item_topic_width">210dp</dimen>
+    <dimen name="size_item_topic_height">110dp</dimen>
+    <dimen name="size_item_topic_width">160dp</dimen>
 </resources>

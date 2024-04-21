@@ -2,7 +2,6 @@ package com.example.english4d.ui.home
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -66,7 +65,6 @@ class HomeViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateStatistic(context: Context) {
-        Log.e("hiihih","bị gọi")
         val sharedPreferences = PreferencesManager(context)
         if (!sharedPreferences.isNewDay()) {
             val statisticDao = VocabularyDatabase.getDatabase(context).statisticDao()

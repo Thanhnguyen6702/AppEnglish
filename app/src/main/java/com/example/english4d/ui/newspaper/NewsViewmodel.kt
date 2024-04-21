@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.english4d.NewsApplication
+import com.example.english4d.DataApplication
 import com.example.english4d.data.news.NewsContent
 import com.example.english4d.data.news.NewsItem
 import com.example.english4d.data.news.NewsRepository
@@ -134,7 +134,7 @@ class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = (this[APPLICATION_KEY] as NewsApplication)
+                val application = (this[APPLICATION_KEY] as DataApplication)
                 val newsRepository = application.container.newsRepository
                 NewsViewmodel(newsRepository = newsRepository)
             }

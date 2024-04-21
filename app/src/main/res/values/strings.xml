@@ -24,4 +24,5 @@
     <string name="finish">Đã hoàn thành</string>
     <string name="number_finish">Chúc mừng bạn đã hoàn thành được %d từ</string>
     <string name="day">%d ngày</string>
+    <string name="number_word">%d từ</string>
 </resources>

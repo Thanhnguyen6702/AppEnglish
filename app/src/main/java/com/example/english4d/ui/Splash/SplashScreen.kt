@@ -40,6 +40,13 @@ fun SplashScreen(
     val offsetIconY =
         remember { Animatable(-300f) } // Sử dụng giá trị âm để hình ảnh bắt đầu ở trên cùng của màn hình
     val offsetTextY = remember { Animatable(500f) }
+    LaunchedEffect(uiState.updated) {
+        if (uiState.updated) {
+            delay(3000L) // Nếu cần đợi một thời gian cụ thể
+            navController.navigate(Screen.Home.route)
+        }
+    }
+
     LaunchedEffect(Unit) {
         launch {
             offsetIconY.animateTo(
@@ -63,9 +70,6 @@ fun SplashScreen(
                 }
             )
         }
-
-        delay(3000L)
-        if (uiState.updated) navController.navigate(Screen.Home.route)
     }
 
     Column(

@@ -1,6 +1,9 @@
 package com.example.english4d.data
 
 import android.content.Context
+import com.example.english4d.data.database.question.OfflineQuestionRepository
+import com.example.english4d.data.database.question.QuestionDatabase
+import com.example.english4d.data.database.question.QuestionRepository
 import com.example.english4d.data.database.vocabulary.OfflineVocabularyRepository
 import com.example.english4d.data.database.vocabulary.VocabularyDatabase
 import com.example.english4d.data.database.vocabulary.VocabularyRepository
@@ -11,6 +14,7 @@ import com.example.english4d.data.news.NewsRepository
 interface AppContainer {
     val newsRepository: NewsRepository
     val vocabularyRepository: VocabularyRepository
+    val questionRepository: QuestionRepository
 }
 
 class DataAppContainer(context: Context): AppContainer{
@@ -29,4 +33,12 @@ class DataAppContainer(context: Context): AppContainer{
             examplesDao = vocabDatabase.examplesDao()
         )
     }
+    private val questionDatabase = QuestionDatabase.getDatabase(context)
+    override val questionRepository: QuestionRepository by lazy {
+        OfflineQuestionRepository(
+            articleDao = questionDatabase.articleDao(),
+            questionDao = questionDatabase.questionDao()
+        )
+    }
+
 }
