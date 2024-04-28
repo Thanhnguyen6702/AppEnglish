@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-@Database(entities = [Article::class,Question::class], version = 0, exportSchema = false)
+@Database(entities = [Article::class,Question::class], version = 1, exportSchema = false)
+@TypeConverters(MapConverter::class)
 abstract class QuestionDatabase: RoomDatabase() {
     abstract fun articleDao(): ArticleDao
     abstract fun questionDao(): QuestionDao

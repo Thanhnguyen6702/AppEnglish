@@ -19,25 +19,26 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
 import com.example.english4d.data.news.NewsTopic
-import com.example.english4d.ui.animation.LoadingScreen
+import com.example.english4d.ui.AppViewModelProvider
+import com.example.english4d.ui.animation.OscillatingBars
 
 @Composable
 fun NewsScreen(
     navController: NavController
 ) {
-    val newsViewmodel: NewsViewmodel = viewModel(factory = NewsViewmodel.Factory)
-    val newsUiState = newsViewmodel.newsUiState
+    val newsViewmodel: NewsViewmodel = viewModel(factory = AppViewModelProvider.Factory)
     NewsTopicLayout(
         navController = navController,
-        newsUiState = newsUiState
+        newsViewmodel = newsViewmodel
     )
 }
 
 @Composable
 fun NewsTopicLayout(
     navController: NavController,
-    newsUiState: NewsUiState
+    newsViewmodel: NewsViewmodel
 ) {
+    val newsUiState = newsViewmodel.newsUiState
     when (newsUiState) {
         is NewsUiState.Loading -> {
             Column(
@@ -45,7 +46,7 @@ fun NewsTopicLayout(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LoadingScreen()
+                OscillatingBars()
             }
         }
 
@@ -58,7 +59,7 @@ fun NewsTopicLayout(
                 newsUiState.trend,
                 newsUiState.world
             )
-            ResultScreen(navController = navController,listTopic = listTopic)
+            ResultScreen(navController = navController,listTopic = listTopic, newsViewmodel = newsViewmodel)
         }
 
         else -> {
@@ -72,7 +73,8 @@ fun NewsTopicLayout(
 @Composable
 fun ResultScreen(
     navController: NavController,
-    listTopic: List<NewsTopic>
+    listTopic: List<NewsTopic>,
+    newsViewmodel: NewsViewmodel
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -87,7 +89,7 @@ fun ResultScreen(
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {
             items(listTopic) { items ->
-                HorizontalScrollRow(navController = navController,items.title, listItem = items.listItem)
+                HorizontalScrollRow(navController = navController,items.title, listItem = items.listItem, newsViewmodel = newsViewmodel )
             }
         }
     }

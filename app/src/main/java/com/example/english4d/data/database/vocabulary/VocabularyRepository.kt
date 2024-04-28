@@ -28,6 +28,10 @@ interface VocabularyRepository {
    suspend fun insertVocab(vocabularies: List<Vocabulary>)
    suspend fun insertTopic(topics: List<Topics>)
    suspend fun insertTheme(themes: List<Theme>)
+   suspend fun updateIsStudyAndCheckDay()
+   suspend fun insertPronunciation(pronunciation: Pronunciation)
+   suspend fun getPronunciation():Flow<List<PronunciationWithVocabulary>>
+   suspend fun getVocabWithoutPronunciation(): List<Vocabulary>
 
 }
 data class CompletionRate(
@@ -35,3 +39,4 @@ data class CompletionRate(
    val totalVocabulary: Int,
    val unlearnedVocabulary: Int
 )
+

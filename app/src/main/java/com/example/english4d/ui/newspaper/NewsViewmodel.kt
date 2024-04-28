@@ -1,20 +1,19 @@
 package com.example.english4d.ui.newspaper
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.english4d.DataApplication
+import com.example.english4d.data.database.question.Article
+import com.example.english4d.data.database.question.Question
+import com.example.english4d.data.database.question.QuestionRepository
 import com.example.english4d.data.news.NewsContent
 import com.example.english4d.data.news.NewsItem
 import com.example.english4d.data.news.NewsRepository
 import com.example.english4d.data.news.NewsTopic
-import com.example.english4d.data.news.Question
+import com.example.english4d.data.news.QuestionGPT
 import com.example.english4d.model.GenerateContent
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +21,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
+class NewsViewmodel(
+    private val newsRepository: NewsRepository,
+    private val questionRepository: QuestionRepository
+) : ViewModel() {
     var newsUiState: NewsUiState by mutableStateOf(NewsUiState.Loading)
         private set
     var dataNews: ContentUiState by mutableStateOf(ContentUiState())
@@ -108,35 +110,48 @@ class NewsViewmodel(private val newsRepository: NewsRepository) : ViewModel() {
                 val contenNews = newsRepository.getContentNews(url)
                 dataNews.updateState(contenNews)
             }
-            getListQuestion()
+            getListQuestion(url)
         }
     }
 
-    private fun getListQuestion() {
-        val contentNews = dataNews.contentNews.filter { it.type == "text" }.map { it.content }
-            .joinToString(separator = "")
+    fun insertArticle(href: String, title: String) {
         viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    val generateQuestion = GenerateContent()
-                    val dataQuestion = generateQuestion.response(contentNews)
-                    val gson = Gson()
-                    val listQuestion =
-                        gson.fromJson(dataQuestion, Array<Question>::class.java).toList()
-                    questionUiState = QuestionUiState(listQuestion = listQuestion)
-                }
-            }catch (e:Exception){
-                e.printStackTrace()
+            withContext(Dispatchers.IO) {
+                questionRepository.insertArticle(Article(href = href, type = title))
             }
         }
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as DataApplication)
-                val newsRepository = application.container.newsRepository
-                NewsViewmodel(newsRepository = newsRepository)
+    private fun getListQuestion(href: String) {
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val questions = questionRepository.getArticleAndQuestion(Uri.encode(href))
+                    if (questions.questions.isEmpty()) {
+                        val contentNews = dataNews.contentNews.filter { it.type == "text" }
+                            .joinToString(separator = "") { it.content }
+                        val generateQuestion = GenerateContent()
+                        val dataQuestion = generateQuestion.response(contentNews)
+                        val gson = Gson()
+                        val listQuestionGPT =
+                            gson.fromJson(dataQuestion, Array<QuestionGPT>::class.java).toList()
+                        questionUiState = QuestionUiState(listQuestionGPT = listQuestionGPT)
+                        val listQuestionDB = listQuestionGPT.map { Question(question = it.question, options = it.options, answer = it.answer, explanation = it.explanation, id_article = questions.article.id) }
+                        questionRepository.insertQuestion(listQuestionDB)
+                    } else {
+                        val listQuestionGPT = questions.questions.map {
+                            QuestionGPT(
+                                question = it.question,
+                                options = it.options,
+                                answer = it.answer,
+                                explanation = it.explanation
+                            )
+                        }
+                        questionUiState = QuestionUiState(listQuestionGPT = listQuestionGPT)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

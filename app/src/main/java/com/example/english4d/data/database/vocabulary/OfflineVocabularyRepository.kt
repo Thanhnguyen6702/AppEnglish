@@ -9,7 +9,8 @@ class OfflineVocabularyRepository(
     private val topicsDAO: TopicsDAO,
     private val themeDao: ThemeDao,
     private val definitionsDao: DefinitionsDao,
-    private val examplesDao: ExamplesDao
+    private val examplesDao: ExamplesDao,
+    private val pronunciationDao: PronunciationDao
 ): VocabularyRepository {
     override fun getUnlearned(): Flow<List<Vocabulary>> = vocabularyDao.getUnlearned()
 
@@ -37,4 +38,8 @@ class OfflineVocabularyRepository(
     override suspend fun insertTopic(topics: List<Topics>) = topicsDAO.insertTopic(topics)
 
     override suspend fun insertTheme(themes: List<Theme>) = themeDao.insertTheme(themes)
+    override suspend fun updateIsStudyAndCheckDay() = statisticDao.updateIsStudyAndCheckDay()
+    override suspend fun insertPronunciation(pronunciation: Pronunciation)  = pronunciationDao.insertPronunciation(pronunciation)
+    override suspend fun getPronunciation(): Flow<List<PronunciationWithVocabulary>> = pronunciationDao.getPronunciation()
+    override suspend fun getVocabWithoutPronunciation(): List<Vocabulary> = vocabularyDao.getVocabWithoutPronunciation()
 }

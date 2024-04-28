@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.english4d"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -95,6 +95,10 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.0")
     ksp("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-ktx:2.5.0")
+    //material 3
+    implementation ("androidx.compose.material3:material3:1.2.1")
+    // Speech SDK
+    implementation ("com.microsoft.cognitiveservices.speech:client-sdk:1.26.0")
 
 }
 secrets {

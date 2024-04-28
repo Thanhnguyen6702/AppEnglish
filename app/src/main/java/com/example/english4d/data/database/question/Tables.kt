@@ -3,6 +3,7 @@ package com.example.english4d.data.database.question
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
@@ -26,7 +27,7 @@ data class Question(
     val id_article: Long
 )
 
-@Entity(tableName = "Article")
+@Entity(tableName = "Article", indices = [Index(value = ["href"], unique = true)])
 data class Article(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -39,8 +40,7 @@ data class ArticleWithQuestion(
     val article: Article,
     @Relation(
         parentColumn = "id",
-        entityColumn = "id_article",
-        entity = Question::class
+        entityColumn = "id_article"
     )
     val questions: List<Question>
 )

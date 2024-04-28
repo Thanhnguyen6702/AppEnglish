@@ -14,11 +14,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +38,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,16 +51,41 @@ import com.example.english4d.navigation.Screen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TopicScreen(
     topicViewModel: TopicViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController
 ) {
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(imageVector = Icons.Filled.Close, contentDescription = null)
+                    }
+                    Text(
+                        text = stringResource(id = R.string.change_topic),
+                        style = TypeText.bodyMedium.copy(
+                            color = colorResource(
+                                id = R.color.purple_200
+                            )
+                        ),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            })
+        }
+    ) {
         val topicUiState by topicViewModel.uiState.collectAsState()
         LazyColumn(
-            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
+            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium), top = it.calculateTopPadding())
         ) {
             items(topicUiState.listTopic) {
                 ItemThemeLayout(
@@ -118,7 +150,11 @@ fun ItemTopicLayout(
                 )
             )
             .padding(end = dimensionResource(id = R.dimen.padding_medium))
-            .clickable { navController.navigate(Screen.Home.passData(itemTopic.id)) },
+            .clickable {
+                navController.navigate(Screen.Home.passData(itemTopic.id)) {
+                    popUpTo(Screen.TopicsVocab.route) { inclusive = true }
+                }
+            },
         tonalElevation = 10.dp,
         shape = MaterialTheme.shapes.large,
         color = colorResource(id = R.color.white)
@@ -127,14 +163,18 @@ fun ItemTopicLayout(
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = itemTopic.topic, style = TypeText.h7.copy(fontWeight = FontWeight.Medium),modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = dimensionResource(id = R.dimen.padding_hight),
-                    top = dimensionResource(id = R.dimen.padding_medium),
-                    end = dimensionResource(id = R.dimen.padding_hight)
+            Text(
+                text = itemTopic.topic,
+                style = TypeText.h7.copy(fontWeight = FontWeight.Medium),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(id = R.dimen.padding_hight),
+                        top = dimensionResource(id = R.dimen.padding_medium),
+                        end = dimensionResource(id = R.dimen.padding_hight)
 
-                ))
+                    )
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -149,7 +189,10 @@ fun ItemTopicLayout(
                         )
                 ) {
                     Text(
-                        text = stringResource(id = R.string.number_word,completionRate.totalVocabulary),
+                        text = stringResource(
+                            id = R.string.number_word,
+                            completionRate.totalVocabulary
+                        ),
                         style = TypeText.h7.copy(color = colorResource(id = R.color.gray_100)),
                         modifier = Modifier.padding(
                             end = dimensionResource(
@@ -174,12 +217,12 @@ fun ItemTopicLayout(
 @Composable
 fun ProgressBarCustom(progress: Float = 0f) {
     LinearProgressIndicator(
-        progress = progress,
-        color = colorResource(id = R.color.green_100),
-        trackColor = colorResource(id = R.color.green_50),
+        progress = { progress },
         modifier = Modifier
             .size(150.dp, 10.dp)
-            .clip(shape = RoundedCornerShape(16.dp))
+            .clip(shape = RoundedCornerShape(16.dp)),
+        color = colorResource(id = R.color.green_100),
+        trackColor = colorResource(id = R.color.green_50),
     )
 }
 
@@ -213,14 +256,18 @@ fun ItemTopicLayout1(
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = itemTopic.topic, style = TypeText.h7.copy(fontWeight = FontWeight.Medium),modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = dimensionResource(id = R.dimen.padding_hight),
-                    top = dimensionResource(id = R.dimen.padding_medium),
-                    end = dimensionResource(id = R.dimen.padding_hight)
+            Text(
+                text = itemTopic.topic,
+                style = TypeText.h7.copy(fontWeight = FontWeight.Medium),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(id = R.dimen.padding_hight),
+                        top = dimensionResource(id = R.dimen.padding_medium),
+                        end = dimensionResource(id = R.dimen.padding_hight)
 
-                ))
+                    )
+            )
             Row(
                 verticalAlignment = Alignment.Bottom
             ) {

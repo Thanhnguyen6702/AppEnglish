@@ -1,16 +1,21 @@
 package com.example.english4d.data.database.question
 
+import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 
+@Dao
 interface ArticleDao {
-    @Query("SELECT * FROM Article WHERE id = :id")
-    suspend fun getArticleAndQuestion(id: Int): ArticleWithQuestion
-    @Insert
+    @Transaction
+    @Query("SELECT * FROM Article WHERE href = :href")
+    suspend fun getArticleAndQuestion(href:String): ArticleWithQuestion
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertArticle(article: Article)
 }
-
+@Dao
 interface QuestionDao{
-    @Insert
-    suspend fun insertQuestion(question: Question)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertQuestion(questions: List<Question>)
 }

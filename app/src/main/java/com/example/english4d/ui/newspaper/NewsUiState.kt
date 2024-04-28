@@ -3,7 +3,7 @@ package com.example.english4d.ui.newspaper
 import com.example.english4d.data.news.NewsContent
 import com.example.english4d.data.news.NewsItem
 import com.example.english4d.data.news.NewsTopic
-import com.example.english4d.data.news.Question
+import com.example.english4d.data.news.QuestionGPT
 
 sealed interface NewsUiState {
     data class Success(
@@ -26,5 +26,5 @@ data class ContentUiState(
     val contentNews: List<NewsContent> = listOf(NewsContent("",""))
 )
 data class QuestionUiState(
-    val listQuestion : List<Question> = emptyList()
+    val listQuestionGPT : List<QuestionGPT> = emptyList()
 )

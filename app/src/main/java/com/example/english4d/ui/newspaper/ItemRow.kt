@@ -38,7 +38,8 @@ fun HorizontalScrollRow(
     navController: NavController,
     title: String,
     listItem: List<NewsItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    newsViewmodel: NewsViewmodel
 ) {
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_hight))
@@ -67,6 +68,7 @@ fun HorizontalScrollRow(
                     modifier = Modifier
                         .padding(end = dimensionResource(id = R.dimen.padding_hight))
                         .clickable {
+                            newsViewmodel.insertArticle(href = Uri.encode(it.href),title = title)
                             navController.navigate(Screen.ReadNews.passData(topic=title,href= Uri.encode(it.href)))
                         }
                 )
@@ -78,7 +80,7 @@ fun HorizontalScrollRow(
 @Composable
 fun ItemRow(
     item: NewsItem,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier

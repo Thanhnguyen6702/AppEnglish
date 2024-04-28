@@ -30,7 +30,8 @@ class DataAppContainer(context: Context): AppContainer{
             topicsDAO = vocabDatabase.topicDao(),
             themeDao = vocabDatabase.themeDao(),
             definitionsDao = vocabDatabase.definitionsDao(),
-            examplesDao = vocabDatabase.examplesDao()
+            examplesDao = vocabDatabase.examplesDao(),
+            pronunciationDao = vocabDatabase.pronunciationDao()
         )
     }
     private val questionDatabase = QuestionDatabase.getDatabase(context)

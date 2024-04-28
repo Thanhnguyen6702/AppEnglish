@@ -1,7 +1,6 @@
 package com.example.english4d.ui.Splash
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.PreferencesManager
@@ -25,13 +24,11 @@ class SplashViewModel(vocabularyRepository: VocabularyRepository, private val co
                      viewModelScope.launch {
                             asyncDatabase.startAsyncDatabase()
                             asyncDatabase.dataSynchronized.collect {
-                                   Log.e("huhuhuhu",it.toString())
                                    _uiState.value = _uiState.value.copy(updated = it.second)
                                    preferencesManager.setUpdated()
                             }
                      }
               }else{
-                     Log.e("huhuhuhu","true")
                      _uiState.value = _uiState.value.copy(updated = true)
               }
        }

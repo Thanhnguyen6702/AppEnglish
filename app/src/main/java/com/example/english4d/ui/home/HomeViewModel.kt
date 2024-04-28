@@ -1,12 +1,9 @@
 package com.example.english4d.ui.home
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.PreferencesManager
-import com.example.english4d.data.database.vocabulary.VocabularyDatabase
 import com.example.english4d.data.database.vocabulary.VocabularyRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,10 +13,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(
-    private val vocabularyRepository: VocabularyRepository
+    private val vocabularyRepository: VocabularyRepository,
+    context: Context
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    init {
+        updateStatistic(context = context)
+    }
 
     private fun updateLayout() {
         viewModelScope.launch {
@@ -46,7 +48,7 @@ class HomeViewModel(
                 }
                 launch {
                     val listVocab = vocabularyRepository.getNewVocabulary(null)
-                    val minID = listVocab.minOf { it.id }
+                    val minID = listVocab.minOf { it.id_topic }
                     val topic = vocabularyRepository.getTopic(minID)
                     val listNewVocab = listVocab.filter { it.id == minID }
                     _uiState.value = _uiState.value.copy(newVocab = Pair(topic, listNewVocab))
@@ -63,14 +65,12 @@ class HomeViewModel(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateStatistic(context: Context) {
         val sharedPreferences = PreferencesManager(context)
         if (!sharedPreferences.isNewDay()) {
-            val statisticDao = VocabularyDatabase.getDatabase(context).statisticDao()
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
-                    statisticDao.updateIsStudyAndCheckDay()
+                    vocabularyRepository.updateIsStudyAndCheckDay()
                     updateLayout()
                 }
             }

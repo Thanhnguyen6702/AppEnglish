@@ -1,8 +1,6 @@
 package com.example.english4d.ui.home
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,20 +16,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Speaker
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Speaker
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,8 +39,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,7 +58,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -66,6 +66,7 @@ import coil.request.ImageRequest
 import com.example.english4d.R
 import com.example.english4d.navigation.Screen
 import com.example.english4d.ui.AppViewModelProvider
+import com.example.english4d.ui.pronuciation.PronunciationStatisticScreen
 import com.example.english4d.ui.theme.TypeText
 
 data class BottomNavigationItem(
@@ -76,64 +77,69 @@ data class BottomNavigationItem(
     val badgeCount: Int? = null
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     id: Int? = null,
     navController: NavController,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    viewModel.updateStatistic(LocalContext.current)
-    Scaffold(
-        bottomBar = {
-            MyBottomBar(selectedItemIndex = 0)
-        }
+    val homeUiState by viewModel.uiState.collectAsState()
+    LaunchedEffect(key1 = id) {
+        if (id != null) viewModel.changeTopic(id)
+
+    }
+
+
+    Column(
+        modifier = modifier.padding(
+            horizontal = dimensionResource(id = R.dimen.padding_medium)
+        )
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
-        ) {
-            val homeUiState by viewModel.uiState.collectAsState()
-            if (id != null) viewModel.changeTopic(id)
-            Text(
-                text = stringResource(id = R.string.welcome),
-                style = TypeText.h4.copy(fontWeight = FontWeight.Medium),
-                modifier = Modifier.padding(
-                    dimensionResource(id = R.dimen.padding_hight)
-                )
+        Text(
+            text = stringResource(id = R.string.welcome),
+            style = TypeText.h4.copy(fontWeight = FontWeight.Medium),
+            modifier = Modifier.padding(
+                dimensionResource(id = R.dimen.padding_hight)
             )
-            LayoutInfo(
-                homeUiState = homeUiState, modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .padding(vertical = dimensionResource(id = R.dimen.padding_hight))
+        )
+        LayoutInfo(
+            homeUiState = homeUiState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .padding(vertical = dimensionResource(id = R.dimen.padding_hight)),
+            navController = navController
+        )
+        CardStudy(
+            homeUiState = homeUiState,
+            navController = navController,
+            modifier = Modifier.padding(
+                vertical = dimensionResource(id = R.dimen.padding_hight)
             )
-            CardStudy(
-                homeUiState = homeUiState,
-                navController = navController,
-                modifier = Modifier.padding(
-                    vertical = dimensionResource(id = R.dimen.padding_hight)
-                )
-            )
-            ButtonNews(onClick = {
-                navController.navigate(Screen.NewsTopic.route)
-            })
-        }
+        )
+        ButtonNews(onClick = {
+            navController.navigate(Screen.NewsTopic.route)
+        })
     }
 }
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun LayoutInfo(
-    modifier: Modifier = Modifier, homeUiState: HomeUiState
+    modifier: Modifier = Modifier, homeUiState: HomeUiState, navController: NavController
 ) {
     Row(
         modifier = modifier.border(
-            width = 2.dp, color = colorResource(id = R.color.gray_10), shape = MaterialTheme.shapes.medium
+            width = 2.dp,
+            color = colorResource(id = R.color.gray_10),
+            shape = MaterialTheme.shapes.medium
         ), horizontalArrangement = Arrangement.SpaceAround
     ) {
         Column(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxHeight()
+                .clickable { navController.navigate(Screen.WordsBook.passIndex(0)) },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -157,7 +163,9 @@ fun LayoutInfo(
                 .width(1.dp), color = colorResource(id = R.color.gray_10)
         )
         Column(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxHeight()
+                .clickable { navController.navigate(Screen.WordsBook.passIndex(1)) },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -181,7 +189,9 @@ fun LayoutInfo(
                 .width(1.dp), color = colorResource(id = R.color.gray_10)
         )
         Column(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxHeight()
+                .clickable { navController.navigate(Screen.WordsBook.passIndex(2)) },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -228,9 +238,7 @@ fun ButtonNews(
 
 @Composable
 fun CardStudy(
-    homeUiState: HomeUiState,
-    navController: NavController,
-    modifier: Modifier = Modifier
+    homeUiState: HomeUiState, navController: NavController, modifier: Modifier = Modifier
 ) {
     if (homeUiState.isRevise) {
         Box(
@@ -393,148 +401,12 @@ fun CardStudy(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewHome() {
-    HomeScreen1()
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun HomeScreen1(
-) {
-    Scaffold(bottomBar = {
-        MyBottomBar(0)
-    }) {
-        Column(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
-        ) {
-            Text(
-                text = stringResource(id = R.string.welcome),
-                style = TypeText.h4.copy(fontWeight = FontWeight.Medium)
-            )
-            LayoutInfo1(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-
-            )
-            CardStudy1()
-            ButtonNews1(onClick = {})
-        }
-    }
-}
-
-@SuppressLint("StateFlowValueCalledInComposition")
-@Composable
-fun LayoutInfo1(
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.border(
-            width = 2.dp,
-            color = colorResource(id = R.color.gray_10),
-            shape = MaterialTheme.shapes.medium
-        ), horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.leaf),
-                contentDescription = stringResource(
-                    id = R.string.leaft
-                ),
-                modifier = Modifier.size(dimensionResource(id = R.dimen.size_icon_home))
-            )
-            Text(
-                text = "1", style = MaterialTheme.typography.labelMedium
-            )
-            Text(text = stringResource(id = R.string.unfam_word), style = TypeText.h7)
-        }
-        Divider(
-            modifier = Modifier
-                .padding(vertical = dimensionResource(id = R.dimen.padding_small))
-                .fillMaxHeight()
-                .width(1.dp), color = colorResource(id = R.color.gray_20)
-        )
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.bough),
-                contentDescription = stringResource(
-                    id = R.string.bough
-                ),
-                modifier = Modifier.size(dimensionResource(id = R.dimen.size_icon_home))
-            )
-            Text(
-                text = "2", style = MaterialTheme.typography.labelMedium
-            )
-            Text(text = stringResource(id = R.string.almost_word), style = TypeText.h7)
-        }
-        Divider(
-            modifier = Modifier
-                .padding(vertical = dimensionResource(id = R.dimen.padding_small))
-                .fillMaxHeight()
-                .width(1.dp), color = colorResource(id = R.color.gray_20)
-        )
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.tree),
-                contentDescription = stringResource(
-                    id = R.string.tree
-                ),
-                modifier = Modifier.size(dimensionResource(id = R.dimen.size_icon_home))
-            )
-            Text(
-                text = "3", style = MaterialTheme.typography.labelMedium
-            )
-            Text(text = stringResource(id = R.string.fam_word), style = TypeText.h7)
-        }
-    }
-
-
-}
-
-@Composable
-fun ButtonNews1(
-    onClick: () -> Unit
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        IconButton(
-            onClick = onClick, modifier = Modifier.background(
-                color = colorResource(id = R.color.green), shape = MaterialTheme.shapes.small
-            )
-        ) {
-            Icon(
-                Icons.Default.Newspaper,
-                contentDescription = stringResource(id = R.string.news),
-                tint = Color.White,
-                modifier = Modifier.size(dimensionResource(id = R.dimen.size_icon_home))
-            )
-        }
-        Text(text = stringResource(id = R.string.news), style = TypeText.h6)
-    }
-}
-
 @Composable
 fun CardStudy1(
 ) {
     if (true) {
         Surface(
-            tonalElevation = 3.dp ,
-            shape = MaterialTheme.shapes.medium
+            tonalElevation = 3.dp, shape = MaterialTheme.shapes.medium
         ) {
             Box(
                 modifier = Modifier
@@ -699,10 +571,9 @@ fun CardStudy1(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyBottomBar(
-    selectedItemIndex: Int
+    selectedItemIndex: Int, onClick: (Int) -> Unit
 ) {
     val listItems = listOf(
         BottomNavigationItem(
@@ -711,9 +582,9 @@ fun MyBottomBar(
             unselectedIcon = Icons.Outlined.Home,
             hasNews = true
         ), BottomNavigationItem(
-            title = "Chat",
-            selectedIcon = Icons.AutoMirrored.Filled.Chat,
-            unselectedIcon = Icons.AutoMirrored.Outlined.Chat,
+            title = "Speak",
+            selectedIcon = Icons.Filled.Speaker,
+            unselectedIcon = Icons.Outlined.Speaker,
             hasNews = false
         ), BottomNavigationItem(
             title = "Settings",
@@ -723,13 +594,13 @@ fun MyBottomBar(
         )
     )
     NavigationBar(
-        containerColor = colorResource(id = R.color.white),
-        tonalElevation = 3.dp
+        containerColor = colorResource(id = R.color.white), tonalElevation = 3.dp
     ) {
         listItems.forEachIndexed { index, item ->
-            NavigationBarItem(
-                selected = (selectedItemIndex == index),
-                onClick = { /*TODO*/ },
+            NavigationBarItem(selected = (selectedItemIndex == index),
+                onClick = {
+                    onClick(index)
+                },
                 label = { Text(text = item.title, style = TypeText.h8) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = colorResource(id = R.color.green_100),
@@ -752,6 +623,25 @@ fun MyBottomBar(
                         )
                     }
                 })
+        }
+    }
+}
+
+@Composable
+fun MainScreen(
+    navController: NavController
+) {
+    var selectedItemIndex by remember {
+        mutableIntStateOf(0)
+    }
+    Scaffold(
+        bottomBar = {
+            MyBottomBar(selectedItemIndex = selectedItemIndex, onClick = { selectedItemIndex = it })
+        }
+    ) {
+        when (selectedItemIndex) {
+            0 -> HomeScreen(navController = navController, modifier = Modifier.padding(bottom = it.calculateBottomPadding()))
+            1 -> PronunciationStatisticScreen(navController = navController, modifier = Modifier.padding(bottom = it.calculateBottomPadding()))
         }
     }
 }

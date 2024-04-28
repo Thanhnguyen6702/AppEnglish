@@ -43,7 +43,7 @@ fun SplashScreen(
     LaunchedEffect(uiState.updated) {
         if (uiState.updated) {
             delay(3000L) // Nếu cần đợi một thời gian cụ thể
-            navController.navigate(Screen.Home.route)
+            navController.navigate(Screen.Main.route)
         }
     }
 
