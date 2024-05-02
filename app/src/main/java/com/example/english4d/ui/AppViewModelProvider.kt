@@ -47,7 +47,7 @@ object AppViewModelProvider {
             SplashViewModel(dataApplication().container.vocabularyRepository, context = dataApplication().applicationContext)
         }
         initializer {
-            PronunciationAssessmentViewModel(dataApplication().container.vocabularyRepository)
+            PronunciationAssessmentViewModel(dataApplication().container.vocabularyRepository, context = dataApplication().applicationContext)
         }
     }
 }

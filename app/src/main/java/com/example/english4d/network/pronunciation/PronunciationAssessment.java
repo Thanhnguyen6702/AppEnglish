@@ -15,10 +15,11 @@ import com.microsoft.cognitiveservices.speech.audio.AudioProcessingOptions;
 
 public class PronunciationAssessment {
     private SpeechConfig speechConfig = SpeechConfig.fromSubscription(KeyApi.SpeechSubscriptionKey, KeyApi.SpeechRegion);
-    ;
     private MicrophoneStream microphoneStream;
     private RecordingListener recordingListener;
 
+
+    private String filePath;
     public void setReferenceText(String referenceText ) {
         if (referenceText == null){
             this.referenceText = "";
@@ -26,13 +27,16 @@ public class PronunciationAssessment {
             this.referenceText = referenceText;
         }
     }
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     private String referenceText = "";
 
     private MicrophoneStream createMicrophoneStream() {
         this.releaseMicrophoneStream();
 
-        microphoneStream = new MicrophoneStream();
+        microphoneStream = new MicrophoneStream(filePath);
         return microphoneStream;
     }
 

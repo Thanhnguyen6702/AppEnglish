@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Headphones
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -44,6 +48,7 @@ fun PronunciationAssessmentScreen(
     navController: NavController,
     viewModel: PronunciationAssessmentViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiStateAssessment.collectAsState()
     Scaffold {
         Column(
@@ -187,11 +192,14 @@ fun PronunciationAssessmentScreen(
                             shape = MaterialTheme.shapes.medium
                         )
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.volume),
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp)
-                    )
+                    IconButton(
+                        onClick = { viewModel.textToSpeech(context) }, enabled = !uiState.isSpeak
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                            contentDescription = null
+                        )
+                    }
                 }
                 Box(
                     modifier = Modifier
@@ -210,7 +218,13 @@ fun PronunciationAssessmentScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     if (uiState.isRecording == RecordingState.NOTRECORDING) {
-                        Icon(imageVector = Icons.Filled.Mic, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Filled.Mic,
+                            contentDescription = null,
+                            tint = colorResource(
+                                id = R.color.white
+                            )
+                        )
                     } else if (uiState.isRecording == RecordingState.RECORDING) {
                         OscillatingBars()
                     } else {
@@ -225,11 +239,20 @@ fun PronunciationAssessmentScreen(
                             shape = MaterialTheme.shapes.medium
                         )
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.headphones),
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp)
-                    )
+                    IconButton(
+                        onClick = { viewModel.listeningAgain() },
+                        enabled = uiState.isListen
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Headphones,
+                            contentDescription = null,
+                            tint = if (uiState.isListen) {
+                                colorResource(id = R.color.green_100)
+                            } else {
+                                colorResource(id = R.color.gray_20)
+                            }
+                        )
+                    }
                 }
 
             }

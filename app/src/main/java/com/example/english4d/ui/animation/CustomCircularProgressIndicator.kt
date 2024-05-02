@@ -40,9 +40,6 @@ fun CustomCircularProgressIndicator(
         mutableStateOf(Offset.Zero)
     }
 
-    var positionValue by remember {
-        mutableStateOf(initialValue)
-    }
 
 
 
@@ -68,7 +65,7 @@ fun CustomCircularProgressIndicator(
             drawArc(
                 color = primaryColor,
                 startAngle = 270f,
-                sweepAngle = (360f / maxValue) * positionValue.toFloat(),
+                sweepAngle = (360f / maxValue) * initialValue.toFloat(),
                 style = Stroke(
                     width = circleThickness,
                     cap = StrokeCap.Round
@@ -87,7 +84,7 @@ fun CustomCircularProgressIndicator(
             drawContext.canvas.nativeCanvas.apply {
                 drawIntoCanvas {
                     drawText(
-                        "$positionValue %",
+                        "$initialValue %",
                         circleCenter.x,
                         circleCenter.y + 12.dp.toPx() / 3f,
                         Paint().apply {

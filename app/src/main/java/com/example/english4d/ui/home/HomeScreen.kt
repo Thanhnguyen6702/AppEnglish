@@ -68,6 +68,7 @@ import com.example.english4d.navigation.Screen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.pronuciation.PronunciationStatisticScreen
 import com.example.english4d.ui.theme.TypeText
+import com.example.english4d.ui.video.VideoScreen
 
 data class BottomNavigationItem(
     val title: String,
@@ -642,6 +643,7 @@ fun MainScreen(
         when (selectedItemIndex) {
             0 -> HomeScreen(navController = navController, modifier = Modifier.padding(bottom = it.calculateBottomPadding()))
             1 -> PronunciationStatisticScreen(navController = navController, modifier = Modifier.padding(bottom = it.calculateBottomPadding()))
+            2 -> VideoScreen(navController = navController)
         }
     }
 }

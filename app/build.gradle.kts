@@ -69,19 +69,19 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
     //Jsoup
     implementation("org.jsoup:jsoup:1.14.3")
     implementation(kotlin("reflect"))
     //Icon
-    implementation ("androidx.compose.material:material-icons-core:1.6.3")
-    implementation ("androidx.compose.material:material-icons-extended:1.6.3")
+    implementation ("androidx.compose.material:material-icons-core:1.6.6")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.6")
     //NavController
     implementation ("androidx.navigation:navigation-compose:2.7.7")
     //Gemini
-    implementation("com.google.ai.client.generativeai:generativeai:0.2.2")
+    implementation("com.google.ai.client.generativeai:generativeai:0.4.0")
     //serialization
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     //Gson
@@ -92,13 +92,26 @@ dependencies {
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     //Room
-    implementation("androidx.room:room-runtime:2.5.0")
-    ksp("androidx.room:room-compiler:2.5.0")
-    implementation("androidx.room:room-ktx:2.5.0")
+    implementation("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     //material 3
     implementation ("androidx.compose.material3:material3:1.2.1")
     // Speech SDK
     implementation ("com.microsoft.cognitiveservices.speech:client-sdk:1.26.0")
+    // ExoPlayer
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
+    // Youtube API
+//    implementation("com.google.apis:google-api-services-youtube:v3-rev222-1.25.0") {
+//        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+//    }
+//
+//    implementation("com.google.auth:google-auth-library-oauth2-http:0.25.0") {
+//        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+//    }
 
 }
 secrets {

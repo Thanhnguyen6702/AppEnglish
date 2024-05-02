@@ -21,6 +21,7 @@ import com.example.english4d.ui.newspaper.NewsScreen
 import com.example.english4d.ui.newspaper.ReadNewsScreen
 import com.example.english4d.ui.pronuciation.PronunciationAssessmentScreen
 import com.example.english4d.ui.topic.TopicScreen
+import com.example.english4d.ui.video.ListeningScreen
 import com.example.english4d.ui.vocabulary.FinishScreen
 import com.example.english4d.ui.vocabulary.NewVocabularyScreen
 import com.example.english4d.ui.vocabulary.ReviseScreen
@@ -101,8 +102,18 @@ fun SetupNavGraph(
         composable(route = Screen.FinishVocab.route) {
             FinishScreen(navController = navController, viewModel = reviseViewModel!!)
         }
-        composable(route = Screen.Pronunciation.route){
+        composable(route = Screen.Pronunciation.route) {
             PronunciationAssessmentScreen(navController = navController)
+        }
+        composable(
+            route = Screen.Video.route, arguments = listOf(
+                navArgument(VIDEO_ARGUMENT){
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val videoId = it.arguments?.getString(VIDEO_ARGUMENT)?:""
+            ListeningScreen(navController = navController, videoId = videoId)
         }
     }
 }

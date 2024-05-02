@@ -9,7 +9,9 @@ enum class RecordingState {
 data class PronunciationAssessmentUiState(
     val score: Int= 0,
     val vocabulary: Vocabulary = Vocabulary(0,"","","","",0),
-    val isRecording: RecordingState  = RecordingState.NOTRECORDING
+    val isRecording: RecordingState  = RecordingState.NOTRECORDING,
+    val isSpeak: Boolean = false,
+    val isListen: Boolean = false
 )
 data class PronunciationStatisticUiState(
     val lower: List<Vocabulary> = listOf(),

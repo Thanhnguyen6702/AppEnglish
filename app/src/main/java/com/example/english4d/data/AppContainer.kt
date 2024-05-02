@@ -15,6 +15,7 @@ interface AppContainer {
     val newsRepository: NewsRepository
     val vocabularyRepository: VocabularyRepository
     val questionRepository: QuestionRepository
+//    val captionTrackRepository: CaptionTrackRepository
 }
 
 class DataAppContainer(context: Context): AppContainer{
@@ -41,5 +42,6 @@ class DataAppContainer(context: Context): AppContainer{
             questionDao = questionDatabase.questionDao()
         )
     }
+   // override val captionTrackRepository: CaptionTrackRepository = OnlineCaptionTrackRepository().captionTrackRepository
 
 }

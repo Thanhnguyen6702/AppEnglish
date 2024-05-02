@@ -5,7 +5,7 @@ const val READNEWS_ARGUMENT_HREF = "href"
 const val NEWVOCAB_ARGUMENT = "id"
 const val HOME_ARGUMENT = "id"
 const val WORDSBOOK_ARGUMENT = "index"
-
+const val VIDEO_ARGUMENT = "video_id"
 sealed class Screen(val route: String) {
     object Splash : Screen(route = "splash")
     object Home : Screen(route = "home/{$HOME_ARGUMENT}") {
@@ -43,4 +43,9 @@ sealed class Screen(val route: String) {
     }
     object Main: Screen(route = "main")
     object Pronunciation: Screen(route = "pronunciation")
+    object Video: Screen(route = "video/{$VIDEO_ARGUMENT}"){
+        fun passId(videoId: String): String{
+            return "video/$videoId"
+        }
+    }
 }
