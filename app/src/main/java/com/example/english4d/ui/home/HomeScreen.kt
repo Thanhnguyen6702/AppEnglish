@@ -17,34 +17,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
+import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Newspaper
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Speaker
+import androidx.compose.material.icons.outlined.DashboardCustomize
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Speaker
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,16 +58,12 @@ import coil.request.ImageRequest
 import com.example.english4d.R
 import com.example.english4d.navigation.Screen
 import com.example.english4d.ui.AppViewModelProvider
-import com.example.english4d.ui.pronuciation.PronunciationStatisticScreen
 import com.example.english4d.ui.theme.TypeText
-import com.example.english4d.ui.video.VideoScreen
 
 data class BottomNavigationItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val hasNews: Boolean,
-    val badgeCount: Int? = null
 )
 
 @Composable
@@ -119,9 +107,6 @@ fun HomeScreen(
                 vertical = dimensionResource(id = R.dimen.padding_hight)
             )
         )
-        ButtonNews(onClick = {
-            navController.navigate(Screen.NewsTopic.route)
-        })
     }
 }
 
@@ -153,7 +138,7 @@ fun LayoutInfo(
             )
             Text(
                 text = homeUiState.unlearned.size.toString(),
-                style = MaterialTheme.typography.labelMedium
+                style = TypeText.h6.copy(fontWeight = FontWeight.Bold)
             )
             Text(text = stringResource(id = R.string.unfam_word), style = TypeText.h7)
         }
@@ -179,7 +164,7 @@ fun LayoutInfo(
             )
             Text(
                 text = homeUiState.learning.size.toString(),
-                style = MaterialTheme.typography.labelMedium
+                style = TypeText.h6.copy(fontWeight = FontWeight.Bold)
             )
             Text(text = stringResource(id = R.string.almost_word), style = TypeText.h7)
         }
@@ -205,7 +190,7 @@ fun LayoutInfo(
             )
             Text(
                 text = homeUiState.master.size.toString(),
-                style = MaterialTheme.typography.labelMedium
+                style = TypeText.h6.copy(fontWeight = FontWeight.Bold)
             )
             Text(text = stringResource(id = R.string.fam_word), style = TypeText.h7)
         }
@@ -214,28 +199,7 @@ fun LayoutInfo(
 
 }
 
-@Composable
-fun ButtonNews(
-    onClick: () -> Unit
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        IconButton(
-            onClick = onClick, modifier = Modifier.background(
-                color = colorResource(id = R.color.green), shape = MaterialTheme.shapes.small
-            )
-        ) {
-            Icon(
-                Icons.Default.Newspaper,
-                contentDescription = stringResource(id = R.string.news),
-                tint = Color.White,
-                modifier = Modifier.size(dimensionResource(id = R.dimen.size_icon_home))
-            )
-        }
-        Text(text = stringResource(id = R.string.news), style = TypeText.h6)
-    }
-}
+
 
 @Composable
 fun CardStudy(
@@ -578,20 +542,17 @@ fun MyBottomBar(
 ) {
     val listItems = listOf(
         BottomNavigationItem(
-            title = "Home",
+            title = "từ vựng",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
-            hasNews = true
         ), BottomNavigationItem(
-            title = "Speak",
+            title = "phát âm",
             selectedIcon = Icons.Filled.Speaker,
             unselectedIcon = Icons.Outlined.Speaker,
-            hasNews = false
         ), BottomNavigationItem(
-            title = "Settings",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-            hasNews = false
+            title = "mở rộng",
+            selectedIcon = Icons.Filled.DashboardCustomize,
+            unselectedIcon = Icons.Outlined.DashboardCustomize,
         )
     )
     NavigationBar(
@@ -611,39 +572,12 @@ fun MyBottomBar(
                     indicatorColor = Color.White
                 ),
                 icon = {
-                    BadgedBox(badge = {
-                        if (item.badgeCount != null) {
-                            Text(text = item.badgeCount.toString())
-                        } else if (item.hasNews) {
-                            Badge()
-                        }
-                    }) {
-                        Icon(
-                            imageVector = if (index == selectedItemIndex) item.selectedIcon
-                            else item.unselectedIcon, contentDescription = item.title
-                        )
-                    }
+                    Icon(
+                        imageVector = if (index == selectedItemIndex) item.selectedIcon
+                        else item.unselectedIcon, contentDescription = item.title
+                    )
                 })
         }
     }
 }
 
-@Composable
-fun MainScreen(
-    navController: NavController
-) {
-    var selectedItemIndex by remember {
-        mutableIntStateOf(0)
-    }
-    Scaffold(
-        bottomBar = {
-            MyBottomBar(selectedItemIndex = selectedItemIndex, onClick = { selectedItemIndex = it })
-        }
-    ) {
-        when (selectedItemIndex) {
-            0 -> HomeScreen(navController = navController, modifier = Modifier.padding(bottom = it.calculateBottomPadding()))
-            1 -> PronunciationStatisticScreen(navController = navController, modifier = Modifier.padding(bottom = it.calculateBottomPadding()))
-            2 -> VideoScreen(navController = navController)
-        }
-    }
-}

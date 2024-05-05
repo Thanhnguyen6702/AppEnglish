@@ -1,4 +1,4 @@
-package com.example.english4d.network.video
+package com.example.english4d.network.fairytail
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -8,9 +8,10 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 interface AppContainer{
-    val videoRepository: VideoRepository
+    val fairyTailRepository: FairyTailRepository
 }
-class OnlineVideoRepository: AppContainer {
+
+class OnlineFairyTailDataRepository: AppContainer {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)  // Thời gian chờ kết nối là 30 giây
         .readTimeout(30, TimeUnit.SECONDS)  // Thời gian chờ đọc là 30 giây
@@ -22,14 +23,10 @@ class OnlineVideoRepository: AppContainer {
         .client(okHttpClient)
         .baseUrl(BaseUrl)
         .build()
-    private val retrofitServerCaptionTrack :ApiCaptionTrack by lazy {
-        retrofit.create(ApiCaptionTrack::class.java)
+    private val retrofitServer :ApiFairyTail by lazy {
+        retrofit.create(ApiFairyTail::class.java)
     }
-    private val retrofitServerChannelInfo : ApiChannel by lazy{
-        retrofit.create(ApiChannel::class.java)
+    override val fairyTailRepository: FairyTailRepository by lazy {
+        NetworkFairyTailRepository(retrofitServer)
     }
-    override val videoRepository: VideoRepository by lazy {
-        NetworkCaptionTrackRepository(retrofitServerCaptionTrack, retrofitServerChannelInfo)
-    }
-
 }

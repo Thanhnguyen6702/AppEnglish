@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,6 +37,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
+import com.example.english4d.ui.animation.ErrorScreen
+import com.example.english4d.ui.animation.LoadingScreen
 import com.example.english4d.ui.theme.TypeText
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -60,15 +63,6 @@ fun ListeningScreen(
     LaunchedEffect(key1 = videoId) {
         viewModel.getCaptionTrack(videoId)
     }
-
-    LaunchedEffect(videoPosition) {
-        val currentCaptionIndex =
-            uiState.captionTrack.transcript.indexOfFirst { videoPosition <= it.start }
-
-        if (currentCaptionIndex > 0) {
-            postionCaptionTrack = currentCaptionIndex - 1
-        }
-    }
     LaunchedEffect(postionCaptionTrack) {
         listState.animateScrollToItem(postionCaptionTrack)
     }
@@ -86,21 +80,45 @@ fun ListeningScreen(
                 youtubePlayer.loadVideo(videoId, 0f) // Khởi tạo video ban đầu
             }
         )
-
-        LazyColumn(
-            state = listState
-        ) {
-            val captionTracks = uiState.captionTrack.transcript
-            items(captionTracks.size) {
-                ItemCaptionLayout(
-                    captionTrack = captionTracks[it].text,
-                    isPlay = postionCaptionTrack == it
+        when(uiState){
+            ListeningUiState.Error -> ErrorScreen(){
+                viewModel.getCaptionTrack(videoId)
+            }
+            ListeningUiState.Loading -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    youtubePlayerRef?.seekTo(captionTracks[it].start) // Tua video đến thời gian này
-                    postionCaptionTrack = it
+                    LoadingScreen()
+                }
+            }
+            is ListeningUiState.Success -> {
+                LaunchedEffect(videoPosition) {
+                    val currentCaptionIndex =
+                        (uiState as ListeningUiState.Success).captionTrack.transcript.indexOfLast { videoPosition >= it.start }
+
+                    if (currentCaptionIndex > 0) {
+                        postionCaptionTrack = currentCaptionIndex
+                    }
+                }
+                LazyColumn(
+                    state = listState
+                ) {
+                    val captionTracks = (uiState as ListeningUiState.Success).captionTrack.transcript
+                    items(captionTracks.size) {
+                        ItemCaptionLayout(
+                            captionTrack = captionTracks[it].text,
+                            isPlay = postionCaptionTrack == it
+                        ) {
+                            youtubePlayerRef?.seekTo(captionTracks[it].start) // Tua video đến thời gian này
+                            postionCaptionTrack = it
+                        }
+                    }
                 }
             }
         }
+
     }
 }
 

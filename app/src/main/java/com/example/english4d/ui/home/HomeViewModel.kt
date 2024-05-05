@@ -65,9 +65,9 @@ class HomeViewModel(
         }
     }
 
-    fun updateStatistic(context: Context) {
+    private fun updateStatistic(context: Context) {
         val sharedPreferences = PreferencesManager(context)
-        if (!sharedPreferences.isNewDay()) {
+        if (sharedPreferences.isNewDay()) {
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     vocabularyRepository.updateIsStudyAndCheckDay()

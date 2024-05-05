@@ -12,16 +12,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.english4d.ui.AppViewModelProvider
-import com.example.english4d.ui.Splash.SplashScreen
+import com.example.english4d.ui.fairytail.FairyTailScreen
+import com.example.english4d.ui.fairytail.FairyTailViewModel
+import com.example.english4d.ui.fairytail.ReadFairyTail
 import com.example.english4d.ui.home.HomeScreen
 import com.example.english4d.ui.home.HomeViewModel
-import com.example.english4d.ui.home.MainScreen
 import com.example.english4d.ui.home.WordsBookScreen
+import com.example.english4d.ui.main.MainScreen
 import com.example.english4d.ui.newspaper.NewsScreen
 import com.example.english4d.ui.newspaper.ReadNewsScreen
 import com.example.english4d.ui.pronuciation.PronunciationAssessmentScreen
+import com.example.english4d.ui.splash.SplashScreen
 import com.example.english4d.ui.topic.TopicScreen
 import com.example.english4d.ui.video.ListeningScreen
+import com.example.english4d.ui.video.VideoScreen
 import com.example.english4d.ui.vocabulary.FinishScreen
 import com.example.english4d.ui.vocabulary.NewVocabularyScreen
 import com.example.english4d.ui.vocabulary.ReviseScreen
@@ -32,7 +36,6 @@ fun SetupNavGraph(
     navController: NavHostController
 ) {
     var reviseViewModel by remember { mutableStateOf<ReviseViewModel?>(null) }
-    // val homeViewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route
@@ -61,7 +64,10 @@ fun SetupNavGraph(
             )
         ) {
             val index = it.arguments?.getInt(WORDSBOOK_ARGUMENT)!!
-            val homeViewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            val previousBackStackEntry = remember {
+                navController.previousBackStackEntry!!
+            }
+            val homeViewModel: HomeViewModel = viewModel(previousBackStackEntry)
             WordsBookScreen(navController = navController, viewModel = homeViewModel, index = index)
         }
         composable(route = Screen.NewsTopic.route) {
@@ -114,6 +120,20 @@ fun SetupNavGraph(
         ) {
             val videoId = it.arguments?.getString(VIDEO_ARGUMENT)?:""
             ListeningScreen(navController = navController, videoId = videoId)
+        }
+        composable(route = Screen.Channel.route){
+            VideoScreen(navController = navController)
+        }
+        composable(route = Screen.FairyTopic.route){
+            val fairyViewModel:FairyTailViewModel = viewModel()
+            FairyTailScreen(navController = navController, viewmodel = fairyViewModel)
+        }
+        composable(route = Screen.ReadFairy.route){
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Screen.FairyTopic.route)
+            }
+            val fairyViewModel:FairyTailViewModel = viewModel(parentEntry)
+            ReadFairyTail(navController = navController, viewmodel = fairyViewModel)
         }
     }
 }

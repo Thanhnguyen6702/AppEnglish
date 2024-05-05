@@ -17,6 +17,9 @@ import com.example.english4d.data.news.QuestionGPT
 import com.example.english4d.model.GenerateContent
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,8 +28,8 @@ class NewsViewmodel(
     private val newsRepository: NewsRepository,
     private val questionRepository: QuestionRepository
 ) : ViewModel() {
-    var newsUiState: NewsUiState by mutableStateOf(NewsUiState.Loading)
-        private set
+    private val _uiState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
+    val uiState:StateFlow<NewsUiState> = _uiState.asStateFlow()
     var dataNews: ContentUiState by mutableStateOf(ContentUiState())
         private set
     var questionUiState: QuestionUiState by mutableStateOf(QuestionUiState())
@@ -46,8 +49,8 @@ class NewsViewmodel(
 
     private fun getListTopic() {
         viewModelScope.launch {
-            newsUiState = NewsUiState.Loading
-            newsUiState = try {
+            _uiState.value = NewsUiState.Loading
+            _uiState.value = try {
                 val travel = withContext(Dispatchers.IO) {
                     val listItem = newsRepository.getListNews("travel")
                     NewsTopic("Travel", listItem ?: listOf(NewsItem()))

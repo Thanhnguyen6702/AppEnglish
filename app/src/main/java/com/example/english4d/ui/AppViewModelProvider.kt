@@ -5,10 +5,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.english4d.DataApplication
-import com.example.english4d.ui.Splash.SplashViewModel
 import com.example.english4d.ui.home.HomeViewModel
 import com.example.english4d.ui.newspaper.NewsViewmodel
 import com.example.english4d.ui.pronuciation.PronunciationAssessmentViewModel
+import com.example.english4d.ui.splash.SplashViewModel
 import com.example.english4d.ui.topic.TopicViewModel
 import com.example.english4d.ui.vocabulary.NewVocabViewModel
 import com.example.english4d.ui.vocabulary.ReviseViewModel

@@ -12,6 +12,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,7 +22,8 @@ import androidx.navigation.NavController
 import com.example.english4d.R
 import com.example.english4d.data.news.NewsTopic
 import com.example.english4d.ui.AppViewModelProvider
-import com.example.english4d.ui.animation.OscillatingBars
+import com.example.english4d.ui.animation.ErrorScreen
+import com.example.english4d.ui.animation.LoadingScreen
 
 @Composable
 fun NewsScreen(
@@ -38,7 +41,7 @@ fun NewsTopicLayout(
     navController: NavController,
     newsViewmodel: NewsViewmodel
 ) {
-    val newsUiState = newsViewmodel.newsUiState
+    val newsUiState by newsViewmodel.uiState.collectAsState()
     when (newsUiState) {
         is NewsUiState.Loading -> {
             Column(
@@ -46,18 +49,18 @@ fun NewsTopicLayout(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OscillatingBars()
+                LoadingScreen()
             }
         }
 
         is NewsUiState.Success -> {
             val listTopic: List<NewsTopic> = listOf(
-                newsUiState.travel,
-                newsUiState.education,
-                newsUiState.business,
-                newsUiState.sports,
-                newsUiState.trend,
-                newsUiState.world
+                (newsUiState as NewsUiState.Success).travel,
+                (newsUiState as NewsUiState.Success).education,
+                (newsUiState as NewsUiState.Success).business,
+                (newsUiState as NewsUiState.Success).sports,
+                (newsUiState as NewsUiState.Success).trend,
+                (newsUiState as NewsUiState.Success).world
             )
             ResultScreen(navController = navController,listTopic = listTopic, newsViewmodel = newsViewmodel)
         }
@@ -95,8 +98,4 @@ fun ResultScreen(
     }
 }
 
-@Composable
-fun ErrorScreen() {
-
-}
 

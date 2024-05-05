@@ -21,18 +21,23 @@ private val channelsId = listOf(
 )
 
 class VideoViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(VideosUiState())
-    val uiState: StateFlow<VideosUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<VideoUiState>(VideoUiState.Loading)
+    val uiState: StateFlow<VideoUiState> = _uiState.asStateFlow()
     private val onlineVideoRepository = OnlineVideoRepository().videoRepository
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
-                val channelsInfo = mutableListOf<ChannelInfo>()
-                channelsId.forEach{
-                    val channelInfo = onlineVideoRepository.getChannelInfo(it)
-                    channelsInfo.add(channelInfo)
+                try {
+                    val channelsInfo = mutableListOf<ChannelInfo>()
+                    channelsId.forEach{
+                        val channelInfo = onlineVideoRepository.getChannelInfo(it)
+                        channelsInfo.add(channelInfo)
+                    }
+                    _uiState.value = VideoUiState.Success(channelsInfo)
+                }catch (e:Exception){
+                    _uiState.value = VideoUiState.Error
                 }
-                _uiState.value = _uiState.value.copy(channelsInfo)
+
             }
         }
     }

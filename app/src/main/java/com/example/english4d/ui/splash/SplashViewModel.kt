@@ -1,4 +1,4 @@
-package com.example.english4d.ui.Splash
+package com.example.english4d.ui.splash
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
