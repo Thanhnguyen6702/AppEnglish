@@ -20,12 +20,16 @@ import com.example.english4d.ui.home.HomeViewModel
 import com.example.english4d.ui.home.WordsBookScreen
 import com.example.english4d.ui.main.MainScreen
 import com.example.english4d.ui.newspaper.NewsScreen
+import com.example.english4d.ui.newspaper.NewsViewmodel
 import com.example.english4d.ui.newspaper.ReadNewsScreen
+import com.example.english4d.ui.newspaper.SeeMoreNewsScreen
 import com.example.english4d.ui.pronuciation.PronunciationAssessmentScreen
 import com.example.english4d.ui.splash.SplashScreen
 import com.example.english4d.ui.topic.TopicScreen
 import com.example.english4d.ui.video.ListeningScreen
+import com.example.english4d.ui.video.SeeMoreVideoScreen
 import com.example.english4d.ui.video.VideoScreen
+import com.example.english4d.ui.video.VideoViewModel
 import com.example.english4d.ui.vocabulary.FinishScreen
 import com.example.english4d.ui.vocabulary.NewVocabularyScreen
 import com.example.english4d.ui.vocabulary.ReviseScreen
@@ -134,6 +138,20 @@ fun SetupNavGraph(
             }
             val fairyViewModel:FairyTailViewModel = viewModel(parentEntry)
             ReadFairyTail(navController = navController, viewmodel = fairyViewModel)
+        }
+        composable(route = Screen.SeeMoreVideo.route){
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Screen.Channel.route)
+            }
+            val viewModel:VideoViewModel = viewModel(parentEntry)
+            SeeMoreVideoScreen(navController = navController,viewModel)
+        }
+        composable(route = Screen.SeeMoreNews.route){
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Screen.NewsTopic.route)
+            }
+            val viewModel:NewsViewmodel = viewModel(parentEntry)
+            SeeMoreNewsScreen(navController = navController,viewModel)
         }
     }
 }

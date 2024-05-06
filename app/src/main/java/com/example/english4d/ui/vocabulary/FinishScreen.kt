@@ -18,6 +18,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,62 +41,69 @@ fun FinishScreen(
     viewModel: ReviseViewModel,
 ) {
     val uiState = viewModel.uiStateFinish.collectAsState()
-    Column(
-        modifier = Modifier.fillMaxHeight()
-    ) {
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(Icons.Default.Close, contentDescription = null)
-        }
+    Scaffold {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .padding(
+                    top = it.calculateTopPadding(),
+                    bottom = it.calculateBottomPadding()
+                )
+                .fillMaxHeight()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_finish),
-                contentDescription = null,
-                modifier = Modifier.size(
-                    dimensionResource(id = R.dimen.size_icon_medium)
-                )
-            )
-            Text(
-                text = stringResource(id = R.string.finish),
-                style = TypeText.bodyMedium,
-                modifier = Modifier.padding(
-                    top = dimensionResource(
-                        id = R.dimen.padding_hight
-                    ), bottom = dimensionResource(id = R.dimen.padding_medium)
-                )
-            )
-            Text(
-                text = stringResource(id = R.string.number_finish, viewModel.numberRevise),
-                style = TypeText.h7,
-                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
-            )
-            LazyColumn(
-                modifier = Modifier.weight(8f)
-            ) {
-                items(uiState.value.listItemFinish) {
-                    ItemFinishLayout(it)
-                    Divider()
-                }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.Close, contentDescription = null)
             }
-            Box(modifier = Modifier.weight(2f), contentAlignment = Alignment.Center) {
-                ElevatedButton(
-                    onClick = {
-                        if (uiState.value.isContinueRevise) {
-                            navController.navigate(Screen.ReviseVocab.route) {
-                                popUpTo(Screen.FinishVocab.route) { inclusive = true }
-                            }
-                        } else {
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.FinishVocab.route) { inclusive = true }
-                            }
-                        }
-                    },
-                ) {
-                    Text(
-                        text = if (uiState.value.isContinueRevise) stringResource(id = R.string.continue_revise)
-                        else stringResource(id = R.string.learn_vocab)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_finish),
+                    contentDescription = null,
+                    modifier = Modifier.size(
+                        dimensionResource(id = R.dimen.size_icon_medium)
                     )
+                )
+                Text(
+                    text = stringResource(id = R.string.finish),
+                    style = TypeText.bodyMedium,
+                    modifier = Modifier.padding(
+                        top = dimensionResource(
+                            id = R.dimen.padding_hight
+                        ), bottom = dimensionResource(id = R.dimen.padding_medium)
+                    )
+                )
+                Text(
+                    text = stringResource(id = R.string.number_finish, viewModel.numberRevise),
+                    style = TypeText.h7,
+                    modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
+                )
+                LazyColumn(
+                    modifier = Modifier.weight(8f)
+                ) {
+                    items(uiState.value.listItemFinish) {
+                        ItemFinishLayout(it)
+                        Divider()
+                    }
+                }
+                Box(modifier = Modifier.weight(2f), contentAlignment = Alignment.Center) {
+                    ElevatedButton(
+                        onClick = {
+                            if (uiState.value.isContinueRevise) {
+                                navController.navigate(Screen.ReviseVocab.route) {
+                                    popUpTo(Screen.FinishVocab.route) { inclusive = true }
+                                }
+                            } else {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.FinishVocab.route) { inclusive = true }
+                                }
+                            }
+                        },
+                    ) {
+                        Text(
+                            text = if (uiState.value.isContinueRevise) stringResource(id = R.string.continue_revise)
+                            else stringResource(id = R.string.learn_vocab)
+                        )
+                    }
                 }
             }
         }

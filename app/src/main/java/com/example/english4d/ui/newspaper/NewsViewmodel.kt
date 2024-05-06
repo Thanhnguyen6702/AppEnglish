@@ -23,14 +23,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+enum class NewsTopicName {
+    Travel,
+    World,
+    Education,
+    Sports,
+    Business,
+    Trend;
+}
 
 class NewsViewmodel(
     private val newsRepository: NewsRepository,
     private val questionRepository: QuestionRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
-    val uiState:StateFlow<NewsUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<NewsUiState> = _uiState.asStateFlow()
     var dataNews: ContentUiState by mutableStateOf(ContentUiState())
+        private set
+    var topicSelected = NewsTopicName.Travel.name
         private set
     var questionUiState: QuestionUiState by mutableStateOf(QuestionUiState())
         private set
@@ -53,27 +63,27 @@ class NewsViewmodel(
             _uiState.value = try {
                 val travel = withContext(Dispatchers.IO) {
                     val listItem = newsRepository.getListNews("travel")
-                    NewsTopic("Travel", listItem ?: listOf(NewsItem()))
+                    NewsTopic(NewsTopicName.Travel.name, listItem ?: listOf(NewsItem()))
                 }
                 val world = withContext(Dispatchers.IO) {
                     val listItem = newsRepository.getListNews("world")
-                    NewsTopic("World", listItem ?: listOf(NewsItem()))
+                    NewsTopic(NewsTopicName.World.name, listItem ?: listOf(NewsItem()))
                 }
                 val education = withContext(Dispatchers.IO) {
                     val listItem = newsRepository.getListNews("news/education")
-                    NewsTopic("Education", listItem ?: listOf(NewsItem()))
+                    NewsTopic(NewsTopicName.Education.name, listItem ?: listOf(NewsItem()))
                 }
                 val sports = withContext(Dispatchers.IO) {
                     val listItem = newsRepository.getListNews("sports")
-                    NewsTopic("Sports", listItem ?: listOf(NewsItem()))
+                    NewsTopic(NewsTopicName.Sports.name, listItem ?: listOf(NewsItem()))
                 }
                 val business = withContext(Dispatchers.IO) {
                     val listItem = newsRepository.getListNews("business")
-                    NewsTopic("Business", listItem ?: listOf(NewsItem()))
+                    NewsTopic(NewsTopicName.Business.name, listItem ?: listOf(NewsItem()))
                 }
                 val trend = withContext(Dispatchers.IO) {
                     val listItem = newsRepository.getListNews("life/trend")
-                    NewsTopic("Trend", listItem ?: listOf(NewsItem()))
+                    NewsTopic(NewsTopicName.Trend.name, listItem ?: listOf(NewsItem()))
                 }
 //                val society= withContext(Dispatchers.IO) {
 //                      val listItem =  newsRepository.getListNews("travel")
@@ -91,6 +101,7 @@ class NewsViewmodel(
 //                     val listItem =  newsRepository.getListNews("travel")
 //                    NewsTopic("travel",listItem?: listOf(Pair("","")))
 //                }
+                val listTopics = listOf(travel)
                 NewsUiState.Success().updateState {
                     copy(
                         travel = travel,
@@ -139,7 +150,15 @@ class NewsViewmodel(
                         val listQuestionGPT =
                             gson.fromJson(dataQuestion, Array<QuestionGPT>::class.java).toList()
                         questionUiState = QuestionUiState(listQuestionGPT = listQuestionGPT)
-                        val listQuestionDB = listQuestionGPT.map { Question(question = it.question, options = it.options, answer = it.answer, explanation = it.explanation, id_article = questions.article.id) }
+                        val listQuestionDB = listQuestionGPT.map {
+                            Question(
+                                question = it.question,
+                                options = it.options,
+                                answer = it.answer,
+                                explanation = it.explanation,
+                                id_article = questions.article.id
+                            )
+                        }
                         questionRepository.insertQuestion(listQuestionDB)
                     } else {
                         val listQuestionGPT = questions.questions.map {
@@ -157,5 +176,8 @@ class NewsViewmodel(
                 e.printStackTrace()
             }
         }
+    }
+    fun setSelectTopic(topic: String){
+        topicSelected = topic
     }
 }

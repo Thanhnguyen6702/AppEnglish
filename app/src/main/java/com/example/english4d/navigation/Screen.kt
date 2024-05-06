@@ -51,4 +51,6 @@ sealed class Screen(val route: String) {
     object Channel: Screen(route = "channel")
     object FairyTopic: Screen(route = "fairy_topic")
     object ReadFairy: Screen(route = "read_fairy")
+    object SeeMoreVideo: Screen(route = "see_more_video")
+    object SeeMoreNews: Screen(route = "see_more_news")
 }

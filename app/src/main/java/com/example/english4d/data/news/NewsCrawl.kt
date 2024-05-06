@@ -14,7 +14,7 @@ class NewsCrawl {
             val contentList = mutableListOf<NewsItem>()
 
             // Duyệt qua tất cả các phần tử con của div
-            div?.children()?.take(10)?.forEach { element ->
+            div?.children()?.forEach { element ->
                 // Kiểm tra nếu phần tử là thẻ div có class là "item_list_folder"
                 if (element.tagName() == "div" && element.hasClass("item_list_folder")) {
                     val h2Element = element.selectFirst("h2.title_news_site")

@@ -37,7 +37,7 @@ fun HorizontalScrollRowVideo(
     title: String,
     listItem: List<Video>,
     modifier: Modifier = Modifier,
-    videoViewModel: VideoViewModel
+    onClick: ()->Unit
 ) {
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_hight))
@@ -54,7 +54,7 @@ fun HorizontalScrollRowVideo(
             Text(
                 text = stringResource(id = R.string.more),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight))
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)).clickable(onClick = onClick)
             )
         }
         LazyRow(

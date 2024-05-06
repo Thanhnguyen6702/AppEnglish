@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -31,13 +30,13 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
 import com.example.english4d.data.news.NewsItem
+import com.example.english4d.data.news.NewsTopic
 import com.example.english4d.navigation.Screen
 
 @Composable
 fun HorizontalScrollRow(
     navController: NavController,
-    title: String,
-    listItem: List<NewsItem>,
+    news: NewsTopic ,
     modifier: Modifier = Modifier,
     newsViewmodel: NewsViewmodel
 ) {
@@ -49,27 +48,30 @@ fun HorizontalScrollRow(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = title,
+                text = news.title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight))
             )
             Text(
                 text = stringResource(id = R.string.more),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight))
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)).clickable {
+                    newsViewmodel.setSelectTopic(news.title)
+                    navController.navigate(Screen.SeeMoreNews.route)
+                }
             )
         }
         LazyRow(
             //  modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_hight))
         ) {
-            items(listItem) {
+            items(5) {
                 ItemRow(
-                    it,
+                    news.listItem[it],
                     modifier = Modifier
                         .padding(end = dimensionResource(id = R.dimen.padding_hight))
                         .clickable {
-                            newsViewmodel.insertArticle(href = Uri.encode(it.href),title = title)
-                            navController.navigate(Screen.ReadNews.passData(topic=title,href= Uri.encode(it.href)))
+                            newsViewmodel.insertArticle(href = Uri.encode(news.listItem[it].href),title = news.listItem[it].title)
+                            navController.navigate(Screen.ReadNews.passData(topic=news.listItem[it].title,href= Uri.encode(news.listItem[it].href)))
                         }
                 )
             }

@@ -82,7 +82,9 @@ fun HomeScreen(
 
     Column(
         modifier = modifier.padding(
-            horizontal = dimensionResource(id = R.dimen.padding_medium)
+            top = dimensionResource(id = R.dimen.padding_hight),
+            start = dimensionResource(id = R.dimen.padding_medium),
+            end = dimensionResource(id = R.dimen.padding_medium)
         )
     ) {
         Text(
@@ -198,7 +200,6 @@ fun LayoutInfo(
 
 
 }
-
 
 
 @Composable

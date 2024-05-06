@@ -91,8 +91,8 @@ fun ResultScreen(
         }
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {
-            items(listTopic) { items ->
-                HorizontalScrollRow(navController = navController,items.title, listItem = items.listItem, newsViewmodel = newsViewmodel )
+            items(listTopic) { topic ->
+                HorizontalScrollRow(navController = navController,topic, newsViewmodel = newsViewmodel )
             }
         }
     }

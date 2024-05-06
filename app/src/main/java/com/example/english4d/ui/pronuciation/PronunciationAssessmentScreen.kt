@@ -52,7 +52,7 @@ fun PronunciationAssessmentScreen(
     val uiState by viewModel.uiStateAssessment.collectAsState()
     Scaffold {
         Column(
-            modifier = Modifier.padding(top = it.calculateTopPadding()),
+            modifier = Modifier.padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(

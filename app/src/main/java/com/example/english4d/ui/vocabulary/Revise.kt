@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -56,140 +57,147 @@ fun ReviseScreen(
         }
         viewModel.updateItemFinish()
     }
-    Column(
-        modifier = Modifier.fillMaxHeight()
-    ) {
-        Row(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Icon(
-                Icons.Default.Close,
-                contentDescription = "Close",
-                tint = Color.Black
-            )
-            Text(
-                text = (uiState.currentNumber.toString() + "/" + uiState.totalNumber),
-                style = TypeText.h7.copy(color = colorResource(id = R.color.green_100))
-            )
-        }
-        Text(
-            text = if (uiState.isQuestionText) stringResource(id = R.string.question_text)
-            else stringResource(id = R.string.question_sound),
-            style = TypeText.h5,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            textAlign = TextAlign.Center
-        )
-        Box(
-            modifier = Modifier
-                .weight(5f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            if (uiState.isQuestionText) {
-                Text(
-                    text = uiState.vocabulary.english, style = TypeText.bodyLarge.copy(
-                        color = colorResource(
-                            id = R.color.green
-                        )
-                    ), textAlign = TextAlign.Center
-                )
-            } else {
-                IconButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier.size(128.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.volume),
-                        contentDescription = null,
-                        modifier = Modifier.size(128.dp)
-                    )
-                }
-            }
-        }
+    Scaffold {
         Column(
-            modifier = Modifier.weight(6f),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier = Modifier
+                .padding(
+                    top = it.calculateTopPadding(),
+                    bottom = it.calculateBottomPadding()
+                )
+                .fillMaxHeight()
         ) {
-            if (uiState.isQuestionText) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[0].vietnamese,
-                        onClick = { onClick(0) },
-                        statusWord = uiState.listStatus[0],
-                        isEnable = uiState.enableChoose
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = Color.Black
+                )
+                Text(
+                    text = (uiState.currentNumber.toString() + "/" + uiState.totalNumber),
+                    style = TypeText.h7.copy(color = colorResource(id = R.color.green_100))
+                )
+            }
+            Text(
+                text = if (uiState.isQuestionText) stringResource(id = R.string.question_text)
+                else stringResource(id = R.string.question_sound),
+                style = TypeText.h5,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                textAlign = TextAlign.Center
+            )
+            Box(
+                modifier = Modifier
+                    .weight(5f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (uiState.isQuestionText) {
+                    Text(
+                        text = uiState.vocabulary.english, style = TypeText.bodyLarge.copy(
+                            color = colorResource(
+                                id = R.color.green
+                            )
+                        ), textAlign = TextAlign.Center
                     )
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[1].vietnamese,
-                        onClick = { onClick(1) },
-                        statusWord = uiState.listStatus[1],
-                        isEnable = uiState.enableChoose
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[2].vietnamese,
-                        onClick = { onClick(2) },
-                        statusWord = uiState.listStatus[2],
-                        isEnable = uiState.enableChoose
-                    )
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[3].vietnamese,
-                        onClick = { onClick(3) },
-                        statusWord = uiState.listStatus[3],
-                        isEnable = uiState.enableChoose
-                    )
-                }
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[0].english,
-                        onClick = { onClick(0) },
-                        statusWord = uiState.listStatus[0],
-                        isEnable = uiState.enableChoose
-                    )
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[1].english,
-                        onClick = { onClick(1) },
-                        statusWord = uiState.listStatus[1],
-                        isEnable = uiState.enableChoose
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[2].english,
-                        onClick = { onClick(2) },
-                        statusWord = uiState.listStatus[2],
-                        isEnable = uiState.enableChoose
-                    )
-                    ButtonChoose(
-                        text = uiState.listVocabMixed[3].english,
-                        onClick = { onClick(3) },
-                        statusWord = uiState.listStatus[3],
-                        isEnable = uiState.enableChoose
-                    )
+                } else {
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.size(128.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.volume),
+                            contentDescription = null,
+                            modifier = Modifier.size(128.dp)
+                        )
+                    }
                 }
             }
-        }
+            Column(
+                modifier = Modifier.weight(6f),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                if (uiState.isQuestionText) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[0].vietnamese,
+                            onClick = { onClick(0) },
+                            statusWord = uiState.listStatus[0],
+                            isEnable = uiState.enableChoose
+                        )
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[1].vietnamese,
+                            onClick = { onClick(1) },
+                            statusWord = uiState.listStatus[1],
+                            isEnable = uiState.enableChoose
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[2].vietnamese,
+                            onClick = { onClick(2) },
+                            statusWord = uiState.listStatus[2],
+                            isEnable = uiState.enableChoose
+                        )
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[3].vietnamese,
+                            onClick = { onClick(3) },
+                            statusWord = uiState.listStatus[3],
+                            isEnable = uiState.enableChoose
+                        )
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[0].english,
+                            onClick = { onClick(0) },
+                            statusWord = uiState.listStatus[0],
+                            isEnable = uiState.enableChoose
+                        )
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[1].english,
+                            onClick = { onClick(1) },
+                            statusWord = uiState.listStatus[1],
+                            isEnable = uiState.enableChoose
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[2].english,
+                            onClick = { onClick(2) },
+                            statusWord = uiState.listStatus[2],
+                            isEnable = uiState.enableChoose
+                        )
+                        ButtonChoose(
+                            text = uiState.listVocabMixed[3].english,
+                            onClick = { onClick(3) },
+                            statusWord = uiState.listStatus[3],
+                            isEnable = uiState.enableChoose
+                        )
+                    }
+                }
+            }
 
+        }
     }
 }
 

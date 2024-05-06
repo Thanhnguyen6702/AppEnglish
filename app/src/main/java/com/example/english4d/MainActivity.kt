@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
         if (!hasNecessaryPermissions()) {
             requestNecessaryPermissions() // Yêu cầu quyền nếu chưa được cấp
         }
-
+        enableEdgeToEdge()
         setContent {
             LayoutEnglish()
         }

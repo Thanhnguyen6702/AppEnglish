@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,58 +68,68 @@ fun ListeningScreen(
         listState.animateScrollToItem(postionCaptionTrack)
     }
 
-    Column {
-        YoutubePlayer(
-            lifecycleOwner = LocalLifecycleOwner.current,
-            onYouTubePlayerReady = { youtubePlayer ->
-                youtubePlayerRef = youtubePlayer
-                youtubePlayer.addListener(object : AbstractYouTubePlayerListener() {
-                    override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
-                        videoPosition = second
-                    }
-                })
-                youtubePlayer.loadVideo(videoId, 0f) // Khởi tạo video ban đầu
-            }
-        )
-        when(uiState){
-            ListeningUiState.Error -> ErrorScreen(){
-                viewModel.getCaptionTrack(videoId)
-            }
-            ListeningUiState.Loading -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LoadingScreen()
+    Scaffold {
+        Column(
+            modifier = Modifier.padding(
+                top = it.calculateTopPadding(),
+                bottom = it.calculateBottomPadding()
+            )
+        ) {
+            YoutubePlayer(
+                lifecycleOwner = LocalLifecycleOwner.current,
+                onYouTubePlayerReady = { youtubePlayer ->
+                    youtubePlayerRef = youtubePlayer
+                    youtubePlayer.addListener(object : AbstractYouTubePlayerListener() {
+                        override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                            videoPosition = second
+                        }
+                    })
+                    youtubePlayer.loadVideo(videoId, 0f) // Khởi tạo video ban đầu
                 }
-            }
-            is ListeningUiState.Success -> {
-                LaunchedEffect(videoPosition) {
-                    val currentCaptionIndex =
-                        (uiState as ListeningUiState.Success).captionTrack.transcript.indexOfLast { videoPosition >= it.start }
+            )
+            when (uiState) {
+                ListeningUiState.Error -> ErrorScreen() {
+                    viewModel.getCaptionTrack(videoId)
+                }
 
-                    if (currentCaptionIndex > 0) {
-                        postionCaptionTrack = currentCaptionIndex
+                ListeningUiState.Loading -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        LoadingScreen()
                     }
                 }
-                LazyColumn(
-                    state = listState
-                ) {
-                    val captionTracks = (uiState as ListeningUiState.Success).captionTrack.transcript
-                    items(captionTracks.size) {
-                        ItemCaptionLayout(
-                            captionTrack = captionTracks[it].text,
-                            isPlay = postionCaptionTrack == it
-                        ) {
-                            youtubePlayerRef?.seekTo(captionTracks[it].start) // Tua video đến thời gian này
-                            postionCaptionTrack = it
+
+                is ListeningUiState.Success -> {
+                    LaunchedEffect(videoPosition) {
+                        val currentCaptionIndex =
+                            (uiState as ListeningUiState.Success).captionTrack.transcript.indexOfLast { videoPosition >= it.start }
+
+                        if (currentCaptionIndex > 0) {
+                            postionCaptionTrack = currentCaptionIndex
+                        }
+                    }
+                    LazyColumn(
+                        state = listState
+                    ) {
+                        val captionTracks =
+                            (uiState as ListeningUiState.Success).captionTrack.transcript
+                        items(captionTracks.size) {
+                            ItemCaptionLayout(
+                                captionTrack = captionTracks[it].text,
+                                isPlay = postionCaptionTrack == it
+                            ) {
+                                youtubePlayerRef?.seekTo(captionTracks[it].start) // Tua video đến thời gian này
+                                postionCaptionTrack = it
+                            }
                         }
                     }
                 }
             }
-        }
 
+        }
     }
 }
 

@@ -24,6 +24,8 @@ class VideoViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<VideoUiState>(VideoUiState.Loading)
     val uiState: StateFlow<VideoUiState> = _uiState.asStateFlow()
     private val onlineVideoRepository = OnlineVideoRepository().videoRepository
+    var channelSelected: Int = 0
+    private set
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
@@ -41,6 +43,10 @@ class VideoViewModel : ViewModel() {
             }
         }
     }
+    fun setSelect(index:Int){
+        channelSelected = index
+    }
+
 
 
 
