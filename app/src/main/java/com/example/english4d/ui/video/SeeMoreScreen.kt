@@ -39,7 +39,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.ui.theme.TypeText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +81,7 @@ fun SeeMoreVideoScreen(
         ) {
             items(channel.videos) {
                 ItemSeeMoreVideoLayout(image = it.imageVideo, title = it.title) {
-                    navController.navigate(Screen.Video.passId(it.videoId))
+                    navController.navigate(ExtensionGraphScreen.Video.passId(it.videoId))
                 }
             }
         }

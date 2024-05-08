@@ -28,7 +28,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.network.video.Video
 
 @Composable
@@ -66,7 +66,7 @@ fun HorizontalScrollRowVideo(
                     modifier = Modifier
                         .padding(end = dimensionResource(id = R.dimen.padding_hight))
                         .clickable {
-                            navController.navigate(Screen.Video.passId(listItem[it].videoId))
+                            navController.navigate(ExtensionGraphScreen.Video.passId(listItem[it].videoId))
                         }
                 )
             }

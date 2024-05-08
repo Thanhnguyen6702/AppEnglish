@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,17 +32,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.HomeGraphScreen
+import com.example.english4d.navigation.Routes
 import com.example.english4d.ui.theme.TypeText
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FinishScreen(
+    rootNavHostController: NavHostController,
     navController: NavHostController,
     viewModel: ReviseViewModel,
 ) {
     val uiState = viewModel.uiStateFinish.collectAsState()
-    Scaffold {
+    Scaffold(
+
+    ) {
         Column(
             modifier = Modifier
                 .padding(
@@ -50,10 +55,11 @@ fun FinishScreen(
                 )
                 .fillMaxHeight()
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { navController.navigate(HomeGraphScreen.Home.route) }) {
                 Icon(Icons.Default.Close, contentDescription = null)
             }
             Column(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
@@ -89,12 +95,12 @@ fun FinishScreen(
                     ElevatedButton(
                         onClick = {
                             if (uiState.value.isContinueRevise) {
-                                navController.navigate(Screen.ReviseVocab.route) {
-                                    popUpTo(Screen.FinishVocab.route) { inclusive = true }
+                                navController.navigate(HomeGraphScreen.ReviseVocab.route) {
+                                    popUpTo(HomeGraphScreen.FinishVocab.route) { inclusive = true }
                                 }
                             } else {
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.FinishVocab.route) { inclusive = true }
+                                rootNavHostController.navigate(Routes.HomeGraph) {
+                                    popUpTo(HomeGraphScreen.FinishVocab.route) { inclusive = true }
                                 }
                             }
                         },

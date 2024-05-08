@@ -17,7 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.Routes
+import com.example.english4d.navigation.SplashNavScreen
 import com.example.english4d.ui.AppViewModelProvider
 import kotlinx.coroutines.delay
 
@@ -31,7 +32,9 @@ fun SplashScreen(
     LaunchedEffect(uiState.updated) {
         if (uiState.updated) {
             delay(3000L) // Nếu cần đợi một thời gian cụ thể
-            navController.navigate(Screen.Main.route)
+            navController.navigate(Routes.MainGraph){
+                popUpTo(SplashNavScreen.Splash.route){inclusive = true}
+            }
         }
     }
     Box(

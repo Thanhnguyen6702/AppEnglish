@@ -1,5 +1,6 @@
 package com.example.english4d.ui.newspaper
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,6 +33,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -68,11 +70,6 @@ fun ReadNewsLayout(
         skipPartiallyExpanded = true
     )
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = topic) }
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -84,23 +81,41 @@ fun ReadNewsLayout(
             }
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            state = scrollState,
+        Column(
+            modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
         ) {
-            items(listItem) {
-                ItemLayout(
-                    item = it, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            vertical = dimensionResource(
-                                id = R.dimen.padding_hight
-                            ),
-                            horizontal = dimensionResource(id = R.dimen.padding_medium)
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(id = R.dimen.padding_hight),
+                        end = dimensionResource(id = R.dimen.padding_hight),
+                        bottom = dimensionResource(
+                            id = R.dimen.padding_small
                         )
-                )
+                    ),
+                text = topic,
+                style = TypeText.h5.copy(fontWeight = FontWeight.Bold),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = scrollState,
+            ) {
+                items(listItem) {
+                    ItemLayout(
+                        item = it, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                vertical = dimensionResource(
+                                    id = R.dimen.padding_hight
+                                ),
+                                horizontal = dimensionResource(id = R.dimen.padding_medium)
+                            )
+                    )
+                }
             }
         }
         if (openQuestion) {

@@ -47,7 +47,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
 import com.example.english4d.data.database.vocabulary.CompletionRate
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.HomeGraphScreen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
@@ -151,8 +151,8 @@ fun ItemTopicLayout(
             )
             .padding(end = dimensionResource(id = R.dimen.padding_medium))
             .clickable {
-                navController.navigate(Screen.Home.passData(itemTopic.id)) {
-                    popUpTo(Screen.TopicsVocab.route) { inclusive = true }
+                navController.navigate(HomeGraphScreen.Home.passData(itemTopic.id)) {
+                    popUpTo(HomeGraphScreen.TopicsVocab.route) { inclusive = true }
                 }
             },
         tonalElevation = 10.dp,

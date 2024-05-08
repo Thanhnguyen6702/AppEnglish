@@ -1,6 +1,7 @@
 package com.example.english4d.ui.vocabulary
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.HelpCenter
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
@@ -29,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +47,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.english4d.R
 import com.example.english4d.ui.AppViewModelProvider
+import com.example.english4d.ui.customdialog.DialogRevise
 import com.example.english4d.ui.theme.TypeText
 
 @SuppressLint("UnrememberedMutableState")
@@ -61,10 +65,32 @@ fun NewVocabularyScreen(
     var isExampleExpanded by remember {
         mutableStateOf(false)
     }
-    viewmodel.updateLayout(id ?: 1)
+    var isShowDialog by remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(key1 = id) {
+        viewmodel.updateLayout(id ?: 1)
+    }
+    if (isShowDialog){
+        DialogRevise(onDismissRequest = { isShowDialog = false }) {
+            isShowDialog = false
+            navController.popBackStack()
+        }
+    }
+    BackHandler(enabled = true) {}
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = {
+                        isShowDialog = true
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                            contentDescription = null
+                        )
+                    }
+                },
                 title = {
                     Text(
                         text = newVocabViewModel.title,
@@ -76,13 +102,15 @@ fun NewVocabularyScreen(
             )
         }
     ) {
+
         Column(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(it),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
                 modifier = Modifier
-                    .padding(it)
                     .fillMaxWidth()
                     .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally

@@ -31,7 +31,7 @@ import coil.request.ImageRequest
 import com.example.english4d.R
 import com.example.english4d.data.news.NewsItem
 import com.example.english4d.data.news.NewsTopic
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.ExtensionGraphScreen
 
 @Composable
 fun HorizontalScrollRow(
@@ -57,7 +57,7 @@ fun HorizontalScrollRow(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)).clickable {
                     newsViewmodel.setSelectTopic(news.title)
-                    navController.navigate(Screen.SeeMoreNews.route)
+                    navController.navigate(ExtensionGraphScreen.SeeMoreNews.route)
                 }
             )
         }
@@ -71,7 +71,7 @@ fun HorizontalScrollRow(
                         .padding(end = dimensionResource(id = R.dimen.padding_hight))
                         .clickable {
                             newsViewmodel.insertArticle(href = Uri.encode(news.listItem[it].href),title = news.listItem[it].title)
-                            navController.navigate(Screen.ReadNews.passData(topic=news.listItem[it].title,href= Uri.encode(news.listItem[it].href)))
+                            navController.navigate(ExtensionGraphScreen.ReadNews.passData(topic=news.listItem[it].title,href= Uri.encode(news.listItem[it].href)))
                         }
                 )
             }

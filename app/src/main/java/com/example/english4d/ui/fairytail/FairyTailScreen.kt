@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.ui.animation.ErrorScreen
 import com.example.english4d.ui.animation.LoadingScreen
 import com.example.english4d.ui.theme.TypeText
@@ -57,7 +57,7 @@ fun FairyTailScreen(
                         items((uiState as FairyTailUiState.Success).fairyTail.size) {
                             ItemFairyLayout(title = (uiState as FairyTailUiState.Success).fairyTail[it].fairy_english.name, image = (uiState as FairyTailUiState.Success).fairyTail[it].fairy_english.href){
                                 viewmodel.selectItem(it)
-                                navController.navigate(Screen.ReadFairy.route)
+                                navController.navigate(ExtensionGraphScreen.ReadFairy.route)
                             }
                         }
                     }

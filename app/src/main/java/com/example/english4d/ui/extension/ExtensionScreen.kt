@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,24 +29,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.ui.theme.TypeText
 
 @Composable
 fun ExtensionScreen(
+    innerPadding : PaddingValues,
     navController: NavController
 ) {
     Box(
         Modifier
+            .padding(bottom = innerPadding.calculateBottomPadding())
             .fillMaxSize()
             .background(color = colorResource(id = R.color.gray_10))
     ) {
@@ -112,7 +113,7 @@ fun ExtensionScreen(
                 title = "Thư viện video",
                 description = "Luyên nghe với các kênh youtube"
             ){
-                navController.navigate(Screen.Channel.route)
+                navController.navigate(ExtensionGraphScreen.Channel.route)
             }
             ItemExtension(
                 modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)),
@@ -120,7 +121,7 @@ fun ExtensionScreen(
                 title = "Kho truyện ngắn",
                 description = "Tăng khả năng đọc qua các mẩu truyện"
             ){
-                navController.navigate(Screen.FairyTopic.route)
+                navController.navigate(ExtensionGraphScreen.FairyTopic.route)
             }
             ItemExtension(
                 modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)),
@@ -129,7 +130,7 @@ fun ExtensionScreen(
                 description = "Tăng khả năng đọc qua các bài báo",
                 label = "New"
             ){
-                navController.navigate(Screen.NewsTopic.route)
+                navController.navigate(ExtensionGraphScreen.NewsTopic.route)
             }
             ItemExtension(
                 modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)),
@@ -222,8 +223,3 @@ fun ItemExtension(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewEx() {
-    ExtensionScreen(navController = NavController(LocalContext.current))
-}

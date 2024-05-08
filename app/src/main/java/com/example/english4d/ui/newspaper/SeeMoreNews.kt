@@ -40,7 +40,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.ui.theme.TypeText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +93,7 @@ fun SeeMoreNewsScreen(
                 ItemSeeMoreNewsLayout(image = it.image, title = it.title) {
                     newsViewmodel.insertArticle(href = Uri.encode(it.href), title = it.title)
                     navController.navigate(
-                        Screen.ReadNews.passData(
+                        ExtensionGraphScreen.ReadNews.passData(
                             topic = it.title,
                             href = Uri.encode(it.href)
                         )

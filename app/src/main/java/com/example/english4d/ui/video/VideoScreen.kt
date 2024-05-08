@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.ui.animation.ErrorScreen
 import com.example.english4d.ui.animation.LoadingScreen
 
@@ -52,7 +52,7 @@ fun VideoScreen(
                         listItem = channels[it].videos
                     ) {
                         viewModel.setSelect(it)
-                        navController.navigate(Screen.SeeMoreVideo.route)
+                        navController.navigate(ExtensionGraphScreen.SeeMoreVideo.route)
                     }
                 }
             }

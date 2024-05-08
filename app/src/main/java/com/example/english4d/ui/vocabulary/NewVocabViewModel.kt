@@ -1,5 +1,6 @@
 package com.example.english4d.ui.vocabulary
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.data.database.vocabulary.Statistic
@@ -17,7 +18,7 @@ class NewVocabViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewVocabUiState())
     val uiState: StateFlow<NewVocabUiState> = _uiState.asStateFlow()
-    private lateinit var vocabularies: MutableList<Vocabulary>
+    private var vocabularies: MutableList<Vocabulary>
     private var index = 0
     private var isShowedE = false
     private var isShowedD = false
@@ -61,6 +62,7 @@ class NewVocabViewModel(
     }
 
     fun nextVocab() {
+        Log.e("HUHUH","$index ${vocabularies.size}")
         if (index < vocabularies.size - 1) {
             index++;
             isShowedD = false

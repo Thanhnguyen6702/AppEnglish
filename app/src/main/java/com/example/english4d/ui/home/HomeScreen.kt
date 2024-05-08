@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,20 +18,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
-import androidx.compose.material.icons.filled.DashboardCustomize
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Speaker
-import androidx.compose.material.icons.outlined.DashboardCustomize
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Speaker
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +35,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -53,24 +44,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.HomeGraphScreen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
-data class BottomNavigationItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-)
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
+    innerPadding: PaddingValues,
     id: Int? = null,
-    navController: NavController,
+    navController: NavHostController,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val homeUiState by viewModel.uiState.collectAsState()
@@ -79,10 +66,9 @@ fun HomeScreen(
 
     }
 
-
     Column(
-        modifier = modifier.padding(
-            top = dimensionResource(id = R.dimen.padding_hight),
+        modifier = Modifier.padding(
+            top = innerPadding.calculateTopPadding(),
             start = dimensionResource(id = R.dimen.padding_medium),
             end = dimensionResource(id = R.dimen.padding_medium)
         )
@@ -127,7 +113,7 @@ fun LayoutInfo(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .clickable { navController.navigate(Screen.WordsBook.passIndex(0)) },
+                .clickable { navController.navigate(HomeGraphScreen.WordsBook.passIndex(0)) },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -153,7 +139,7 @@ fun LayoutInfo(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .clickable { navController.navigate(Screen.WordsBook.passIndex(1)) },
+                .clickable { navController.navigate(HomeGraphScreen.WordsBook.passIndex(1)) },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -179,7 +165,7 @@ fun LayoutInfo(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .clickable { navController.navigate(Screen.WordsBook.passIndex(2)) },
+                .clickable { navController.navigate(HomeGraphScreen.WordsBook.passIndex(2)) },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -246,7 +232,7 @@ fun CardStudy(
                     }
                     Button(
                         onClick = {
-                            navController.navigate(Screen.ReviseVocab.route)
+                            navController.navigate(HomeGraphScreen.ReviseVocab.route)
                         },
                         modifier = Modifier.padding(
                             start = dimensionResource(id = R.dimen.padding_hight),
@@ -312,7 +298,7 @@ fun CardStudy(
                         )
                     }
                     Button(
-                        onClick = { navController.navigate(Screen.NewVocab.passID(homeUiState.newVocab.first.id)) },
+                        onClick = { navController.navigate(HomeGraphScreen.NewVocab.passID(homeUiState.newVocab.first.id)) },
                         modifier = Modifier.padding(
                             start = dimensionResource(id = R.dimen.padding_hight),
                             bottom = dimensionResource(id = R.dimen.padding_hight)
@@ -335,7 +321,7 @@ fun CardStudy(
                         modifier = Modifier
                             .padding(top = dimensionResource(id = R.dimen.padding_medium))
                             .clickable {
-                                navController.navigate(route = Screen.TopicsVocab.route)
+                                navController.navigate(route = HomeGraphScreen.TopicsVocab.route)
                             }, verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -533,51 +519,6 @@ fun CardStudy1(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun MyBottomBar(
-    selectedItemIndex: Int, onClick: (Int) -> Unit
-) {
-    val listItems = listOf(
-        BottomNavigationItem(
-            title = "từ vựng",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ), BottomNavigationItem(
-            title = "phát âm",
-            selectedIcon = Icons.Filled.Speaker,
-            unselectedIcon = Icons.Outlined.Speaker,
-        ), BottomNavigationItem(
-            title = "mở rộng",
-            selectedIcon = Icons.Filled.DashboardCustomize,
-            unselectedIcon = Icons.Outlined.DashboardCustomize,
-        )
-    )
-    NavigationBar(
-        containerColor = colorResource(id = R.color.white), tonalElevation = 3.dp
-    ) {
-        listItems.forEachIndexed { index, item ->
-            NavigationBarItem(selected = (selectedItemIndex == index),
-                onClick = {
-                    onClick(index)
-                },
-                label = { Text(text = item.title, style = TypeText.h8) },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = colorResource(id = R.color.green_100),
-                    selectedTextColor = colorResource(id = R.color.green_100),
-                    unselectedIconColor = colorResource(id = R.color.gray_50),
-                    unselectedTextColor = colorResource(id = R.color.gray_50),
-                    indicatorColor = Color.White
-                ),
-                icon = {
-                    Icon(
-                        imageVector = if (index == selectedItemIndex) item.selectedIcon
-                        else item.unselectedIcon, contentDescription = item.title
-                    )
-                })
         }
     }
 }

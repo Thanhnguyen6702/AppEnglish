@@ -84,6 +84,7 @@ public class PronunciationAssessment {
             });
             reco.recognized.addEventListener((o, speechRecognitionResultEventArgs) -> {
                 PronunciationAssessmentResult pronResult = PronunciationAssessmentResult.fromResult(speechRecognitionResultEventArgs.getResult());
+                Log.e("hihii","đã vào");
                 if (pronResult != null) {
                     recordingListener.onResultReceived(new PronunciationResult(
                             pronResult.getAccuracyScore(), pronResult.getPronunciationScore(), pronResult.getCompletenessScore(), pronResult.getFluencyScore()

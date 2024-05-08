@@ -74,7 +74,6 @@ class ReviseViewModel(private val vocabularyRepository: VocabularyRepository) : 
                 selected = true
             }
         }
-
     }
     fun setStatusWord(pos: Int){
         val listStatusWord: MutableList<StatusWord> = _uiState.value.listStatus.toMutableList()

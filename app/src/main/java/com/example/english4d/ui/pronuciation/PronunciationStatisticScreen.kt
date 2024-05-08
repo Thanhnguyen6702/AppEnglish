@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
-import com.example.english4d.navigation.Screen
+import com.example.english4d.navigation.PronunciationGraphScreen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
@@ -208,13 +209,14 @@ fun ItemStatisticPronunciation(
 }
 @Composable
 fun PronunciationStatisticScreen(
-    modifier: Modifier = Modifier,
+    innerPadding: PaddingValues,
     viewModel: PronunciationAssessmentViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavController
 ) {
     val uiState  by viewModel.uiStateStatistic.collectAsState()
     Column(
-        modifier = modifier
+        modifier = Modifier
+            .padding(bottom = innerPadding.calculateBottomPadding())
             .fillMaxSize()
             .background(color = colorResource(id = R.color.gray_10))
     ) {
@@ -259,7 +261,7 @@ fun PronunciationStatisticScreen(
                 )
                 ElevatedButton(
                     onClick = {
-                              navController.navigate(Screen.Pronunciation.route)
+                              navController.navigate(PronunciationGraphScreen.Pronunciation.route)
                               },
                     modifier = Modifier.size(width = 200.dp, height = 50.dp),
                     colors = ButtonDefaults.elevatedButtonColors(
