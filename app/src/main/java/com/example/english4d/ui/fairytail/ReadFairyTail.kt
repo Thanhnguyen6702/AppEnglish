@@ -72,9 +72,7 @@ fun ReadFairyTail(
                             .padding(
                                 start = dimensionResource(id = R.dimen.padding_hight),
                                 end = dimensionResource(id = R.dimen.padding_hight),
-                                bottom = dimensionResource(
-                                    id = R.dimen.padding_small
-                                )
+                                bottom = dimensionResource(id = R.dimen.padding_small)
                             ),
                         text = fairyTail.fairy_english.name,
                         style = TypeText.h4.copy(fontWeight = FontWeight.Medium),

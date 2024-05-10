@@ -307,7 +307,7 @@ fun BottomBarNewVocab(
             )
             Button(
                 onClick = {
-                    viewmodel.updateStatistic()
+                    viewmodel.nextVocab()
                     onReset()
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700))
