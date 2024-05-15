@@ -10,11 +10,14 @@ import com.example.english4d.data.database.vocabulary.VocabularyRepository
 import com.example.english4d.data.news.NetworkNewsRepository
 import com.example.english4d.data.news.NewsCrawl
 import com.example.english4d.data.news.NewsRepository
+import com.example.english4d.data.workers.VocabWorkerRepository
+import com.example.english4d.data.workers.WorkerManagerRepository
 
 interface AppContainer {
     val newsRepository: NewsRepository
     val vocabularyRepository: VocabularyRepository
     val questionRepository: QuestionRepository
+    val workerRepository: VocabWorkerRepository
 //    val captionTrackRepository: CaptionTrackRepository
 }
 
@@ -42,6 +45,7 @@ class DataAppContainer(context: Context): AppContainer{
             questionDao = questionDatabase.questionDao()
         )
     }
-   // override val captionTrackRepository: CaptionTrackRepository = OnlineCaptionTrackRepository().captionTrackRepository
+    override val workerRepository: WorkerManagerRepository = WorkerManagerRepository(context)
+    // override val captionTrackRepository: CaptionTrackRepository = OnlineCaptionTrackRepository().captionTrackRepository
 
 }

@@ -104,6 +104,8 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
+    // work manager
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     // Youtube API
 //    implementation("com.google.apis:google-api-services-youtube:v3-rev222-1.25.0") {
 //        exclude(group = "org.apache.httpcomponents", module = "httpclient")

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.PreferencesManager
 import com.example.english4d.data.database.vocabulary.VocabularyRepository
+import com.example.english4d.data.workers.VocabWorkerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(
+    private val workerRepository: VocabWorkerRepository,
     private val vocabularyRepository: VocabularyRepository,
     context: Context
 ) : ViewModel() {
@@ -21,6 +23,7 @@ class HomeViewModel(
 
     init {
         updateStatistic(context = context)
+        workerRepository.applyVocab()
     }
 
     private fun updateLayout() {

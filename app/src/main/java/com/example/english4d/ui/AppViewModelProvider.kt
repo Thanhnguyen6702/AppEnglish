@@ -24,6 +24,7 @@ object AppViewModelProvider {
         }
         initializer {
             HomeViewModel(
+                dataApplication().container.workerRepository,
                 dataApplication().container.vocabularyRepository,
                 dataApplication().applicationContext
             )

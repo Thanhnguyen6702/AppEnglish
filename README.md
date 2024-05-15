@@ -21,7 +21,7 @@
 | --------------| ------------------------------| ------------------------------ |
 | ![image9](./image9.jpg) | ![image10](./image10.jpg) | ![image11](./image11.jpg)     |
   
--Practice listening with popular YouTube channels.
+- Practice listening with popular YouTube channels.
 
 |                             |                           |
 | --------------------------- | ------------------------- |
