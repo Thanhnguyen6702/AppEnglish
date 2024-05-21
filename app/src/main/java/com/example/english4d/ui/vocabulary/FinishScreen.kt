@@ -33,13 +33,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.english4d.R
 import com.example.english4d.navigation.HomeGraphScreen
-import com.example.english4d.navigation.Routes
 import com.example.english4d.ui.theme.TypeText
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FinishScreen(
-    rootNavHostController: NavHostController,
     navController: NavHostController,
     viewModel: ReviseViewModel,
 ) {
@@ -99,7 +97,7 @@ fun FinishScreen(
                                     popUpTo(HomeGraphScreen.FinishVocab.route) { inclusive = true }
                                 }
                             } else {
-                                rootNavHostController.navigate(Routes.HomeGraph) {
+                                navController.navigate(HomeGraphScreen.Home.route) {
                                     popUpTo(HomeGraphScreen.FinishVocab.route) { inclusive = true }
                                 }
                             }

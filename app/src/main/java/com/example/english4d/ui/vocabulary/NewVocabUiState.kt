@@ -14,5 +14,6 @@ data class NewVocabUiState (
     val vocabulary: Vocabulary = Vocabulary(1,"","","","",1),
     val examples: List<Examples> = listOf(),
     val definitions: List<Definitions> = listOf(),
-    val statusVocab: StatusVocab = StatusVocab.UNCHOOSE
+    val statusVocab: StatusVocab = StatusVocab.UNCHOOSE,
+    val isFinish: Boolean = false
 )

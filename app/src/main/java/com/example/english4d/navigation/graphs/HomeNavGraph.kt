@@ -105,7 +105,6 @@ fun HomeNavGraph(
             val reviseViewModel:ReviseViewModel = viewModel(parentEntry)
             FinishScreen(
                 navController = navHostController,
-                rootNavHostController = navHostController,
                 viewModel = reviseViewModel
             )
         }

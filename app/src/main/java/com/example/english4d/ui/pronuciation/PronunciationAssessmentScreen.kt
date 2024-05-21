@@ -48,7 +48,6 @@ fun PronunciationAssessmentScreen(
     navController: NavController,
     viewModel: PronunciationAssessmentViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val context = LocalContext.current
     val uiState by viewModel.uiStateAssessment.collectAsState()
     Scaffold {
         Column(
@@ -193,7 +192,7 @@ fun PronunciationAssessmentScreen(
                         )
                 ) {
                     IconButton(
-                        onClick = { viewModel.textToSpeech(context) }, enabled = !uiState.isSpeak
+                        onClick = { viewModel.textToSpeech() }, enabled = !uiState.isSpeak
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.VolumeUp,

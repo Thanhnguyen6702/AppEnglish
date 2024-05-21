@@ -1,9 +1,11 @@
 package com.example.english4d.ui.vocabulary
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.data.database.vocabulary.Vocabulary
 import com.example.english4d.data.database.vocabulary.VocabularyRepository
+import com.example.english4d.utils.TextToSpeechManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +20,7 @@ data class ItemFinish(
     val vocabulary: Vocabulary,
     val dayRevise: Int
 )
-class ReviseViewModel(private val vocabularyRepository: VocabularyRepository) : ViewModel() {
+class ReviseViewModel(private val vocabularyRepository: VocabularyRepository,context: Context) : ViewModel() {
     private val _uiState = MutableStateFlow(ReviseUiState())
     val uiState: StateFlow<ReviseUiState> = _uiState.asStateFlow()
     private val _uiStateFinish = MutableStateFlow(FinishUiState())
@@ -28,6 +30,7 @@ class ReviseViewModel(private val vocabularyRepository: VocabularyRepository) : 
     private lateinit var listVocabRevise: List<Vocabulary>
     private var index = 0
     private var selected = false
+    private val playSound: TextToSpeechManager = TextToSpeechManager(context)
     init {
         initVocab()
     }
@@ -109,5 +112,8 @@ class ReviseViewModel(private val vocabularyRepository: VocabularyRepository) : 
                 _uiStateFinish.value = _uiStateFinish.value.copy(listItemFinish = listItemFinish,isContinueRevise = isContinueRevise)
             }
         }
+    }
+    fun speak(){
+        playSound.speak(_uiState.value.vocabulary.english)
     }
 }

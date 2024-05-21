@@ -30,7 +30,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -195,8 +194,6 @@ fun ItemAnswer(
         colors = CardDefaults.cardColors(
             containerColor = if (!selected) {
                 colorResource(id = R.color.white)
-            } else if (isCorrect) {
-                colorResource(id = R.color.white)
             } else {
                 colorResource(id = R.color.purple_200)
             }
@@ -220,12 +217,8 @@ fun ItemAnswer(
                     .background(
                         color = if (!selected) {
                             colorResource(id = R.color.white)
-                        } else if (isCorrect) {
-                            //colorResource(id = R.color.green_20)
-                            Color(0xff7ddf9e)
-                        } else {
-                            //  colorResource(id = R.color.pink_50)
-                            Color(0xFFff9596)
+                        }  else {
+                              colorResource(id = R.color.pink_50)
                         }, shape = RoundedCornerShape(100.dp)
                     )
                     .border(

@@ -31,7 +31,8 @@ object AppViewModelProvider {
         }
         initializer {
             NewVocabViewModel(
-                dataApplication().container.vocabularyRepository
+                dataApplication().container.vocabularyRepository,
+                dataApplication().applicationContext
             )
         }
         initializer {
@@ -41,7 +42,8 @@ object AppViewModelProvider {
         }
         initializer {
             ReviseViewModel(
-                dataApplication().container.vocabularyRepository
+                dataApplication().container.vocabularyRepository,
+                dataApplication().applicationContext
             )
         }
         initializer {

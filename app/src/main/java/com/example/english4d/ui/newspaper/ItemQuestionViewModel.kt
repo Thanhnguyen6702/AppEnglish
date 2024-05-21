@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 class ItemQuestionViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ItemQuestionUiState())
     val uiState: StateFlow<ItemQuestionUiState> = _uiState.asStateFlow()
+    val QuestionSelected = mutableMapOf<Int,Boolean>()
     fun setSelectOption(selectOption: String) {
         _uiState.value = _uiState.value.copy(selectOption = selectOption)
     }

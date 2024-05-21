@@ -63,9 +63,7 @@ fun ReviseScreen(
         mutableStateOf(false)
     }
     if (uiState.isFinish) {
-        navController.navigate(HomeGraphScreen.FinishVocab.route) {
-            popUpTo(HomeGraphScreen.ReviseVocab.route) { inclusive = true }
-        }
+        navController.navigate(HomeGraphScreen.FinishVocab.route)
         viewModel.updateItemFinish()
     }
     if (isShowDialog) {
@@ -137,7 +135,7 @@ fun ReviseScreen(
                     )
                 } else {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { viewModel.speak() },
                         modifier = Modifier.size(128.dp)
                     ) {
                         Image(

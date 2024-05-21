@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
@@ -17,6 +16,7 @@ import com.example.english4d.data.database.vocabulary.VocabularyRepository
 import com.example.english4d.network.pronunciation.PronunciationAssessment
 import com.example.english4d.network.pronunciation.PronunciationAssessment.RecordingListener
 import com.example.english4d.network.pronunciation.PronunciationResult
+import com.example.english4d.utils.TextToSpeechManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,9 +27,11 @@ import java.io.DataInputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
-import java.util.Locale
 
-class PronunciationAssessmentViewModel(private val vocabularyRepository: VocabularyRepository,private val context: Context) :
+class PronunciationAssessmentViewModel(
+    private val vocabularyRepository: VocabularyRepository,
+    context: Context
+) :
     ViewModel() {
     private val _uiStateAssessment = MutableStateFlow(PronunciationAssessmentUiState())
     val uiStateAssessment: StateFlow<PronunciationAssessmentUiState> =
@@ -39,7 +41,7 @@ class PronunciationAssessmentViewModel(private val vocabularyRepository: Vocabul
     private lateinit var listVocab: List<Vocabulary>
     private var index = 0
     private val pronunciationAssessment = PronunciationAssessment()
-    lateinit var textToSpeech: TextToSpeech
+    private val playSound = TextToSpeechManager(context)
     private var filePath: String? = context.getExternalFilesDir(null)?.absolutePath + "/record.wav"
     lateinit var audioTrack: AudioTrack
 
@@ -64,13 +66,13 @@ class PronunciationAssessmentViewModel(private val vocabularyRepository: Vocabul
             }
 
             override fun onResultReceived(pronunciationResult: PronunciationResult?) {
-                if (pronunciationResult == null){
+                if (pronunciationResult == null) {
                     _uiStateAssessment.value =
                         _uiStateAssessment.value.copy(
                             score = -1,
                             isRecording = RecordingState.NOTRECORDING
                         )
-                }else{
+                } else {
                     val score = (pronunciationResult.accuracyScore).toInt()
                     _uiStateAssessment.value =
                         _uiStateAssessment.value.copy(
@@ -134,7 +136,11 @@ class PronunciationAssessmentViewModel(private val vocabularyRepository: Vocabul
         if (_uiStateAssessment.value.isRecording == RecordingState.NOTRECORDING) {
             index++
             _uiStateAssessment.value =
-                _uiStateAssessment.value.copy(score = 0, vocabulary = listVocab[index], isListen = false)
+                _uiStateAssessment.value.copy(
+                    score = 0,
+                    vocabulary = listVocab[index],
+                    isListen = false
+                )
         }
     }
 
@@ -142,74 +148,68 @@ class PronunciationAssessmentViewModel(private val vocabularyRepository: Vocabul
         pronunciationAssessment.setReferenceText(listVocab[index].english)
         pronunciationAssessment.startRecord()
     }
-    fun textToSpeech(context: Context){
-        _uiStateAssessment.value = _uiStateAssessment.value.copy(isSpeak = true )
-        textToSpeech = TextToSpeech(context){
-            if(it == TextToSpeech.SUCCESS){
-                textToSpeech?.let {tts ->
-                    tts.language = Locale.ENGLISH
-                    tts.setSpeechRate(1.0f)
-                    tts.speak(_uiStateAssessment.value.vocabulary.english,TextToSpeech.QUEUE_ADD,null,null)
 
-                }
-            }
-            _uiStateAssessment.value = _uiStateAssessment.value.copy(isSpeak = false )
-        }
+    fun textToSpeech() {
+        _uiStateAssessment.value = _uiStateAssessment.value.copy(isSpeak = true)
+        playSound.speak(_uiStateAssessment.value.vocabulary.english)
+        _uiStateAssessment.value = _uiStateAssessment.value.copy(isSpeak = false)
     }
-    fun listeningAgain(){
-        if (filePath != null){
-            viewModelScope.launch {
-                withContext(Dispatchers.IO){
-                    try {
-                        _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = false )
-                        val file = File(filePath)
-                        val bufferSize = 8192
-                        val audioAttributes = AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build()
-                        val audioFormat = AudioFormat.Builder()
-                            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                            .setSampleRate(16000)
-                            .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                            .build()
-                        val audioTrack = AudioTrack.Builder()
-                            .setAudioAttributes(audioAttributes)
-                            .setAudioFormat(audioFormat)
-                            .setBufferSizeInBytes(bufferSize)
-                            .setTransferMode(AudioTrack.MODE_STREAM)
-                            .build()
 
-                        val buffer = ByteArray(bufferSize)
-                        val dataInputStream = DataInputStream(FileInputStream(file))
+fun listeningAgain() {
+    if (filePath != null) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = false)
+                    val file = File(filePath)
+                    val bufferSize = 8192
+                    val audioAttributes = AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build()
+                    val audioFormat = AudioFormat.Builder()
+                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                        .setSampleRate(16000)
+                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                        .build()
+                    val audioTrack = AudioTrack.Builder()
+                        .setAudioAttributes(audioAttributes)
+                        .setAudioFormat(audioFormat)
+                        .setBufferSizeInBytes(bufferSize)
+                        .setTransferMode(AudioTrack.MODE_STREAM)
+                        .build()
 
-                        audioTrack.play()
+                    val buffer = ByteArray(bufferSize)
+                    val dataInputStream = DataInputStream(FileInputStream(file))
 
-                        while (dataInputStream.available() > 0) {
-                            val bytesRead = dataInputStream.read(buffer, 0, buffer.size)
-                            if (bytesRead != AudioTrack.ERROR_INVALID_OPERATION) {
-                                audioTrack.write(buffer, 0, bytesRead)
-                            }
+                    audioTrack.play()
+
+                    while (dataInputStream.available() > 0) {
+                        val bytesRead = dataInputStream.read(buffer, 0, buffer.size)
+                        if (bytesRead != AudioTrack.ERROR_INVALID_OPERATION) {
+                            audioTrack.write(buffer, 0, bytesRead)
                         }
-
-                        audioTrack.stop()
-                        audioTrack.release()
-                        _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = true )
-                    } catch (e: IOException) {
-                        e.printStackTrace()
                     }
+
+                    audioTrack.stop()
+                    audioTrack.release()
+                    _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = true)
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
+        }
 
-        }
     }
-    fun hasPermissions(activity: ComponentActivity, vararg permissions: String): Boolean {
-        return permissions.all { permission ->
-            ContextCompat.checkSelfPermission(
-                activity,
-                permission
-            ) == PackageManager.PERMISSION_GRANTED
-        }
+}
+
+fun hasPermissions(activity: ComponentActivity, vararg permissions: String): Boolean {
+    return permissions.all { permission ->
+        ContextCompat.checkSelfPermission(
+            activity,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
+}
 
 }

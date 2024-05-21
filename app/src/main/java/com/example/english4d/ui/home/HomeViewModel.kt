@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(
-    private val workerRepository: VocabWorkerRepository,
+    workerRepository: VocabWorkerRepository,
     private val vocabularyRepository: VocabularyRepository,
     context: Context
 ) : ViewModel() {

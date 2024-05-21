@@ -83,11 +83,10 @@ sealed class BottomNavigationItem(
 //}
 
 
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-    mainNavController :NavHostController = rememberNavController()
+    mainNavController: NavHostController = rememberNavController()
 ) {
     val items = listOf(
         BottomNavigationItem.Home,
@@ -102,33 +101,37 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             if (isShowBottomBar.value)
-            NavigationBar {
-                items.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentRoute == item.route,
-                        label = { Text(text = item.title, style = TypeText.h8) },
-                        icon = {
-                            Icon(
-                                imageVector = if (currentRoute == item.route) item.selectedIcon
-                                else item.unselectedIcon, contentDescription = item.title
-                            )
-                        },
-                        onClick = {
-                            if (currentRoute != item.route) {
-                                mainNavController.graph.startDestinationRoute?.let {
-                                    mainNavController.popBackStack(it, true)
-                                }
-                                mainNavController.navigate(item.route){
-                                    launchSingleTop = true
+                NavigationBar {
+                    items.forEach { item ->
+                        NavigationBarItem(
+                            selected = currentRoute == item.route,
+                            label = { Text(text = item.title, style = TypeText.h8) },
+                            icon = {
+                                Icon(
+                                    imageVector = if (currentRoute == item.route) item.selectedIcon
+                                    else item.unselectedIcon, contentDescription = item.title
+                                )
+                            },
+                            onClick = {
+                                if (currentRoute != item.route) {
+                                    mainNavController.graph.startDestinationRoute?.let {
+                                        mainNavController.popBackStack(it, true)
+                                    }
+                                    mainNavController.navigate(item.route) {
+                                        launchSingleTop = true
+                                    }
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
-            }
         }
     ) {
-            MainNavGraph(innerPadding = it,navController = mainNavController, showBottomBar = isShowBottomBar)
+        MainNavGraph(
+            innerPadding = it,
+            navController = mainNavController,
+            showBottomBar = isShowBottomBar
+        )
     }
 }
 

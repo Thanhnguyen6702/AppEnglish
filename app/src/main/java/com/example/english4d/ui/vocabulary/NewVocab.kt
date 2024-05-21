@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.english4d.R
+import com.example.english4d.navigation.HomeGraphScreen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.customdialog.DialogRevise
 import com.example.english4d.ui.theme.TypeText
@@ -71,7 +72,7 @@ fun NewVocabularyScreen(
     LaunchedEffect(key1 = id) {
         viewmodel.updateLayout(id ?: 1)
     }
-    if (isShowDialog){
+    if (isShowDialog) {
         DialogRevise(onDismissRequest = { isShowDialog = false }) {
             isShowDialog = false
             navController.popBackStack()
@@ -126,15 +127,17 @@ fun NewVocabularyScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_hight))
                 ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.VolumeUp,
-                        contentDescription = "VolumeUp",
-                        modifier = Modifier.padding(
-                            horizontal = dimensionResource(
-                                id = R.dimen.padding_medium
+                    IconButton(onClick = viewmodel::speak) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.VolumeUp,
+                            contentDescription = "VolumeUp",
+                            modifier = Modifier.padding(
+                                horizontal = dimensionResource(
+                                    id = R.dimen.padding_medium
+                                )
                             )
                         )
-                    )
+                    }
                     Text(text = newVocabViewModel.vocabulary.pronunciation, style = TypeText.h7)
                 }
                 Text(
@@ -217,6 +220,7 @@ fun NewVocabularyScreen(
                     isExampleExpanded = false
                 },
                 viewmodel = viewmodel,
+                navController = navController,
                 modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_small))
             )
         }
@@ -228,6 +232,7 @@ fun NewVocabularyScreen(
 fun BottomBarNewVocab(
     onReset: () -> Unit,
     viewmodel: NewVocabViewModel,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val newVocabUiState by viewmodel.uiState.collectAsState()
@@ -306,11 +311,23 @@ fun BottomBarNewVocab(
                     }
             )
             Button(
+                enabled = newVocabUiState.statusVocab != StatusVocab.UNCHOOSE,
                 onClick = {
-                    viewmodel.nextVocab()
-                    onReset()
+                    if (newVocabUiState.isFinish) {
+                        navController.navigate(HomeGraphScreen.Home.route) {
+                            popUpTo(HomeGraphScreen.Home.route) { inclusive = false }
+                        }
+                    } else {
+                        viewmodel.updateStatistic()
+                        onReset()
+                    }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.teal_700))
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.teal_700),
+                    disabledContainerColor = colorResource(
+                        id = R.color.gray_50
+                    )
+                )
             ) {
                 Text(text = "Done")
             }

@@ -24,7 +24,8 @@ data class Question(
     val options: Map<String, String>, // use MapConverter
     val answer: String,
     val explanation: String,
-    val id_article: Long
+    val id_article: Long,
+    val isCorrect: Boolean? = null
 )
 
 @Entity(tableName = "Article", indices = [Index(value = ["href"], unique = true)])
