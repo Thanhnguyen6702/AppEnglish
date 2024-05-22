@@ -1,5 +1,6 @@
 package com.example.english4d.ui.newspaper
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,29 +34,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.english4d.R
-import com.example.english4d.data.news.QuestionGPT
+import com.example.english4d.data.database.question.Question
+import com.example.english4d.navigation.ExtensionGraphScreen
+import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
 @Composable
 fun QuestionLayout(
-    viewModel:ItemQuestionViewModel = viewModel(),
-    questions: List<QuestionGPT>
+    viewModel: ItemQuestionViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    questions: List<Question>,
+    href: String,
+    navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Column {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Surface(
             color = colorResource(id = R.color.gray_10)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = stringResource(id = R.string.question_number,uiState.questionNumber+1), style = TypeText.bodyMedium)
+                Text(
+                    text = stringResource(
+                        id = R.string.question_number,
+                        uiState.questionNumber + 1
+                    ), style = TypeText.bodyMedium
+                )
                 Text(
                     text = questions[uiState.questionNumber].question,
                     style = TypeText.h7.copy(fontWeight = FontWeight.Medium),
@@ -67,44 +79,36 @@ fun QuestionLayout(
         }
         GroupItemAnswer(
             onClick = {
-                viewModel.setSelectOption(it)
+                viewModel.setSelectOption(it, questions[uiState.questionNumber].id)
             },
             options = questions[uiState.questionNumber].options,
             answerCorrect = questions[uiState.questionNumber].answer,
-            selectOption = uiState.selectOption
+            selectOption = uiState.answerSelected[uiState.questionNumber] ?: ""
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_hight))
-        ) {
-            Text(
-                text = "Explain details",
-                style = TypeText.h6.copy(color = colorResource(id = R.color.purple_700))
-            )
-            IconButton(onClick = { viewModel.changeExpanded() }) {
-                Icon(
-                    imageVector = if (!uiState.expanded) {
-                        Icons.Filled.ExpandMore
-                    } else {
-                        Icons.Filled.ExpandLess
-                    }, contentDescription = null,
-                    tint = colorResource(id = R.color.purple_700)
+        ElevatedButton(
+            enabled = uiState.questionNumber == questions.size - 1,
+            colors = ButtonDefaults.elevatedButtonColors(
+                containerColor = colorResource(id = R.color.green_100),
+                disabledContainerColor = colorResource(
+                    id = R.color.gray_50
                 )
-            }
-        }
-
-        if (uiState.expanded) {
+            ),
+            onClick = {
+                navController.navigate(ExtensionGraphScreen.QuestionStatistic.passHref(Uri.encode(href))) {
+                    popUpTo(ExtensionGraphScreen.ReadNews.route) {
+                        inclusive = true
+                    }
+                }
+            }) {
             Text(
-                modifier = Modifier.padding(
-                    horizontal = dimensionResource(id = R.dimen.padding_hight),
-                    vertical = dimensionResource(
-                        id = R.dimen.padding_medium
+                text = "Hoàn thành", style = TypeText.h7.copy(
+                    fontWeight = FontWeight.Medium, color = colorResource(
+                        id = R.color.white
                     )
                 ),
-                text = questions[uiState.questionNumber].explanation,
-                style = TypeText.h7.copy(
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Italic
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_hight),
+                    vertical = dimensionResource(id = R.dimen.padding_small)
                 )
             )
         }
@@ -131,7 +135,7 @@ fun QuestionLayout(
                     color = colorResource(id = R.color.white),
                     shape = RoundedCornerShape(100.dp)
                 ), onClick = {
-                    viewModel.backQuestion()
+                viewModel.backQuestion()
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = null,
@@ -143,11 +147,13 @@ fun QuestionLayout(
                 )
             }
             Text(
-                text = "${uiState.questionNumber+1} / ${questions.size}", style = TypeText.h6.copy(
+                text = "${uiState.questionNumber + 1} / ${questions.size}",
+                style = TypeText.h6.copy(
                     fontWeight = FontWeight.Medium, color = colorResource(
                         id = R.color.purple_700
                     )
-                ), textAlign = TextAlign.Center
+                ),
+                textAlign = TextAlign.Center
             )
 
             IconButton(modifier = Modifier
@@ -162,12 +168,12 @@ fun QuestionLayout(
                     color = colorResource(id = R.color.white),
                     shape = RoundedCornerShape(100.dp)
                 ), onClick = {
-                   viewModel.nextQuestion(questions.size)
-                }) {
+                viewModel.nextQuestion(questions.size)
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                     contentDescription = null,
-                    tint = if (uiState.questionNumber < questions.size-1) {
+                    tint = if (uiState.questionNumber < questions.size - 1) {
                         colorResource(id = R.color.black)
                     } else {
                         colorResource(id = R.color.gray_50)
@@ -185,7 +191,6 @@ fun ItemAnswer(
     modifier: Modifier = Modifier,
     answer: Pair<String, String>,
     selected: Boolean,
-    isCorrect: Boolean,
     onClick: () -> Unit
 ) {
     Card(
@@ -217,8 +222,8 @@ fun ItemAnswer(
                     .background(
                         color = if (!selected) {
                             colorResource(id = R.color.white)
-                        }  else {
-                              colorResource(id = R.color.pink_50)
+                        } else {
+                            colorResource(id = R.color.pink_50)
                         }, shape = RoundedCornerShape(100.dp)
                     )
                     .border(
@@ -257,14 +262,12 @@ fun GroupItemAnswer(
     options: Map<String, String>,
     answerCorrect: String,
     selectOption: String
-
 ) {
     LazyColumn {
         items(options.keys.toList()) {
             ItemAnswer(
                 answer = Pair(it, options[it]!!),
                 selected = selectOption == it,
-                isCorrect = answerCorrect == it,
                 onClick = { onClick(it) }
             )
         }

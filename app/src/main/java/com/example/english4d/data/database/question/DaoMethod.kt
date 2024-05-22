@@ -18,4 +18,6 @@ interface ArticleDao {
 interface QuestionDao{
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertQuestion(questions: List<Question>)
+    @Query("UPDATE Question SET answerSelected = :answer WHERE id = :id")
+    suspend fun updateAnswer(id:Long, answer: String)
 }

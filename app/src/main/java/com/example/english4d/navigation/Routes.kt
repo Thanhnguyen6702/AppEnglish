@@ -4,6 +4,7 @@ const val READNEWS_ARGUMENT_TOPIC = "topic"
 const val READNEWS_ARGUMENT_HREF = "href"
 const val NEWVOCAB_ARGUMENT = "id"
 const val HOME_ARGUMENT = "id"
+const val STATISTIC_NEWS_ARGUMENT = "href"
 const val WORDSBOOK_ARGUMENT = "index"
 const val VIDEO_ARGUMENT = "video_id"
 object Routes {
@@ -51,6 +52,11 @@ sealed class ExtensionGraphScreen(val route: String){
             href: String
         ): String {
             return "read_news/$topic/$href"
+        }
+    }
+    object QuestionStatistic: ExtensionGraphScreen(route = "question_statistic/{$STATISTIC_NEWS_ARGUMENT}"){
+        fun passHref(href: String): String{
+            return "question_statistic/$href"
         }
     }
     object Video: ExtensionGraphScreen(route = "video/{$VIDEO_ARGUMENT}"){

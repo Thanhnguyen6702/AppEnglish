@@ -4,4 +4,5 @@ interface QuestionRepository {
     suspend fun getArticleAndQuestion(href: String): ArticleWithQuestion
     suspend fun insertArticle(article: Article)
     suspend fun insertQuestion(questions: List<Question>)
+    suspend fun updateAnswer(id: Long, answer: String)
 }

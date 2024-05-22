@@ -101,7 +101,6 @@ class NewsViewmodel(
 //                     val listItem =  newsRepository.getListNews("travel")
 //                    NewsTopic("travel",listItem?: listOf(Pair("","")))
 //                }
-                val listTopics = listOf(travel)
                 NewsUiState.Success().updateState {
                     copy(
                         travel = travel,
@@ -149,7 +148,6 @@ class NewsViewmodel(
                         val gson = Gson()
                         val listQuestionGPT =
                             gson.fromJson(dataQuestion, Array<QuestionGPT>::class.java).toList()
-                        questionUiState = QuestionUiState(listQuestionGPT = listQuestionGPT)
                         val listQuestionDB = listQuestionGPT.map {
                             Question(
                                 question = it.question,
@@ -160,16 +158,10 @@ class NewsViewmodel(
                             )
                         }
                         questionRepository.insertQuestion(listQuestionDB)
+                        val newQuestions = questionRepository.getArticleAndQuestion(Uri.encode(href))
+                        questionUiState = QuestionUiState(listQuestion = newQuestions.questions)
                     } else {
-                        val listQuestionGPT = questions.questions.map {
-                            QuestionGPT(
-                                question = it.question,
-                                options = it.options,
-                                answer = it.answer,
-                                explanation = it.explanation
-                            )
-                        }
-                        questionUiState = QuestionUiState(listQuestionGPT = listQuestionGPT)
+                        questionUiState = QuestionUiState(listQuestion = questions.questions)
                     }
                 }
             } catch (e: Exception) {

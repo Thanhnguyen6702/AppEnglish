@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
@@ -47,21 +48,24 @@ import com.example.english4d.ui.theme.TypeText
 @Composable
 fun ReadNewsScreen(
     topic: String,
-    url: String
+    url: String,
+    navController: NavController
 ) {
     val newsViewmodel: NewsViewmodel = viewModel(factory = AppViewModelProvider.Factory)
     newsViewmodel.getNewsPaper(url)
-    ReadNewsLayout(uiState = newsViewmodel, topic = topic)
+    ReadNewsLayout(uiState = newsViewmodel, href = url, topic = topic,navController = navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReadNewsLayout(
     uiState: NewsViewmodel,
+    href: String,
     topic: String,
+    navController: NavController
 ) {
     val listItem = uiState.dataNews.contentNews
-    val listQuestion = uiState.questionUiState.listQuestionGPT
+    val listQuestion = uiState.questionUiState.listQuestion
     val scrollState = rememberLazyListState()
     var openQuestion by remember {
         mutableStateOf(false)
@@ -127,7 +131,9 @@ fun ReadNewsLayout(
                     LoadingQuestion()
                 } else {
                     QuestionLayout(
-                        questions = listQuestion
+                        href = href,
+                        questions = listQuestion,
+                        navController = navController
                     )
                 }
             }

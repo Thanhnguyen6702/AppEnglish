@@ -6,7 +6,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.english4d.DataApplication
 import com.example.english4d.ui.home.HomeViewModel
+import com.example.english4d.ui.newspaper.ItemQuestionViewModel
 import com.example.english4d.ui.newspaper.NewsViewmodel
+import com.example.english4d.ui.newspaper.StatisticNewsViewModel
 import com.example.english4d.ui.pronuciation.PronunciationAssessmentViewModel
 import com.example.english4d.ui.splash.SplashViewModel
 import com.example.english4d.ui.topic.TopicViewModel
@@ -51,6 +53,12 @@ object AppViewModelProvider {
         }
         initializer {
             PronunciationAssessmentViewModel(dataApplication().container.vocabularyRepository, context = dataApplication().applicationContext)
+        }
+        initializer {
+            ItemQuestionViewModel(dataApplication().container.questionRepository)
+        }
+        initializer {
+            StatisticNewsViewModel(dataApplication().container.questionRepository)
         }
     }
 }

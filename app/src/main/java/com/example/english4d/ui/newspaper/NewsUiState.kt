@@ -1,9 +1,9 @@
 package com.example.english4d.ui.newspaper
 
+import com.example.english4d.data.database.question.Question
 import com.example.english4d.data.news.NewsContent
 import com.example.english4d.data.news.NewsItem
 import com.example.english4d.data.news.NewsTopic
-import com.example.english4d.data.news.QuestionGPT
 
 sealed class NewsUiState {
     data class Success(
@@ -26,5 +26,5 @@ data class ContentUiState(
     val contentNews: List<NewsContent> = listOf(NewsContent("",""))
 )
 data class QuestionUiState(
-    val listQuestionGPT : List<QuestionGPT> = emptyList()
+    val listQuestion : List<Question> = emptyList()
 )

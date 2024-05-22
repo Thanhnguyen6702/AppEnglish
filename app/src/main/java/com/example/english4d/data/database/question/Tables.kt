@@ -25,7 +25,7 @@ data class Question(
     val answer: String,
     val explanation: String,
     val id_article: Long,
-    val isCorrect: Boolean? = null
+    val answerSelected: String? = null
 )
 
 @Entity(tableName = "Article", indices = [Index(value = ["href"], unique = true)])

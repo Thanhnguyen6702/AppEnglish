@@ -9,4 +9,5 @@ class OfflineQuestionRepository(
     override suspend fun insertArticle(article: Article) = articleDao.insertArticle(article)
 
     override suspend fun insertQuestion(questions: List<Question>) = questionDao.insertQuestion(questions)
+    override suspend fun updateAnswer(id: Long, answer: String) = questionDao.updateAnswer(id,answer)
 }

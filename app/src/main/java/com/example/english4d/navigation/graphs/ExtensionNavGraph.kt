@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.navigation.READNEWS_ARGUMENT_HREF
 import com.example.english4d.navigation.READNEWS_ARGUMENT_TOPIC
+import com.example.english4d.navigation.STATISTIC_NEWS_ARGUMENT
 import com.example.english4d.navigation.VIDEO_ARGUMENT
 import com.example.english4d.ui.extension.ExtensionScreen
 import com.example.english4d.ui.fairytail.FairyTailScreen
@@ -25,11 +26,11 @@ import com.example.english4d.ui.newspaper.NewsScreen
 import com.example.english4d.ui.newspaper.NewsViewmodel
 import com.example.english4d.ui.newspaper.ReadNewsScreen
 import com.example.english4d.ui.newspaper.SeeMoreNewsScreen
+import com.example.english4d.ui.newspaper.StatisticNewsScreen
 import com.example.english4d.ui.video.ListeningScreen
 import com.example.english4d.ui.video.SeeMoreVideoScreen
 import com.example.english4d.ui.video.VideoScreen
 import com.example.english4d.ui.video.VideoViewModel
-
 
 
 @Composable
@@ -73,9 +74,18 @@ fun ExtensionNavGraph(
         ) {
             val topic = it.arguments?.getString(READNEWS_ARGUMENT_TOPIC).toString()
             val url = it.arguments?.getString(READNEWS_ARGUMENT_HREF).toString()
-            ReadNewsScreen(topic = topic, url = url)
+            ReadNewsScreen(topic = topic, url = url, navController = navHostController)
         }
 
+        composable(
+            route = ExtensionGraphScreen.QuestionStatistic.route,
+            arguments = listOf(navArgument(STATISTIC_NEWS_ARGUMENT) {
+                type = NavType.StringType
+            })
+        ) {
+            val href = it.arguments?.getString(STATISTIC_NEWS_ARGUMENT)?:""
+            StatisticNewsScreen(navController = navHostController, href = href)
+        }
 
         composable(
             route = ExtensionGraphScreen.Video.route,
