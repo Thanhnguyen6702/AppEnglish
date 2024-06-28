@@ -14,7 +14,7 @@ class ItemQuestionViewModel(private val questionRepository: QuestionRepository) 
     private val _uiState = MutableStateFlow(ItemQuestionUiState())
     val uiState: StateFlow<ItemQuestionUiState> = _uiState.asStateFlow()
     fun setSelectOption(selectOption: String,id: Long) {
-        val answerSelected = _uiState.value.answerSelected
+        val answerSelected = _uiState.value.answerSelected.toMutableMap()
         answerSelected[_uiState.value.questionNumber] = selectOption
         _uiState.value =
             _uiState.value.copy(answerSelected = answerSelected)

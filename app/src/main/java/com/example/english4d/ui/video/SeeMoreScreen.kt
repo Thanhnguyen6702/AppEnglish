@@ -81,7 +81,7 @@ fun SeeMoreVideoScreen(
         ) {
             items(channel.videos) {
                 ItemSeeMoreVideoLayout(image = it.imageVideo, title = it.title) {
-                    navController.navigate(ExtensionGraphScreen.Video.passId(it.videoId))
+                    navController.navigate(ExtensionGraphScreen.VideoMode.route)
                 }
             }
         }

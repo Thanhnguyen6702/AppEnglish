@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.english4d.DataApplication
+import com.example.english4d.di.DataApplication
+import com.example.english4d.ui.fairytail.FairyTailViewModel
 import com.example.english4d.ui.home.HomeViewModel
 import com.example.english4d.ui.newspaper.ItemQuestionViewModel
 import com.example.english4d.ui.newspaper.NewsViewmodel
@@ -12,6 +13,7 @@ import com.example.english4d.ui.newspaper.StatisticNewsViewModel
 import com.example.english4d.ui.pronuciation.PronunciationAssessmentViewModel
 import com.example.english4d.ui.splash.SplashViewModel
 import com.example.english4d.ui.topic.TopicViewModel
+import com.example.english4d.ui.video.ListeningViewModel
 import com.example.english4d.ui.vocabulary.NewVocabViewModel
 import com.example.english4d.ui.vocabulary.ReviseViewModel
 
@@ -59,6 +61,12 @@ object AppViewModelProvider {
         }
         initializer {
             StatisticNewsViewModel(dataApplication().container.questionRepository)
+        }
+        initializer {
+            ListeningViewModel(dataApplication().applicationContext)
+        }
+        initializer {
+            FairyTailViewModel(context = dataApplication().applicationContext)
         }
     }
 }

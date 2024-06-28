@@ -10,7 +10,7 @@
 
 
     <application
-        android:name=".DataApplication"
+        android:name=".di.DataApplication"
         android:allowBackup="true"
         android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

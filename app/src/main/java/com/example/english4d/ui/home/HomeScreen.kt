@@ -20,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,6 +43,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -193,155 +196,67 @@ fun CardStudy(
     homeUiState: HomeUiState, navController: NavController, modifier: Modifier = Modifier
 ) {
     if (homeUiState.isRevise) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.height_card_home))
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            colorResource(id = R.color.orange_100),
-                            colorResource(id = R.color.orange_50)
-                        ), start = Offset.Zero, end = Offset(0f, Float.POSITIVE_INFINITY)
-                    ), shape = MaterialTheme.shapes.medium
-                )
+        Card(
+            modifier = modifier,
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxHeight(1f), verticalAlignment = Alignment.Bottom
-            ) {
-                Column(
-                    Modifier
-                        .padding(
-                            start = dimensionResource(id = R.dimen.padding_medium),
-                            top = dimensionResource(id = R.dimen.padding_medium)
-                        )
-                        .fillMaxHeight()
-                        .width(200.dp),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.noti_revise1),
-                            style = TypeText.h9.copy(color = Color.White)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.noti_revise2),
-                            style = TypeText.bodyMedium.copy(color = Color.White),
-                            maxLines = 2
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            navController.navigate(HomeGraphScreen.ReviseVocab.route)
-                        },
-                        modifier = Modifier.padding(
-                            start = dimensionResource(id = R.dimen.padding_hight),
-                            bottom = dimensionResource(id = R.dimen.padding_hight)
-                        ),
-                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange_red)),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = dimensionResource(id = R.dimen.elevation)
-                        )
-                    ) {
-                        Text(text = stringResource(id = R.string.revise))
-                    }
-
-                }
-                Image(
-                    painter = painterResource(id = R.drawable.magnifier),
-                    contentDescription = "magnifier",
-                    modifier = Modifier.size(
-                        width = dimensionResource(id = R.dimen.size_icon_medium),
-                        height = dimensionResource(id = R.dimen.size_icon_medium)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimensionResource(id = R.dimen.height_card_home))
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                colorResource(id = R.color.orange_100),
+                                colorResource(id = R.color.orange_50)
+                            ), start = Offset.Zero, end = Offset(0f, Float.POSITIVE_INFINITY)
+                        ), shape = MaterialTheme.shapes.medium
                     )
-                )
-            }
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.height_card_home))
-                .padding(
-                    all = dimensionResource(id = R.dimen.padding_medium)
-                )
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            colorResource(id = R.color.green_100),
-                            colorResource(id = R.color.green_50)
-                        ), start = Offset.Zero, end = Offset(0f, Float.POSITIVE_INFINITY)
-                    ), shape = MaterialTheme.shapes.small
-                )
-        ) {
-            Row(
-                modifier = Modifier.fillMaxHeight(1f), verticalAlignment = Alignment.Bottom
             ) {
-                Column(
-                    Modifier
-                        .padding(
-                            start = dimensionResource(id = R.dimen.padding_medium),
-                            top = dimensionResource(id = R.dimen.padding_medium)
-                        )
-                        .fillMaxHeight()
-                        .width(200.dp),
-                    verticalArrangement = Arrangement.SpaceBetween
+                Row(
+                    modifier = Modifier.fillMaxHeight(1f), verticalAlignment = Alignment.Bottom
                 ) {
-                    Column {
-                        Text(
-                            text = "Học từ mơi", style = TypeText.h9.copy(color = Color.White)
-                        )
-                        Text(
-                            text = homeUiState.newVocab.first.topic,
-                            style = TypeText.bodyMedium.copy(color = Color.White),
-                            maxLines = 2
-                        )
-                    }
-                    Button(
-                        onClick = { navController.navigate(HomeGraphScreen.NewVocab.passID(homeUiState.newVocab.first.id)) },
-                        modifier = Modifier.padding(
-                            start = dimensionResource(id = R.dimen.padding_hight),
-                            bottom = dimensionResource(id = R.dimen.padding_hight)
-                        ),
-                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange_red)),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = dimensionResource(id = R.dimen.elevation)
-                        )
-                    ) {
-                        Text(text = stringResource(id = R.string.learn_vocab))
-                    }
-
-                }
-                Column(
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.End,
-                    modifier = Modifier.fillMaxHeight()
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(top = dimensionResource(id = R.dimen.padding_medium))
-                            .clickable {
-                                navController.navigate(route = HomeGraphScreen.TopicsVocab.route)
-                            }, verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.change_topic),
-                            style = TypeText.h8.copy(color = colorResource(id = R.color.white)),
-                            modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
-                        )
-                        Icon(
-                            Icons.Default.Cached,
-                            contentDescription = "Change Topic",
-                            tint = colorResource(
-                                id = R.color.white
+                    Column(
+                        Modifier
+                            .padding(
+                                start = dimensionResource(id = R.dimen.padding_medium),
+                                top = dimensionResource(id = R.dimen.padding_medium)
                             )
-                        )
+                            .fillMaxHeight()
+                            .width(200.dp),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.noti_revise1),
+                                style = TypeText.h9.copy(color = Color.White)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.noti_revise2),
+                                style = TypeText.bodyMedium.copy(color = Color.White),
+                                maxLines = 2
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                navController.navigate(HomeGraphScreen.ReviseVocab.route)
+                            },
+                            modifier = Modifier.padding(
+                                start = dimensionResource(id = R.dimen.padding_hight),
+                                bottom = dimensionResource(id = R.dimen.padding_hight)
+                            ),
+                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange_red)),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = dimensionResource(id = R.dimen.elevation)
+                            )
+                        ) {
+                            Text(text = stringResource(id = R.string.revise))
+                        }
+
                     }
-                    AsyncImage(
-                        model = ImageRequest.Builder(
-                            context = LocalContext.current
-                        ).data(homeUiState.newVocab.first.image).build(),
-                        contentDescription = "Image Topic",
+                    Image(
+                        painter = painterResource(id = R.drawable.magnifier),
+                        contentDescription = "magnifier",
                         modifier = Modifier.size(
                             width = dimensionResource(id = R.dimen.size_icon_medium),
                             height = dimensionResource(id = R.dimen.size_icon_medium)
@@ -350,15 +265,121 @@ fun CardStudy(
                 }
             }
         }
+    } else {
+        Card(
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+            modifier = Modifier.padding(
+                all = dimensionResource(id = R.dimen.padding_medium)
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimensionResource(id = R.dimen.height_card_home))
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                colorResource(id = R.color.green_100),
+                                colorResource(id = R.color.green_50)
+                            ), start = Offset.Zero, end = Offset(0f, Float.POSITIVE_INFINITY)
+                        ), shape = MaterialTheme.shapes.small
+                    )
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxHeight(1f), verticalAlignment = Alignment.Bottom
+                ) {
+                    Column(
+                        Modifier
+                            .padding(
+                                start = dimensionResource(id = R.dimen.padding_medium),
+                                top = dimensionResource(id = R.dimen.padding_medium)
+                            )
+                            .fillMaxHeight()
+                            .width(200.dp),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = "Học từ mới", style = TypeText.h9.copy(color = Color.White)
+                            )
+                            Text(
+                                text = homeUiState.newVocab.first.topic,
+                                style = TypeText.bodyMedium.copy(color = Color.White),
+                                maxLines = 2
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                navController.navigate(
+                                    HomeGraphScreen.NewVocab.passID(
+                                        homeUiState.newVocab.first.id
+                                    )
+                                )
+                            },
+                            modifier = Modifier.padding(
+                                start = dimensionResource(id = R.dimen.padding_hight),
+                                bottom = dimensionResource(id = R.dimen.padding_hight)
+                            ),
+                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.orange_red)),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = dimensionResource(id = R.dimen.elevation)
+                            )
+                        ) {
+                            Text(text = stringResource(id = R.string.learn_vocab))
+                        }
+
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.End,
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(top = dimensionResource(id = R.dimen.padding_medium))
+                                .clickable {
+                                    navController.navigate(route = HomeGraphScreen.TopicsVocab.route)
+                                }, verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.change_topic),
+                                style = TypeText.h8.copy(color = colorResource(id = R.color.white)),
+                                modifier = Modifier.padding(end = dimensionResource(id = R.dimen.padding_small))
+                            )
+                            Icon(
+                                Icons.Default.Cached,
+                                contentDescription = "Change Topic",
+                                tint = colorResource(
+                                    id = R.color.white
+                                )
+                            )
+                        }
+                        AsyncImage(
+                            model = ImageRequest.Builder(
+                                context = LocalContext.current
+                            ).data(homeUiState.newVocab.first.image).build(),
+                            contentDescription = "Image Topic",
+                            modifier = Modifier.size(
+                                width = dimensionResource(id = R.dimen.size_icon_medium),
+                                height = dimensionResource(id = R.dimen.size_icon_medium)
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
+@Preview(showBackground = true)
 @Composable
 fun CardStudy1(
 ) {
     if (true) {
         Surface(
-            tonalElevation = 3.dp, shape = MaterialTheme.shapes.medium
+            tonalElevation = 3.dp, shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.padding(all = 60.dp)
+
         ) {
             Box(
                 modifier = Modifier
@@ -370,8 +391,8 @@ fun CardStudy1(
                     .background(
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                colorResource(id = R.color.orange_100),
-                                colorResource(id = R.color.orange_50)
+                                colorResource(id = R.color.green_100),
+                                colorResource(id = R.color.green_50)
                             ), start = Offset.Zero, end = Offset(0f, Float.POSITIVE_INFINITY)
                         ), shape = MaterialTheme.shapes.medium
                     )
@@ -396,8 +417,8 @@ fun CardStudy1(
                                 style = TypeText.h9.copy(color = Color.White)
                             )
                             Text(
-                                text = stringResource(id = R.string.noti_revise2),
-                                style = TypeText.bodyLarge.copy(color = Color.White),
+                                text = "Học từ mới",
+                                style = TypeText.h4.copy(color = Color.White, fontWeight = FontWeight.Bold),
                                 maxLines = 2
                             )
                         }
@@ -522,4 +543,22 @@ fun CardStudy1(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun LayoutInfo1() {
+    Button(
+        onClick = {},
+        modifier = Modifier.padding(
+         all = 60.dp
+        ),
+        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_100)),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = dimensionResource(id = R.dimen.elevation)
+        )
+    ) {
+        Text(text = stringResource(id = R.string.revise))
+    }
+}
+
 

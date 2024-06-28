@@ -1,5 +1,9 @@
 package com.example.english4d.ui.pronuciation
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +41,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
@@ -49,9 +57,33 @@ fun PronunciationAssessmentScreen(
     viewModel: PronunciationAssessmentViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState by viewModel.uiStateAssessment.collectAsState()
+    val context = LocalContext.current
+
+    // Biến để theo dõi trạng thái quyền
+    var hasPermissions by remember {
+        mutableStateOf(
+            arrayOf(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ).all {
+                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+            }
+        )
+    }
+
+    // Launcher để yêu cầu quyền
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        hasPermissions = permissions.all { it.value }
+    }
     Scaffold {
         Column(
-            modifier = Modifier.padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()),
+            modifier = Modifier.padding(
+                top = it.calculateTopPadding(),
+                bottom = it.calculateBottomPadding()
+            ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -192,7 +224,7 @@ fun PronunciationAssessmentScreen(
                         )
                 ) {
                     IconButton(
-                        onClick = { viewModel.textToSpeech() }, enabled = !uiState.isSpeak
+                        onClick = { viewModel.textToSpeech(uiState.vocabulary.english) }, enabled = !uiState.isSpeak
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.VolumeUp,
@@ -212,7 +244,17 @@ fun PronunciationAssessmentScreen(
                             shape = MaterialTheme.shapes.large
                         )
                         .clickable {
-                            viewModel.startPronun()
+                            if (hasPermissions) {
+                                viewModel.startPronun()
+                            } else {
+                                permissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.RECORD_AUDIO,
+                                        Manifest.permission.INTERNET,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
+                                    )
+                                )
+                            }
                         },
                     contentAlignment = Alignment.Center
                 ) {

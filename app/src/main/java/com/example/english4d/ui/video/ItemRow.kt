@@ -1,5 +1,6 @@
 package com.example.english4d.ui.video
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +38,7 @@ fun HorizontalScrollRowVideo(
     title: String,
     listItem: List<Video>,
     modifier: Modifier = Modifier,
-    onClick: ()->Unit
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_hight))
@@ -49,12 +50,16 @@ fun HorizontalScrollRowVideo(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)).weight(1f)
+                modifier = Modifier
+                    .padding(bottom = dimensionResource(id = R.dimen.padding_hight))
+                    .weight(1f)
             )
             Text(
                 text = stringResource(id = R.string.more),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)).clickable(onClick = onClick)
+                modifier = Modifier
+                    .padding(bottom = dimensionResource(id = R.dimen.padding_hight))
+                    .clickable(onClick = onClick)
             )
         }
         LazyRow(
@@ -66,7 +71,13 @@ fun HorizontalScrollRowVideo(
                     modifier = Modifier
                         .padding(end = dimensionResource(id = R.dimen.padding_hight))
                         .clickable {
-                            navController.navigate(ExtensionGraphScreen.Video.passId(listItem[it].videoId))
+                            navController.navigate(
+                                ExtensionGraphScreen.VideoMode.passData(
+                                    videoId = listItem[it].videoId,
+                                    videoTitle = Uri.encode(listItem[it].title),
+                                    urlImage = Uri.encode(listItem[it].imageVideo)
+                                )
+                            )
                         }
                 )
             }
@@ -84,7 +95,7 @@ fun ItemRowVideo(
             .size(
                 width = dimensionResource(id = R.dimen.item_news_width),
                 height = dimensionResource(id = R.dimen.item_news_height)
-            ) // Thiết lập kích thước cho Card
+            )
     ) {
         Card(
             elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.padding_hight))

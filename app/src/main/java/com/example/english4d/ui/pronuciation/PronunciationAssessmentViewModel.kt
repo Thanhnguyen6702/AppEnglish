@@ -1,13 +1,10 @@
 package com.example.english4d.ui.pronuciation
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.data.database.vocabulary.Pronunciation
@@ -43,7 +40,6 @@ class PronunciationAssessmentViewModel(
     private val pronunciationAssessment = PronunciationAssessment()
     private val playSound = TextToSpeechManager(context)
     private var filePath: String? = context.getExternalFilesDir(null)?.absolutePath + "/record.wav"
-    lateinit var audioTrack: AudioTrack
 
     init {
         if (filePath != null) {
@@ -101,8 +97,8 @@ class PronunciationAssessmentViewModel(
     private fun updateStatistic() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                vocabularyRepository.getPronunciation().collect {
-                    val determine = it.groupBy {
+                vocabularyRepository.getPronunciation().collect { pronunciationWithVocabularies ->
+                    val determine = pronunciationWithVocabularies.groupBy {
                         when (it.pronunciation.score) {
                             in 0..49 -> "lower"
                             in 49..74 -> "medium"
@@ -111,15 +107,17 @@ class PronunciationAssessmentViewModel(
                     }
                     _uiStateStatistic.value =
                         _uiStateStatistic.value.copy(
-                            lower = determine["lower"]?.map { it.vocabulary } ?: listOf(),
-                            medium = determine["medium"]?.map { it.vocabulary } ?: listOf(),
-                            high = determine["high"]?.map { it.vocabulary } ?: listOf()
+                            lower = determine["lower"] ?: listOf(),
+                            medium = determine["medium"] ?: listOf(),
+                            high = determine["high"] ?: listOf()
                         )
                 }
             }
         }
     }
-
+    fun setOptionSelect(option: StatisticPronunciation){
+        _uiStateStatistic.value = _uiStateStatistic.value.copy(optionSelect = option)
+    }
     private fun getVocabWithoutPronun() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -149,9 +147,9 @@ class PronunciationAssessmentViewModel(
         pronunciationAssessment.startRecord()
     }
 
-    fun textToSpeech() {
+    fun textToSpeech(text: String) {
         _uiStateAssessment.value = _uiStateAssessment.value.copy(isSpeak = true)
-        playSound.speak(_uiStateAssessment.value.vocabulary.english)
+        playSound.speak(text)
         _uiStateAssessment.value = _uiStateAssessment.value.copy(isSpeak = false)
     }
 
@@ -203,13 +201,5 @@ fun listeningAgain() {
     }
 }
 
-fun hasPermissions(activity: ComponentActivity, vararg permissions: String): Boolean {
-    return permissions.all { permission ->
-        ContextCompat.checkSelfPermission(
-            activity,
-            permission
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-}
 
 }

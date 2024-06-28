@@ -143,7 +143,7 @@ interface ExamplesDao {
 
 @Dao
 interface PronunciationDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPronunciation(pronunciation: Pronunciation)
 
     @Transaction

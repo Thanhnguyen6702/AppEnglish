@@ -1,4 +1,4 @@
-package com.example.english4d.data
+package com.example.english4d.di
 
 import android.content.Context
 import com.example.english4d.data.database.question.OfflineQuestionRepository
@@ -21,7 +21,7 @@ interface AppContainer {
 //    val captionTrackRepository: CaptionTrackRepository
 }
 
-class DataAppContainer(context: Context): AppContainer{
+class DataAppContainer(context: Context): AppContainer {
     private val newsCrawl = NewsCrawl()
     override val newsRepository: NewsRepository by lazy {
         NetworkNewsRepository(newsCrawl)

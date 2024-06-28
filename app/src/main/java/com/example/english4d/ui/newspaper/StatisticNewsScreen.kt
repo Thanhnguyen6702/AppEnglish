@@ -2,6 +2,7 @@ package com.example.english4d.ui.newspaper
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
@@ -33,6 +33,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +53,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.ui.AppViewModelProvider
+import com.example.english4d.ui.customdialog.DialogQuestion
 import com.example.english4d.ui.theme.TypeText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +66,20 @@ fun StatisticNewsScreen(
     viewModel: StatisticNewsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var isShowDialog by remember {
+        mutableStateOf(false)
+    }
+    var questionSelected by remember {
+        mutableIntStateOf(0)
+    }
+    if (isShowDialog) {
+        DialogQuestion(
+            numberQuestion = questionSelected + 1,
+            question = uiState.questionsFailed[questionSelected].second,
+            onDismissRequest = { isShowDialog = false }) {
+
+        }
+    }
     LaunchedEffect(key1 = true) {
         viewModel.update(href)
     }
@@ -68,7 +88,7 @@ fun StatisticNewsScreen(
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(colorResource(id = R.color.green_100)),
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBackIosNew,
                             contentDescription = null,
@@ -139,6 +159,17 @@ fun StatisticNewsScreen(
                         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
                     ) {
                         Column {
+
+                            Row(
+                                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = "Thành tích của bạn:",
+                                    style = TypeText.h6.copy(fontWeight = FontWeight.Bold)
+                                )
+                            }
                             Row(
                                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
                                 verticalAlignment = Alignment.CenterVertically
@@ -153,38 +184,19 @@ fun StatisticNewsScreen(
                                     modifier = Modifier
                                         .size(42.dp)
                                         .clip(shape = RoundedCornerShape(50))
-                                        .background(color = colorResource(id = R.color.green_100))
-
-                                ) {
-                                    Text(
-                                        text = "${uiState.numberCorrect*100/uiState.totalQuestion}%", style = TypeText.h8.copy(
-                                            fontWeight = FontWeight.Bold, color = colorResource(
-                                                id = R.color.white
-                                            )
+                                        .background(
+                                            color = when (uiState.numberCorrect * 100 / uiState.totalQuestion) {
+                                                in 0..45 -> colorResource(id = R.color.orange_red)
+                                                in 46..75 -> colorResource(id = R.color.yellow)
+                                                else -> colorResource(id = R.color.green_100)
+                                            }
                                         )
-                                    )
-                                }
-                            }
-                            Row(
-                                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    modifier = Modifier.weight(1f),
-                                    text = "Tỷ lệ trung bình của bạn:",
-                                    style = TypeText.h6.copy(fontWeight = FontWeight.Bold)
-                                )
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier
-                                        .size(42.dp)
-                                        .clip(shape = RoundedCornerShape(50))
-                                        .background(color = colorResource(id = R.color.green_100))
-
                                 ) {
                                     Text(
-                                        text = "60%", style = TypeText.h8.copy(
-                                            fontWeight = FontWeight.Bold, color = colorResource(
+                                        text = "${uiState.numberCorrect * 100 / uiState.totalQuestion}%",
+                                        style = TypeText.h8.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = colorResource(
                                                 id = R.color.white
                                             )
                                         )
@@ -213,9 +225,13 @@ fun StatisticNewsScreen(
                                 )
                             )
                             LazyColumn {
-                                items(uiState.questionsFailed) {
-                                    ItemQuestionFailedLayout(position = it.first, answer = it.second) {
-
+                                items(uiState.questionsFailed.size) {
+                                    ItemQuestionFailedLayout(
+                                        position = uiState.questionsFailed[it].first,
+                                        answer = uiState.questionsFailed[it].second.answer
+                                    ) {
+                                        questionSelected = it
+                                        isShowDialog = true
                                     }
                                 }
                             }
@@ -248,7 +264,7 @@ fun StatisticNewsScreen(
                                 id = R.color.green_100
                             )
                         ),
-                        onClick = { /*TODO*/ }) {
+                        onClick = { navController.popBackStack() }) {
                         Text(
                             modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_small)),
                             text = "Làm lại", style = TypeText.h5.copy(
@@ -261,7 +277,12 @@ fun StatisticNewsScreen(
                     }
                     Text(
                         text = "Đọc các bài báo khác",
-                        style = TypeText.h7.copy(textDecoration = TextDecoration.Underline)
+                        style = TypeText.h7.copy(textDecoration = TextDecoration.Underline),
+                        modifier = Modifier.clickable {
+                            navController.navigate(ExtensionGraphScreen.NewsTopic.route) {
+                                popUpTo(ExtensionGraphScreen.NewsTopic.route)
+                            }
+                        }
                     )
                 }
             }
@@ -295,6 +316,6 @@ fun ItemQuestionFailedLayout(
 
 @Preview
 @Composable
-fun PreviewNews(){
-    StatisticNewsScreen(navController = NavController(LocalContext.current), href ="" )
+fun PreviewNews() {
+    StatisticNewsScreen(navController = NavController(LocalContext.current), href = "")
 }

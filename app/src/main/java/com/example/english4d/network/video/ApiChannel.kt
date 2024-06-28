@@ -8,4 +8,7 @@ interface ApiChannel {
     suspend fun getChannelInfo(
         @Query("channelId") channelId: String
     ): ChannelInfo
+
+    @GET("getChannel.php")
+    suspend fun getChannels(): List<Channel>
 }

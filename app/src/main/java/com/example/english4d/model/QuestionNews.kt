@@ -22,7 +22,7 @@ val model = GenerativeModel(
         temperature = 0.9f
         topK = 1
         topP = 1f
-        maxOutputTokens = 2048
+        maxOutputTokens = 1024
     },
     safetySettings = listOf(
         SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.MEDIUM_AND_ABOVE),

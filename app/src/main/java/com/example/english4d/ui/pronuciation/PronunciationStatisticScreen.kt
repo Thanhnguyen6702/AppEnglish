@@ -2,6 +2,7 @@ package com.example.english4d.ui.pronuciation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -134,9 +135,15 @@ fun PronunciationStatisticScreen12(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, 0)
-            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, 0)
-            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, 0)
+            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, 0){
+
+            }
+            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, 0){
+
+            }
+            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, 0){
+
+            }
 
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -147,7 +154,8 @@ fun PronunciationStatisticScreen12(
 @Composable
 fun ItemStatisticPronunciation(
     type: StatisticPronunciation,
-    number: Int
+    number: Int,
+    onClick:()->Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -158,7 +166,7 @@ fun ItemStatisticPronunciation(
                 StatisticPronunciation.HIGH -> colorResource(id = R.color.green_10)
             },
             shape = MaterialTheme.shapes.large
-        )
+        ).clickable(onClick = onClick)
     ) {
         Box(
             modifier = Modifier
@@ -301,9 +309,18 @@ fun PronunciationStatisticScreen(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, uiState.lower.size)
-            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, uiState.medium.size)
-            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, uiState.high.size)
+            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, uiState.lower.size){
+                viewModel.setOptionSelect(StatisticPronunciation.LOWER)
+                navController.navigate(PronunciationGraphScreen.DetailStatisticPronunciation.route)
+            }
+            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, uiState.medium.size){
+                viewModel.setOptionSelect(StatisticPronunciation.MEDIUM)
+                navController.navigate(PronunciationGraphScreen.DetailStatisticPronunciation.route)
+            }
+            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, uiState.high.size){
+                viewModel.setOptionSelect(StatisticPronunciation.HIGH)
+                navController.navigate(PronunciationGraphScreen.DetailStatisticPronunciation.route)
+            }
 
         }
         Spacer(modifier = Modifier.weight(1f))

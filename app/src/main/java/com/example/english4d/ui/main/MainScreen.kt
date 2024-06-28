@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -100,7 +101,7 @@ fun MainScreen(
     }
     Scaffold(
         bottomBar = {
-            if (isShowBottomBar.value)
+            if (isShowBottomBar.value) {
                 NavigationBar {
                     items.forEach { item ->
                         NavigationBarItem(
@@ -114,18 +115,21 @@ fun MainScreen(
                             },
                             onClick = {
                                 if (currentRoute != item.route) {
-                                    mainNavController.graph.startDestinationRoute?.let {
-                                        mainNavController.popBackStack(it, true)
-                                    }
                                     mainNavController.navigate(item.route) {
                                         launchSingleTop = true
+                                        restoreState = true
+                                        popUpTo(mainNavController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
                                     }
                                 }
                             }
                         )
                     }
                 }
+            }
         }
+
     ) {
         MainNavGraph(
             innerPadding = it,

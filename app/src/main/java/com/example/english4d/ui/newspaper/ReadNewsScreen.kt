@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.english4d.R
@@ -53,7 +56,12 @@ fun ReadNewsScreen(
 ) {
     val newsViewmodel: NewsViewmodel = viewModel(factory = AppViewModelProvider.Factory)
     newsViewmodel.getNewsPaper(url)
-    ReadNewsLayout(uiState = newsViewmodel, href = url, topic = topic,navController = navController)
+    ReadNewsLayout(
+        uiState = newsViewmodel,
+        href = url,
+        topic = topic,
+        navController = navController
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,9 +81,14 @@ fun ReadNewsLayout(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
+    LaunchedEffect(key1 = currentDestination) {
+        openQuestion = false
+    }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
+                containerColor = colorResource(id = R.color.green_100),
                 onClick = {
                     openQuestion = true
                 },
@@ -86,7 +99,10 @@ fun ReadNewsLayout(
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
+            modifier = Modifier.padding(
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding()
+            )
         ) {
             Text(
                 modifier = Modifier

@@ -50,7 +50,7 @@ fun QuestionLayout(
     viewModel: ItemQuestionViewModel = viewModel(factory = AppViewModelProvider.Factory),
     questions: List<Question>,
     href: String,
-    navController: NavController
+    navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     Column(
@@ -82,7 +82,6 @@ fun QuestionLayout(
                 viewModel.setSelectOption(it, questions[uiState.questionNumber].id)
             },
             options = questions[uiState.questionNumber].options,
-            answerCorrect = questions[uiState.questionNumber].answer,
             selectOption = uiState.answerSelected[uiState.questionNumber] ?: ""
         )
         ElevatedButton(
@@ -94,11 +93,7 @@ fun QuestionLayout(
                 )
             ),
             onClick = {
-                navController.navigate(ExtensionGraphScreen.QuestionStatistic.passHref(Uri.encode(href))) {
-                    popUpTo(ExtensionGraphScreen.ReadNews.route) {
-                        inclusive = true
-                    }
-                }
+                navController.navigate(ExtensionGraphScreen.QuestionStatistic.passHref(Uri.encode(href)))
             }) {
             Text(
                 text = "Hoàn thành", style = TypeText.h7.copy(
@@ -260,7 +255,6 @@ fun ItemAnswer(
 fun GroupItemAnswer(
     onClick: (String) -> Unit,
     options: Map<String, String>,
-    answerCorrect: String,
     selectOption: String
 ) {
     LazyColumn {

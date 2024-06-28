@@ -33,6 +33,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.english4d.R
@@ -222,4 +223,105 @@ fun ItemExtension(
         }
     }
 }
+@Preview(showBackground = true)
+@Composable
+fun ExtensionScreen1(
 
+) {
+    Box(
+        Modifier
+            .fillMaxSize().
+                padding(all = 10.dp)
+            .background(color = colorResource(id = R.color.gray_10))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            colorResource(id = R.color.green_100),
+                            colorResource(id = R.color.green_50)
+                        ), start = Offset.Zero, end = Offset(0f, Float.POSITIVE_INFINITY)
+                    )
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(start = dimensionResource(id = R.dimen.padding_hight))
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Vừa học vừa chill", style = TypeText.h4.copy(
+                        fontWeight = FontWeight.Bold, color = colorResource(
+                            id = R.color.white
+                        )
+                    )
+                )
+                Text(
+                    modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_small)),
+                    text = "Càng học càng fun", style = TypeText.h4.copy(
+                        fontWeight = FontWeight.Bold, color = colorResource(
+                            id = R.color.white
+                        )
+                    )
+                )
+                Text(
+                    text = "Ứng dụng ngay kiến thức vừa học\nvào nghe - đọc - nói",
+                    style = TypeText.h8.copy(
+                        color = colorResource(
+                            id = R.color.white
+                        )
+                    )
+                )
+            }
+            Image(
+                painter = painterResource(id = R.drawable.stationery),
+                contentDescription = null,
+                Modifier
+                    .size(120.dp)
+                    .padding(dimensionResource(id = R.dimen.padding_hight))
+            )
+        }
+        Column(
+            modifier = Modifier.padding(top = 214.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            ItemExtension(
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)),
+                icon = Icons.Outlined.VideoLibrary,
+                title = "Thư viện video",
+                description = "Luyên nghe với các kênh youtube"
+            ){
+               // navController.navigate(ExtensionGraphScreen.Channel.route)
+            }
+            ItemExtension(
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)),
+                icon = Icons.AutoMirrored.Outlined.MenuBook,
+                title = "Kho truyện ngắn",
+                description = "Tăng khả năng đọc qua các mẩu truyện"
+            ){
+              //  navController.navigate(ExtensionGraphScreen.FairyTopic.route)
+            }
+            ItemExtension(
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)),
+                icon = Icons.Outlined.Newspaper,
+                title = "Tin tức hàng ngày",
+                description = "Tăng khả năng đọc qua các bài báo",
+                label = "New"
+            ){
+             //   navController.navigate(ExtensionGraphScreen.NewsTopic.route)
+            }
+            ItemExtension(
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_hight)),
+                icon = Icons.Outlined.LibraryAdd,
+                title = "Kho từ của tôi",
+                description = "Quản lý từ vựng mà bạn thêm vào"
+            )
+        }
+    }
+}

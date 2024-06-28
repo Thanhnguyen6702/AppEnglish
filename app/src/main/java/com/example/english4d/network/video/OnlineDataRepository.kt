@@ -31,5 +31,4 @@ class OnlineVideoRepository: AppContainer {
     override val videoRepository: VideoRepository by lazy {
         NetworkCaptionTrackRepository(retrofitServerCaptionTrack, retrofitServerChannelInfo)
     }
-
 }

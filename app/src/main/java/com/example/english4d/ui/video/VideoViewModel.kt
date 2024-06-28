@@ -12,14 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-private val channelsId = listOf(
-    "UCNbeSPp8RYKmHUliYBUDizg",
-    "UCVBErcpqaokOf4fI5j73K_w",
-    "UCz4tgANd4yy8Oe0iXCdSWfA",
-    "UCxJGMJbjokfnr2-s4_RXPxQ",
-    "UCeTVoczn9NOZA9blls3YgUg"
-)
-
 class VideoViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<VideoUiState>(VideoUiState.Loading)
     val uiState: StateFlow<VideoUiState> = _uiState.asStateFlow()
@@ -30,16 +22,16 @@ class VideoViewModel : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 try {
+                    val channels = onlineVideoRepository.getChannels()
                     val channelsInfo = mutableListOf<ChannelInfo>()
-                    channelsId.forEach{
-                        val channelInfo = onlineVideoRepository.getChannelInfo(it)
+                    channels.forEach{
+                        val channelInfo = onlineVideoRepository.getChannelInfo(it.id)
                         channelsInfo.add(channelInfo)
                     }
                     _uiState.value = VideoUiState.Success(channelsInfo)
                 }catch (e:Exception){
                     _uiState.value = VideoUiState.Error
                 }
-
             }
         }
     }
