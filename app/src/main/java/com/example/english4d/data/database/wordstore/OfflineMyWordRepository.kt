@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 class OfflineMyWordRepository(
     val myWordDao: MyWordDao
 ) : MyWordRepository {
-    override suspend fun insertTopical(topic: MyWordTopic): Long = myWordDao.insertTopic(topic)
+    override suspend fun insertTopic(topic: MyWordTopic): Long = myWordDao.insertTopic(topic)
 
     override fun getTopics(): Flow<List<MyWordTopic>> = myWordDao.getTopics()
 

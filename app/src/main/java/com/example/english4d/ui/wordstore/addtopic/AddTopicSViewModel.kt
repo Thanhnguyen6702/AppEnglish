@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.R
 import com.example.english4d.data.database.wordstore.DictionaryResponse
+import com.example.english4d.data.database.wordstore.MyWordRepository
+import com.example.english4d.data.database.wordstore.MyWordTopic
 import com.example.english4d.model.ResponseData
 import com.example.englishe4.common.Trie
 import com.google.gson.Gson
@@ -26,6 +28,7 @@ import java.io.InputStreamReader
 
 
 class AddWordSViewModel(
+   private val repository: MyWordRepository,
     context: Context
 ) : ViewModel() {
     private val _searchText = MutableStateFlow("")
@@ -108,6 +111,12 @@ class AddWordSViewModel(
         Log.d("dataVM", "findDataByItem: $word")
         Log.d("dataVM", "findDataByItem: ${listData.value} ")
         Log.d("dataVM", "findDataByItem: ${dataFind.value} ")
+    }
+    fun addTopic(title: String){
+        viewModelScope.launch(Dispatchers.IO) {
+           val topic_id =  repository.insertTopic(MyWordTopic(name = title))
+            insertMyWordDatabase(repository = repository, dictionaryMyWord = _listData.value[0], topic_id = topic_id)
+        }
     }
 }
 

@@ -67,6 +67,7 @@ fun AddWordScreen(
         bottomBar = {
             Button(
                 onClick = {
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()

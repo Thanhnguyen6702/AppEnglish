@@ -67,6 +67,7 @@ fun WordStoreScreen(
                     )
                 }
             }
+
             LazyColumn {
                 items(topic) {
                     ItemTopicCard(
