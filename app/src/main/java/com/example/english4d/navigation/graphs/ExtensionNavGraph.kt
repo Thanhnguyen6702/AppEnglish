@@ -36,6 +36,8 @@ import com.example.english4d.ui.video.SeeMoreVideoScreen
 import com.example.english4d.ui.video.VideoModeScreen
 import com.example.english4d.ui.video.VideoScreen
 import com.example.english4d.ui.video.VideoViewModel
+import com.example.english4d.ui.wordstore.WordStoreScreen
+import com.example.english4d.ui.wordstore.addtopic.AddWordScreen
 
 
 @Composable
@@ -141,6 +143,19 @@ fun ExtensionNavGraph(
             }
             val fairyViewModel: FairyTailViewModel = viewModel(parentEntry)
             ReadFairyTail(navController = navHostController, viewmodel = fairyViewModel)
+        }
+        composable(route = ExtensionGraphScreen.WordStore.route){
+            showBottomBar.value = false
+            WordStoreScreen(navController = navHostController)
+        }
+        composable(route = ExtensionGraphScreen.AddWord.route){
+            AddWordScreen(navController = navHostController)
+        }
+        composable(route = ExtensionGraphScreen.DetailWord.route){
+            val parentEntry = remember(it) {
+                navHostController.getBackStackEntry(ExtensionGraphScreen.AddWord.route)
+            }
+          //  DetailItemWordCardScreen(word = , navController = , viewModel = )
         }
     }
 }

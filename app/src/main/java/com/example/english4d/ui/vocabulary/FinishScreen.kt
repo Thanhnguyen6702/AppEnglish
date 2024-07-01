@@ -2,6 +2,7 @@ package com.example.english4d.ui.vocabulary
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -85,7 +86,9 @@ fun FinishScreen(
                     modifier = Modifier.weight(8f)
                 ) {
                     items(uiState.value.listItemFinish) {
-                        ItemFinishLayout(it)
+                        ItemFinishLayout(it){
+                            viewModel.speak(it)
+                        }
                         Divider()
                     }
                 }
@@ -117,6 +120,7 @@ fun FinishScreen(
 @Composable
 fun ItemFinishLayout(
     itemFinish: ItemFinish,
+    onVolumeClick: (text: String) -> Unit = {}
 ) {
     Row(
         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_medium)),
@@ -127,7 +131,7 @@ fun ItemFinishLayout(
             contentDescription = null,
             modifier = Modifier.padding(
                 horizontal = dimensionResource(id = R.dimen.padding_medium),
-            ),
+            ).clickable { onVolumeClick(itemFinish.vocabulary.english) },
             tint = colorResource(id = R.color.green_100)
         )
         Column {

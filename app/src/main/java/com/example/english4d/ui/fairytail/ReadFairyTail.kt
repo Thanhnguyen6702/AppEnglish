@@ -43,9 +43,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -106,7 +108,7 @@ fun ReadFairyTail(
                                         contentDescription = null
                                     )
                                 }
-                                Text(text = "Truyện ngụ ngôn")
+                                Text(text = "Truyện ngắn")
                                 IconButton(onClick = { openSetting = true }) {
                                     Icon(
                                         imageVector = Icons.Filled.Settings,
@@ -135,7 +137,7 @@ fun ReadFairyTail(
                                 bottom = dimensionResource(id = R.dimen.padding_small)
                             ),
                         text = fairyTail.fairy_english.name,
-                        style = TypeText.h4.copy(fontWeight = FontWeight.Medium),
+                        style = TypeText.h4.copy(fontWeight = FontWeight.Medium, fontSize = (20* (uiState as FairyTailUiState.Success).sizeLevel).sp),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -161,7 +163,8 @@ fun ReadFairyTail(
                                 contentE = fairyTail.fairy_english.content[it],
                                 contentV = fairyTail.fairy_vietnamese.content[it],
                                 isSelected = selected[it],
-                                isAudio = (uiState as FairyTailUiState.Success).isAudio
+                                isAudio = (uiState as FairyTailUiState.Success).isAudio,
+                                sizeLevel = (uiState as FairyTailUiState.Success).sizeLevel,
                             ) {
                                 selected[it] = !selected[it]
                             }
@@ -200,6 +203,7 @@ fun ReadFairyTail(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Card(
+                                modifier = Modifier.clickable { viewmodel.setTextSize(1.1f) },
                                 colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.green_100)),
                                 shape = MaterialTheme.shapes.small
                             ) {
@@ -218,6 +222,7 @@ fun ReadFairyTail(
                                 )
                             }
                             Card(
+                                modifier = Modifier.clickable { viewmodel.setTextSize(1.2f) },
                                 colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.green_100)),
                                 shape = MaterialTheme.shapes.small
                             ) {
@@ -236,6 +241,7 @@ fun ReadFairyTail(
                                 )
                             }
                             Card(
+                                modifier = Modifier.clickable { viewmodel.setTextSize(1.3f) },
                                 colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.green_100)),
                                 shape = MaterialTheme.shapes.small
                             ) {
@@ -254,6 +260,7 @@ fun ReadFairyTail(
                                 )
                             }
                             Card(
+                                modifier = Modifier.clickable { viewmodel.setTextSize(1.5f) },
                                 colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.green_100)),
                                 shape = MaterialTheme.shapes.small
                             ) {
@@ -300,18 +307,19 @@ fun ItemReadFairyLayout(
     contentV: String,
     isSelected: Boolean,
     isAudio: Boolean = false,
+    sizeLevel: Float = 1f,
     onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = contentE, style = TypeText.h6, modifier = Modifier.clickable(onClick = onClick))
+        Text(text = contentE, style = TypeText.h6.copy(fontSize = (16*sizeLevel).sp), modifier = Modifier.clickable(onClick = onClick))
         Box(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))) {
             if (isSelected)
                 Text(
                     text = contentV,
-                    style = TypeText.h7
+                    style = TypeText.h7.copy(fontSize = (14*sizeLevel).sp), fontStyle = FontStyle.Italic
                 )
         }
         if (isAudio) {

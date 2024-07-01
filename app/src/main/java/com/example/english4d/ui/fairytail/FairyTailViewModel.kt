@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class FairyTailViewModel(context: Context) : ViewModel() {
     private val _uiState = MutableStateFlow<FairyTailUiState>(FairyTailUiState.Loading)
     val uiState = _uiState.asStateFlow()
-    private val tts = TextToSpeechManager(context)
+    private val tts = TextToSpeechManager.getInstance(context)
     var optionSelected = mutableIntStateOf(0)
         private set
     private val onlineFairyTail = OnlineFairyTailDataRepository().fairyTailRepository
@@ -36,5 +36,9 @@ class FairyTailViewModel(context: Context) : ViewModel() {
     }
     fun stopAudio(){
         tts.stop()
+    }
+    fun setTextSize(sizeLevel: Float){
+        val currentState = (_uiState.value as FairyTailUiState.Success)
+        _uiState.value = currentState.copy(sizeLevel = sizeLevel)
     }
 }

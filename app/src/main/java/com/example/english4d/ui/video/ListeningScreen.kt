@@ -1,13 +1,14 @@
 package com.example.english4d.ui.video
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -50,6 +51,7 @@ import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.animation.ErrorScreen
 import com.example.english4d.ui.animation.LoadingScreen
 import com.example.english4d.ui.theme.TypeText
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -74,7 +76,8 @@ fun ListeningScreen(
     var maxPosition by remember {
         mutableIntStateOf(0)
     }
-    var isListened = remember { false}
+    var isListened = remember{false}
+    var isListening by remember  { mutableStateOf(false) }
     LaunchedEffect(key1 = videoId) {
         if (mode == 0) {
             viewModel.getCaptionTrack(videoId)
@@ -87,7 +90,6 @@ fun ListeningScreen(
             listState.animateScrollToItem(positionCaptionTrack-2)
         }
     }
-
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier.padding(
@@ -102,6 +104,17 @@ fun ListeningScreen(
                     youtubePlayer.addListener(object : AbstractYouTubePlayerListener() {
                         override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
                             videoPosition = second
+                        }
+
+                        override fun onStateChange(
+                            youTubePlayer: YouTubePlayer,
+                            state: PlayerConstants.PlayerState
+                        ) {
+                            if (state == PlayerConstants.PlayerState.PLAYING) {
+                                isListening = true
+                            }else if (state == PlayerConstants.PlayerState.PAUSED){
+                                isListening = false
+                            }
                         }
                     })
                     youtubePlayer.loadVideo(videoId, 0f) // Khởi tạo video ban đầu
@@ -147,10 +160,20 @@ fun ListeningScreen(
                                 items(captionTracks.size) {
                                     ItemCaptionLayout(
                                         captionTrack = captionTracks[it].text,
-                                        isPlay = positionCaptionTrack == it
+                                        isPlay = (positionCaptionTrack == it) && isListening
                                     ) {
-                                        youtubePlayerRef?.seekTo(captionTracks[it].start) // Tua video đến thời gian này
-                                        positionCaptionTrack = it
+//                                        youtubePlayerRef?.seekTo(captionTracks[it].start) // Tua video đến thời gian này
+//                                        positionCaptionTrack = it
+                                        if (positionCaptionTrack == it) {
+                                            if (isListening) {
+                                                youtubePlayerRef?.pause()
+                                            } else {
+                                                youtubePlayerRef?.play()
+                                            }
+                                        }else{
+                                            youtubePlayerRef?.play()
+                                            youtubePlayerRef?.seekTo(captionTracks[it].start)
+                                        }
                                     }
                                 }
                             }
@@ -163,9 +186,7 @@ fun ListeningScreen(
                                     if (positionCaptionTrack == maxPosition) {
                                         //youtubePlayerRef?.seekTo(captionTracks[positionCaptionTrack-1].start)
                                         youtubePlayerRef?.pause()
-                                        Log.e("hehehe", positionCaptionTrack.toString())
                                     } else {
-                                        Log.e("hehehe", "aaa $positionCaptionTrack")
                                         isListened = false
                                     }
                             }
@@ -182,6 +203,9 @@ fun ListeningScreen(
 //                                        youtubePlayerRef?.seekTo(captionTracks[it].start) // Tua video đến thời gian này
 //                                        positionCaptionTrack = it
                                     }
+                                }
+                                item {
+                                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_hight)))
                                 }
                             }
                             val answers = (uiState as ListeningUiState.Success).answers

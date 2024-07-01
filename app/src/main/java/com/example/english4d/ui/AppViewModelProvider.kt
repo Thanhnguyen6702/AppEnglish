@@ -16,6 +16,8 @@ import com.example.english4d.ui.topic.TopicViewModel
 import com.example.english4d.ui.video.ListeningViewModel
 import com.example.english4d.ui.vocabulary.NewVocabViewModel
 import com.example.english4d.ui.vocabulary.ReviseViewModel
+import com.example.english4d.ui.wordstore.WordStoreViewModel
+import com.example.english4d.ui.wordstore.addtopic.AddWordSViewModel
 
 
 object AppViewModelProvider {
@@ -67,6 +69,15 @@ object AppViewModelProvider {
         }
         initializer {
             FairyTailViewModel(context = dataApplication().applicationContext)
+        }
+        initializer {
+            AddWordSViewModel(context = dataApplication().applicationContext)
+        }
+        initializer {
+            AddWordSViewModel(context = dataApplication().applicationContext)
+        }
+        initializer {
+            WordStoreViewModel(dataApplication().container.myWordRepository)
         }
     }
 }

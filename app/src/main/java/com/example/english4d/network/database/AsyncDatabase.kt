@@ -24,7 +24,7 @@ class AsyncDatabase(private val vocabularyRepository: VocabularyRepository) : Da
     private val _dataSynchronized = MutableStateFlow(Pair(false, false))
     val dataSynchronized: StateFlow<Pair<Boolean, Boolean>>
         get() = _dataSynchronized
-    private val baseUrl = "https://thanhhust.x10.mx/jetpack/"
+    private val baseUrl = "http://thanhhust.x10.mx/jetpack/"
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl).build()

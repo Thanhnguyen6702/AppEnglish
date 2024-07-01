@@ -138,7 +138,9 @@ fun ExtensionScreen(
                 icon = Icons.Outlined.LibraryAdd,
                 title = "Kho từ của tôi",
                 description = "Quản lý từ vựng mà bạn thêm vào"
-            )
+            ){
+                navController.navigate(ExtensionGraphScreen.WordStore.route)
+            }
         }
     }
 }

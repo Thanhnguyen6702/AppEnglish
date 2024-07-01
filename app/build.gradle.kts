@@ -81,7 +81,7 @@ dependencies {
     //NavController
     implementation ("androidx.navigation:navigation-compose:2.7.7")
     //Gemini
-    implementation("com.google.ai.client.generativeai:generativeai:0.4.0")
+    implementation("com.google.ai.client.generativeai:generativeai:0.8.0")
     //serialization
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     //Gson
@@ -106,6 +106,8 @@ dependencies {
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
     // work manager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+    // plippable
+    implementation ("com.wajahatkarim:flippable:1.5.4")
     // Youtube API
 //    implementation("com.google.apis:google-api-services-youtube:v3-rev222-1.25.0") {
 //        exclude(group = "org.apache.httpcomponents", module = "httpclient")

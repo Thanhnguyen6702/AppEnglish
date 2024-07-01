@@ -15,6 +15,7 @@ import com.example.english4d.network.pronunciation.PronunciationAssessment.Recor
 import com.example.english4d.network.pronunciation.PronunciationResult
 import com.example.english4d.utils.TextToSpeechManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +39,7 @@ class PronunciationAssessmentViewModel(
     private lateinit var listVocab: List<Vocabulary>
     private var index = 0
     private val pronunciationAssessment = PronunciationAssessment()
-    private val playSound = TextToSpeechManager(context)
+    private val playSound = TextToSpeechManager.getInstance(context)
     private var filePath: String? = context.getExternalFilesDir(null)?.absolutePath + "/record.wav"
 
     init {
@@ -51,6 +52,11 @@ class PronunciationAssessmentViewModel(
         getVocabWithoutPronun()
         pronunciationAssessment.setRecordingListener(object : RecordingListener {
             override fun onRecordingStarted() {
+                viewModelScope.launch {
+                    delay(5000)
+                    pronunciationAssessment.stopRecord()
+                }
+
                 _uiStateAssessment.value =
                     _uiStateAssessment.value.copy(isRecording = RecordingState.RECORDING)
             }
@@ -58,7 +64,6 @@ class PronunciationAssessmentViewModel(
             override fun onProcess() {
                 _uiStateAssessment.value =
                     _uiStateAssessment.value.copy(isRecording = RecordingState.PROCESSING)
-
             }
 
             override fun onResultReceived(pronunciationResult: PronunciationResult?) {
@@ -190,7 +195,6 @@ fun listeningAgain() {
                     }
 
                     audioTrack.stop()
-                    audioTrack.release()
                     _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = true)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -200,6 +204,8 @@ fun listeningAgain() {
 
     }
 }
-
+    fun stopSound() {
+        playSound.stop()
+      }
 
 }

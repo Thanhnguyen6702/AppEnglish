@@ -21,7 +21,7 @@ class NewVocabViewModel(
     private val _uiState = MutableStateFlow(NewVocabUiState())
     val uiState: StateFlow<NewVocabUiState> = _uiState.asStateFlow()
     private var vocabularies: MutableList<Vocabulary> = mutableListOf()
-    private val playSound = TextToSpeechManager(context)
+    private val playSound = TextToSpeechManager.getInstance(context)
     private var index = 0
     private var isShowedE = false
     private var isShowedD = false
@@ -121,4 +121,9 @@ class NewVocabViewModel(
     fun speak(){
         playSound.speak(_uiState.value.vocabulary.english)
     }
+    fun stopSpeak(){
+        playSound.stop()
+
+    }
+
 }

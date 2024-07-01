@@ -30,7 +30,7 @@ class ReviseViewModel(private val vocabularyRepository: VocabularyRepository,con
     private lateinit var listVocabRevise: List<Vocabulary>
     private var index = 0
     private var selected = false
-    private val playSound: TextToSpeechManager = TextToSpeechManager(context)
+    private val playSound: TextToSpeechManager = TextToSpeechManager.getInstance(context)
     init {
         initVocab()
     }
@@ -113,7 +113,11 @@ class ReviseViewModel(private val vocabularyRepository: VocabularyRepository,con
             }
         }
     }
-    fun speak(){
-        playSound.speak(_uiState.value.vocabulary.english)
+    fun speak(text: String = ""){
+        if(text.isEmpty()) playSound.speak(_uiState.value.vocabulary.english)
+        else playSound.speak(text)
+    }
+    fun stopSpeak(){
+        playSound.stop()
     }
 }

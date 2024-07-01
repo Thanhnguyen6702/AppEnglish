@@ -1,5 +1,6 @@
 package com.example.english4d.ui.video
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -81,7 +82,8 @@ fun SeeMoreVideoScreen(
         ) {
             items(channel.videos) {
                 ItemSeeMoreVideoLayout(image = it.imageVideo, title = it.title) {
-                    navController.navigate(ExtensionGraphScreen.VideoMode.route)
+                    navController.navigate(ExtensionGraphScreen.VideoMode.passData(it.videoId, Uri.encode(it.title),
+                        Uri.encode(it.imageVideo)))
                 }
             }
         }

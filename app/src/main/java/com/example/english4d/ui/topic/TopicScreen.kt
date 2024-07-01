@@ -152,7 +152,7 @@ fun ItemTopicLayout(
             .padding(end = dimensionResource(id = R.dimen.padding_medium))
             .clickable {
                 navController.navigate(HomeGraphScreen.Home.passData(itemTopic.id)) {
-                    popUpTo(HomeGraphScreen.TopicsVocab.route) { inclusive = true }
+                    popUpTo(HomeGraphScreen.Home.route) { inclusive = true }
                 }
             },
         tonalElevation = 10.dp,

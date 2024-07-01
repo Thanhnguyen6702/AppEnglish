@@ -94,7 +94,11 @@ sealed class ExtensionGraphScreen(val route: String) {
     }
 
     object SeeMoreNews : ExtensionGraphScreen(route = "see_more_news")
+    object  WordStore : ExtensionGraphScreen(route = "word_store")
+    object  AddWord : ExtensionGraphScreen(route = "add_word")
+    object DetailWord : ExtensionGraphScreen(route = "detail_word")
 }
+
 
 sealed class SplashNavScreen(val route: String) {
     object Splash : SplashNavScreen(route = "splash")

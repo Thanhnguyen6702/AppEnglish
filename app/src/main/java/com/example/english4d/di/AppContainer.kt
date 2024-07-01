@@ -7,6 +7,9 @@ import com.example.english4d.data.database.question.QuestionRepository
 import com.example.english4d.data.database.vocabulary.OfflineVocabularyRepository
 import com.example.english4d.data.database.vocabulary.VocabularyDatabase
 import com.example.english4d.data.database.vocabulary.VocabularyRepository
+import com.example.english4d.data.database.wordstore.MyWordDataBase
+import com.example.english4d.data.database.wordstore.MyWordRepository
+import com.example.english4d.data.database.wordstore.OfflineMyWordRepository
 import com.example.english4d.data.news.NetworkNewsRepository
 import com.example.english4d.data.news.NewsCrawl
 import com.example.english4d.data.news.NewsRepository
@@ -18,10 +21,10 @@ interface AppContainer {
     val vocabularyRepository: VocabularyRepository
     val questionRepository: QuestionRepository
     val workerRepository: VocabWorkerRepository
-//    val captionTrackRepository: CaptionTrackRepository
+    val myWordRepository: MyWordRepository
 }
 
-class DataAppContainer(context: Context): AppContainer {
+class DataAppContainer(context: Context) : AppContainer {
     private val newsCrawl = NewsCrawl()
     override val newsRepository: NewsRepository by lazy {
         NetworkNewsRepository(newsCrawl)
@@ -46,6 +49,10 @@ class DataAppContainer(context: Context): AppContainer {
         )
     }
     override val workerRepository: WorkerManagerRepository = WorkerManagerRepository(context)
-    // override val captionTrackRepository: CaptionTrackRepository = OnlineCaptionTrackRepository().captionTrackRepository
-
+    private val myWordDatabase = MyWordDataBase.getDatabase(context)
+    override val myWordRepository: MyWordRepository by lazy {
+        OfflineMyWordRepository(
+            myWordDao = myWordDatabase.myWordDao()
+        )
+    }
 }
