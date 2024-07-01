@@ -71,10 +71,10 @@ object AppViewModelProvider {
             FairyTailViewModel(context = dataApplication().applicationContext)
         }
         initializer {
-            AddWordSViewModel(context = dataApplication().applicationContext)
+            AddWordSViewModel(dataApplication().container.myWordRepository,context = dataApplication().applicationContext,)
         }
         initializer {
-            AddWordSViewModel(context = dataApplication().applicationContext)
+            AddWordSViewModel(dataApplication().container.myWordRepository,context = dataApplication().applicationContext)
         }
         initializer {
             WordStoreViewModel(dataApplication().container.myWordRepository)
