@@ -1,8 +1,6 @@
 package com.example.english4d.ui.wordstore.addtopic
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.R
@@ -29,7 +27,7 @@ import java.io.InputStreamReader
 
 
 class AddWordSViewModel(
-   private val repository: MyWordRepository,
+    private val repository: MyWordRepository,
     context: Context
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AddWordUiState())
@@ -46,11 +44,11 @@ class AddWordSViewModel(
         }
     }
 
-    val topicCards = uiState.value.contentSearch
+    val topicCards = uiState
         .debounce(300)  // Debounce to reduce search frequency
         .flatMapLatest { query ->
             flow {
-                emit(trie.search(query)
+                emit(trie.search(query.contentSearch)
                     .take(10)
                     .map {
                         WordCard(content = it)
@@ -60,7 +58,7 @@ class AddWordSViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            emptyList()  // Initial value for _topicCards
+            emptyList()
         )
 
     private fun readRawTextFile(context: Context): List<WordCard> {
@@ -75,41 +73,50 @@ class AddWordSViewModel(
         return content
     }
 
-    fun onTextChange(newValue: String) {
-        _searchText.value = newValue
+    fun onWordChange(newValue: String) {
+        _uiState.update {
+            it.copy(
+                contentSearch = newValue
+            )
+        }
     }
 
-    fun onWordChange(newValue: String) {
-        _searchWord.value = newValue
+    fun onTitleChange(newValue: String) {
+        _uiState.update {
+            it.copy(
+                title = newValue
+            )
+        }
     }
 
     fun submit(word: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _uiState.update {
+                it.copy(
+                    title = word
+                )
+            }
             val jsonString = ResponseData(word)
-            Log.d("vm", "jsonString: $jsonString")
             gson?.fromJson(jsonString, DictionaryResponse::class.java)?.let { entry ->
-                _listData.update { currentList ->
-                    currentList + entry
+                _uiState.update {
+                    val listData: MutableList<DictionaryResponse> = it.wordResult.toMutableList()
+                    listData.add(entry)
+                    it.copy(
+                        wordResult = listData
+                    )
                 }
             }
-            Log.d("vm", "submit: ${listData.value}")
 
         }
     }
 
-    fun findDataByItem(word: String) {
-        val filteredList = _listData.value.find { item ->
-            item.response == word
-        }
-        _dataFind.value = filteredList
-        Log.d("dataVM", "findDataByItem: $word")
-        Log.d("dataVM", "findDataByItem: ${listData.value} ")
-        Log.d("dataVM", "findDataByItem: ${dataFind.value} ")
-    }
+
     fun addTopic(title: String){
         viewModelScope.launch(Dispatchers.IO) {
-           val topic_id =  repository.insertTopic(MyWordTopic(name = title))
-            insertMyWordDatabase(repository = repository, dictionaryMyWord = _listData.value[0], topic_id = topic_id)
+            val topic_id =  repository.insertTopic(MyWordTopic(name = title))
+            _uiState.value.wordResult.forEach {
+                insertMyWordDatabase(repository = repository, dictionaryMyWord = it, topic_id = topic_id)
+            }
         }
     }
     fun getTopic(id: Long) {

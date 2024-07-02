@@ -55,8 +55,7 @@ fun AddWordScreen(
     viewModel: AddWordSViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val resultSearch = viewModel.topicCards.collectAsState()
-    val contentSearch = viewModel.searchText.collectAsState()
-    val dataSearch by viewModel.listData.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val active = remember {
         mutableStateOf(false)
     }
@@ -70,7 +69,7 @@ fun AddWordScreen(
         bottomBar = {
             Button(
                 onClick = {
-                    viewModel.addTopic(viewModel.searchWord.value)
+                    viewModel.addTopic(uiState.title)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -95,9 +94,9 @@ fun AddWordScreen(
                 text = "Title",
             )
             OutlinedTextField(
-                value = viewModel.searchWord.collectAsState().value,
+                value = uiState.title,
                 onValueChange = {
-                    viewModel.onWordChange(it)
+                    viewModel.onTitleChange(it)
                 },
                 placeholder = {
                     Text(
@@ -115,9 +114,9 @@ fun AddWordScreen(
                 text = "Vocabulary",
             )
             SearchBar(
-                query = contentSearch.value,
+                query = uiState.contentSearch,
                 onQueryChange = {
-                    viewModel.onTextChange(it)
+                    viewModel.onWordChange(it)
                 },
                 onSearch = {
                     viewModel.submit(it)
@@ -184,7 +183,7 @@ fun AddWordScreen(
 
             }
             Spacer(modifier = Modifier.height(10.dp))
-            if (dataSearch.isEmpty()) {
+            if (uiState.wordResult.isEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -201,13 +200,10 @@ fun AddWordScreen(
                 }
 
             } else {
-                dataSearch.forEach { item ->
+                uiState.wordResult.forEach { item ->
                     Log.d("data", "AddWordScreen: $item")
                     item.response?.let { it1 ->
                         ItemWordCardScreen(data = it1) {
-
-                            viewModel.findDataByItem(item.response ?: "")
-                        //    navController.navigate(Screen.BottomBar.DetailsCard.bRouter + "/" + item.response)
                         }
                     }
                 }
