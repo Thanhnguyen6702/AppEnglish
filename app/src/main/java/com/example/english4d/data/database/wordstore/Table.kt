@@ -70,6 +70,14 @@ data class MyWordAntonym(
     val vocab2_id: Long
 )
 
+data class TopicWithWords(
+    @Embedded val topic: MyWordTopic,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "topic_id"
+    )
+    val words: List<MyWord>
+)
 
 data class MyWordWithDetails(
     @Embedded val myword: MyWord,

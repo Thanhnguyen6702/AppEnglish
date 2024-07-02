@@ -2,6 +2,7 @@ package com.example.english4d.ui.wordstore.addtopic
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.R
@@ -31,15 +32,8 @@ class AddWordSViewModel(
    private val repository: MyWordRepository,
     context: Context
 ) : ViewModel() {
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
-
-    private val _searchWord = MutableStateFlow("")
-    val searchWord = _searchWord.asStateFlow()
-
-    private val _listData = MutableStateFlow<List<DictionaryResponse>>(emptyList())
-    val listData: StateFlow<List<DictionaryResponse>> = _listData.asStateFlow()
-
+    private val _uiState = MutableStateFlow(AddWordUiState())
+    val uiState: StateFlow<AddWordUiState> = _uiState.asStateFlow()
     private val _dataFind = MutableStateFlow<DictionaryResponse?>(null)
     val dataFind: StateFlow<DictionaryResponse?> = _dataFind
     val trie = Trie()
@@ -52,7 +46,7 @@ class AddWordSViewModel(
         }
     }
 
-    val topicCards = searchText
+    val topicCards = uiState.value.contentSearch
         .debounce(300)  // Debounce to reduce search frequency
         .flatMapLatest { query ->
             flow {
@@ -116,6 +110,11 @@ class AddWordSViewModel(
         viewModelScope.launch(Dispatchers.IO) {
            val topic_id =  repository.insertTopic(MyWordTopic(name = title))
             insertMyWordDatabase(repository = repository, dictionaryMyWord = _listData.value[0], topic_id = topic_id)
+        }
+    }
+    fun getTopic(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val topicDetail = repository.getTopic(id)
         }
     }
 }

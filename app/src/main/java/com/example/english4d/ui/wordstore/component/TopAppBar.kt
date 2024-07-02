@@ -17,11 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.english4d.R
 
 
@@ -29,8 +26,8 @@ import com.example.english4d.R
 @Composable
 fun TopAppBar(
     type: String,
-    navController: NavHostController,
-    title : String
+    title : String,
+    onClick: () -> Unit,
 ) {
     androidx.compose.material3.TopAppBar(
         modifier = Modifier
@@ -49,7 +46,7 @@ fun TopAppBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ }) {
+                    onClick = onClick) {
                     Icon(
                         modifier = Modifier
                             .size(20.dp),
@@ -90,10 +87,4 @@ fun TopAppBar(
         }
     )
 
-}
-
-@Preview(showBackground = true)
-@Composable
-fun dahda() {
-    TopAppBar(type = "main", navController = rememberNavController(), title = "Kho từ của tôi")
 }

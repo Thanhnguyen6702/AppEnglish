@@ -51,6 +51,7 @@ import com.example.englishe4.presentation.component.TopAppBar
 @Composable
 fun AddWordScreen(
     navController: NavHostController,
+    id: Long,
     viewModel: AddWordSViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val resultSearch = viewModel.topicCards.collectAsState()
@@ -62,12 +63,14 @@ fun AddWordScreen(
     Log.d("data", "AddWordScreen: $resultSearch")
     Scaffold(
         topBar = {
-            TopAppBar(type = "main", navController = navController, title = "Kho của tôi")
+            TopAppBar(type = "main", title = "Kho của tôi"){
+
+            }
         },
         bottomBar = {
             Button(
                 onClick = {
-
+                    viewModel.addTopic(viewModel.searchWord.value)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

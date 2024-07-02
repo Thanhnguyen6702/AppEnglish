@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.english4d.navigation.ExtensionGraphScreen
+import com.example.english4d.navigation.MYWORD_ARGUMENT
 import com.example.english4d.navigation.READNEWS_ARGUMENT_HREF
 import com.example.english4d.navigation.READNEWS_ARGUMENT_TOPIC
 import com.example.english4d.navigation.STATISTIC_NEWS_ARGUMENT
@@ -148,8 +149,13 @@ fun ExtensionNavGraph(
             showBottomBar.value = false
             WordStoreScreen(navController = navHostController)
         }
-        composable(route = ExtensionGraphScreen.AddWord.route){
-            AddWordScreen(navController = navHostController)
+        composable(route = ExtensionGraphScreen.AddWord.route,
+            arguments = listOf(navArgument(MYWORD_ARGUMENT) {
+                type = NavType.LongType
+            })
+            ){
+            val id = it.arguments?.getLong(MYWORD_ARGUMENT) ?: -1
+            AddWordScreen(navController = navHostController,id = id)
         }
         composable(route = ExtensionGraphScreen.DetailWord.route){
             val parentEntry = remember(it) {

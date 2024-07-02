@@ -13,6 +13,9 @@ interface MyWordDao {
     @Query("SELECT * FROM myword_topic")
     fun getTopics(): Flow<List<MyWordTopic>>
     @Transaction
+    @Query("SELECT * FROM myword_topic WHERE id = :id")
+    fun getTopic(id: Long): TopicWithWords
+    @Transaction
     @Query("SELECT * FROM myword WHERE id = :id ")
     suspend fun getMyWordDetail(id: Long): MyWordWithDetails
 
