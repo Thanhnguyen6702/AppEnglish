@@ -39,9 +39,10 @@ fun WordStoreScreen(
         topBar = {
             TopAppBar(
                 type = "backpress",
-                navController = navController,
                 title = "Kho chủ đề"
-            )
+            ){
+                navController.navigate(ExtensionGraphScreen.AddWord.route)
+            }
         }
     ) {
         val topic by viewModel.topic.collectAsState()
@@ -73,7 +74,8 @@ fun WordStoreScreen(
                     ItemTopicCard(
                         title = it.name
                     ) {
-                        navController.navigate(ExtensionGraphScreen.AddWord.route)
+                        viewModel.getItem(it.id)
+                        navController.navigate(ExtensionGraphScreen.DetailTopic.route)
                     }
                 }
             }

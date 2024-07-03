@@ -36,13 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.english4d.R
-import com.example.english4d.ui.AppViewModelProvider
+import com.example.english4d.ui.wordstore.WordStoreViewModel
 import com.example.englishe4.presentation.component.ItemWordCardScreen
 import com.example.englishe4.presentation.component.TopAppBar
 
@@ -51,23 +49,24 @@ import com.example.englishe4.presentation.component.TopAppBar
 @Composable
 fun AddWordScreen(
     navController: NavHostController,
-    viewModel: AddWordSViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: WordStoreViewModel
 ) {
     val resultSearch = viewModel.topicCards.collectAsState()
-    val contentSearch = viewModel.searchText.collectAsState()
-    val dataSearch by viewModel.listData.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val active = remember {
         mutableStateOf(false)
     }
     Log.d("data", "AddWordScreen: $resultSearch")
     Scaffold(
         topBar = {
-            TopAppBar(type = "main", navController = navController, title = "Kho của tôi")
+            TopAppBar(type = "main", title = "Kho của tôi"){
+
+            }
         },
         bottomBar = {
             Button(
                 onClick = {
-
+                    viewModel.addTopic(uiState.title)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,9 +91,9 @@ fun AddWordScreen(
                 text = "Title",
             )
             OutlinedTextField(
-                value = viewModel.searchWord.collectAsState().value,
+                value = uiState.title,
                 onValueChange = {
-                    viewModel.onWordChange(it)
+                    viewModel.onTitleChange(it)
                 },
                 placeholder = {
                     Text(
@@ -112,9 +111,9 @@ fun AddWordScreen(
                 text = "Vocabulary",
             )
             SearchBar(
-                query = contentSearch.value,
+                query = uiState.contentSearch,
                 onQueryChange = {
-                    viewModel.onTextChange(it)
+                    viewModel.onWordChange(it)
                 },
                 onSearch = {
                     viewModel.submit(it)
@@ -181,7 +180,7 @@ fun AddWordScreen(
 
             }
             Spacer(modifier = Modifier.height(10.dp))
-            if (dataSearch.isEmpty()) {
+            if (uiState.wordResult.isEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -198,13 +197,9 @@ fun AddWordScreen(
                 }
 
             } else {
-                dataSearch.forEach { item ->
-                    Log.d("data", "AddWordScreen: $item")
+                uiState.wordResult.forEach { item ->
                     item.response?.let { it1 ->
                         ItemWordCardScreen(data = it1) {
-
-                            viewModel.findDataByItem(item.response ?: "")
-                        //    navController.navigate(Screen.BottomBar.DetailsCard.bRouter + "/" + item.response)
                         }
                     }
                 }
@@ -216,7 +211,3 @@ fun AddWordScreen(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun dada() {
-}

@@ -10,6 +10,7 @@ const val VIDEO_ID_ARGUMENT = "video_id"
 const val VIDEO_URL_ARGUMENT = "image_url"
 const val VIDEO_TITLE_ARGUMENT = "video_title"
 const val VIDEO_MODE = "video_mode"
+const val MYTOPIC_ARGUMENT = "id"
 
 object Routes {
     const val RootGraph = "rootGraph"
@@ -96,6 +97,8 @@ sealed class ExtensionGraphScreen(val route: String) {
     object SeeMoreNews : ExtensionGraphScreen(route = "see_more_news")
     object  WordStore : ExtensionGraphScreen(route = "word_store")
     object  AddWord : ExtensionGraphScreen(route = "add_word")
+    object DetailTopic : ExtensionGraphScreen(route = "detail_topic"){
+    }
     object DetailWord : ExtensionGraphScreen(route = "detail_word")
 }
 

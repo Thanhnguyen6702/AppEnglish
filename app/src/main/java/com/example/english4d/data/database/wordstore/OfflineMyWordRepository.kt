@@ -8,6 +8,7 @@ class OfflineMyWordRepository(
     override suspend fun insertTopic(topic: MyWordTopic): Long = myWordDao.insertTopic(topic)
 
     override fun getTopics(): Flow<List<MyWordTopic>> = myWordDao.getTopics()
+    override suspend fun getTopic(id: Long): TopicWithWords = myWordDao.getTopic(id)
 
     override suspend fun insertMyWord(word: MyWord): Long = myWordDao.insertMyWord(word)
     override suspend fun getMyWordDetail(id: Long): MyWordWithDetails = myWordDao.getMyWordDetail(id)

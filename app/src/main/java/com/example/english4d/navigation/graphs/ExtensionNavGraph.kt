@@ -36,8 +36,11 @@ import com.example.english4d.ui.video.SeeMoreVideoScreen
 import com.example.english4d.ui.video.VideoModeScreen
 import com.example.english4d.ui.video.VideoScreen
 import com.example.english4d.ui.video.VideoViewModel
+import com.example.english4d.ui.wordstore.DetailTopicScreen
 import com.example.english4d.ui.wordstore.WordStoreScreen
+import com.example.english4d.ui.wordstore.WordStoreViewModel
 import com.example.english4d.ui.wordstore.addtopic.AddWordScreen
+import com.example.english4d.ui.wordstore.component.DetailItemWordCardScreen
 
 
 @Composable
@@ -98,7 +101,7 @@ fun ExtensionNavGraph(
             route = ExtensionGraphScreen.Video.route,
             arguments = listOf(navArgument(VIDEO_ID_ARGUMENT) {
                 type = NavType.StringType
-            }, navArgument(VIDEO_MODE){
+            }, navArgument(VIDEO_MODE) {
                 type = NavType.IntType
             })
         ) {
@@ -130,11 +133,17 @@ fun ExtensionNavGraph(
             val videoId = it.arguments?.getString(VIDEO_ID_ARGUMENT) ?: ""
             val title = it.arguments?.getString(VIDEO_TITLE_ARGUMENT) ?: ""
             val urlImage = it.arguments?.getString(VIDEO_URL_ARGUMENT) ?: ""
-            VideoModeScreen(navController = navHostController,urlImage = urlImage, title = title, videoId = videoId)
+            VideoModeScreen(
+                navController = navHostController,
+                urlImage = urlImage,
+                title = title,
+                videoId = videoId
+            )
         }
         composable(route = ExtensionGraphScreen.FairyTopic.route) {
             showBottomBar.value = false
-            val fairyViewModel: FairyTailViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            val fairyViewModel: FairyTailViewModel =
+                viewModel(factory = AppViewModelProvider.Factory)
             FairyTailScreen(navController = navHostController, viewmodel = fairyViewModel)
         }
         composable(route = ExtensionGraphScreen.ReadFairy.route) {
@@ -144,18 +153,37 @@ fun ExtensionNavGraph(
             val fairyViewModel: FairyTailViewModel = viewModel(parentEntry)
             ReadFairyTail(navController = navHostController, viewmodel = fairyViewModel)
         }
-        composable(route = ExtensionGraphScreen.WordStore.route){
+        composable(route = ExtensionGraphScreen.WordStore.route) {
             showBottomBar.value = false
             WordStoreScreen(navController = navHostController)
         }
-        composable(route = ExtensionGraphScreen.AddWord.route){
-            AddWordScreen(navController = navHostController)
-        }
-        composable(route = ExtensionGraphScreen.DetailWord.route){
+        composable(
+            route = ExtensionGraphScreen.AddWord.route
+        ) {
             val parentEntry = remember(it) {
-                navHostController.getBackStackEntry(ExtensionGraphScreen.AddWord.route)
+                navHostController.getBackStackEntry(ExtensionGraphScreen.WordStore.route)
             }
-          //  DetailItemWordCardScreen(word = , navController = , viewModel = )
+            val wordStoreViewModel: WordStoreViewModel = viewModel(parentEntry)
+            AddWordScreen(navController = navHostController, viewModel = wordStoreViewModel)
         }
+        composable(route = ExtensionGraphScreen.DetailTopic.route
+        ) {
+            val parentEntry = remember(it) {
+                navHostController.getBackStackEntry(ExtensionGraphScreen.WordStore.route)
+            }
+            val wordStoreViewModel: WordStoreViewModel = viewModel(parentEntry)
+            DetailTopicScreen(navController = navHostController, viewModel = wordStoreViewModel)
+        }
+        composable(route = ExtensionGraphScreen.DetailWord.route) {
+            val parentEntry = remember(it) {
+                navHostController.getBackStackEntry(ExtensionGraphScreen.WordStore.route)
+            }
+            val wordStoreViewModel: WordStoreViewModel = viewModel(parentEntry)
+            DetailItemWordCardScreen(
+                navController = navHostController,
+                viewModel = wordStoreViewModel
+            )
+        }
+
     }
 }
