@@ -36,13 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.english4d.R
-import com.example.english4d.ui.AppViewModelProvider
+import com.example.english4d.ui.wordstore.WordStoreViewModel
 import com.example.englishe4.presentation.component.ItemWordCardScreen
 import com.example.englishe4.presentation.component.TopAppBar
 
@@ -51,8 +49,7 @@ import com.example.englishe4.presentation.component.TopAppBar
 @Composable
 fun AddWordScreen(
     navController: NavHostController,
-    id: Long,
-    viewModel: AddWordSViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: WordStoreViewModel
 ) {
     val resultSearch = viewModel.topicCards.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
@@ -201,7 +198,6 @@ fun AddWordScreen(
 
             } else {
                 uiState.wordResult.forEach { item ->
-                    Log.d("data", "AddWordScreen: $item")
                     item.response?.let { it1 ->
                         ItemWordCardScreen(data = it1) {
                         }
@@ -215,7 +211,3 @@ fun AddWordScreen(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun dada() {
-}

@@ -41,7 +41,7 @@ fun WordStoreScreen(
                 type = "backpress",
                 title = "Kho chủ đề"
             ){
-                navController.navigate(ExtensionGraphScreen.AddWord.passId(-1))
+                navController.navigate(ExtensionGraphScreen.AddWord.route)
             }
         }
     ) {
@@ -58,7 +58,7 @@ fun WordStoreScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        modifier = Modifier.clickable { navController.navigate(ExtensionGraphScreen.AddWord.passId(-1)) },
+                        modifier = Modifier.clickable { navController.navigate(ExtensionGraphScreen.AddWord.route) },
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = null
                     )
@@ -74,7 +74,8 @@ fun WordStoreScreen(
                     ItemTopicCard(
                         title = it.name
                     ) {
-                        navController.navigate(ExtensionGraphScreen.AddWord.passId(it.id))
+                        viewModel.getItem(it.id)
+                        navController.navigate(ExtensionGraphScreen.DetailTopic.route)
                     }
                 }
             }
