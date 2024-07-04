@@ -1,8 +1,9 @@
 package com.example.englishe4.presentation.TopicScreen.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,14 +30,16 @@ import androidx.compose.ui.unit.dp
 import com.example.english4d.R
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ItemTopicCard( title: String,onClick :()-> Unit) {
+fun ItemTopicCard(modifier: Modifier, title: String,onClick :()-> Unit, onLongClick: () -> Unit) {
     Box (
-        modifier = Modifier
+        modifier = modifier
             .height(230.dp)
-            .clickable {
-                onClick()
-            }
+            .combinedClickable (
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
     ) {
         Card(
             modifier = Modifier
@@ -123,6 +126,5 @@ fun ItemTopicCard( title: String,onClick :()-> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun ItemTopicCardPreview() {
-    ItemTopicCard(title = "Chủ đề 1") {
-    }
+    ItemTopicCard(modifier = Modifier,title = "Chủ đề 1", onClick = {}, onLongClick = {})
 }

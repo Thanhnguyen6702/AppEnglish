@@ -16,9 +16,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -40,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.english4d.R
+import com.example.english4d.navigation.ExtensionGraphScreen
 import com.example.english4d.ui.wordstore.WordStoreViewModel
 import com.example.englishe4.presentation.component.ItemWordCardScreen
 import com.example.englishe4.presentation.component.TopAppBar
@@ -59,8 +64,8 @@ fun AddWordScreen(
     Log.d("data", "AddWordScreen: $resultSearch")
     Scaffold(
         topBar = {
-            TopAppBar(type = "main", title = "Kho của tôi"){
-
+            TopAppBar(title = "Kho của tôi", onClickRight = {}) {
+                navController.popBackStack()
             }
         },
         bottomBar = {
@@ -160,20 +165,18 @@ fun AddWordScreen(
                         Row(
                             modifier = Modifier
                                 .clickable {
-                                    item.content?.let { it1 -> viewModel.submit(it1) }
+                                    item.let { it1 -> viewModel.submit(it1) }
                                     active.value = false
                                 },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            item.content?.let { it1 ->
-                                Text(
-                                    text = it1,
-                                    style = TextStyle(
-                                        fontSize = 14.sp,
-                                    ),
-                                    modifier = Modifier.padding(start = 10.dp)
-                                )
-                            }
+                            Text(
+                                text = item,
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                ),
+                                modifier = Modifier.padding(start = 10.dp)
+                            )
                         }
                     }
                 }
@@ -197,9 +200,31 @@ fun AddWordScreen(
                 }
 
             } else {
-                uiState.wordResult.forEach { item ->
-                    item.response?.let { it1 ->
-                        ItemWordCardScreen(data = it1) {
+                uiState.wordResult.forEachIndexed { index, dictionaryResponse ->
+                    dictionaryResponse.response?.let { it1 ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically
+                        )  {
+                            ItemWordCardScreen(
+                                modifier = Modifier.weight(1f),
+                                data = it1,
+                                onLongClick = {
+                                    viewModel.showDeleteWordResult(true)
+                                },
+                                onClickNav = {
+                                    navController.navigate(ExtensionGraphScreen.DetailWord.route)
+                                })
+                            if (uiState.showRemoveWordResult) {
+                                IconButton(onClick = {  viewModel.deleteWordResult(index) }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
                         }
                     }
                 }

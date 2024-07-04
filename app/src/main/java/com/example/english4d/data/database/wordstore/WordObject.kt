@@ -19,7 +19,7 @@ data class Definition(
     @SerializedName("partOfSpeech") val partOfSpeech: String?,
     @SerializedName("definition_en") val definitionEN: String?,
     @SerializedName("definition_vi") val definitionVI: String?,
-    @SerializedName("examples") val examples: Example?
+    @SerializedName("example") val examples: Example?
 )
 
 data class Example(

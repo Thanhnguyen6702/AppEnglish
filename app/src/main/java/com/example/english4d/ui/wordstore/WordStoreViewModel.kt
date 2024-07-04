@@ -8,7 +8,7 @@ import com.example.english4d.data.database.wordstore.DictionaryResponse
 import com.example.english4d.data.database.wordstore.MyWordRepository
 import com.example.english4d.data.database.wordstore.MyWordTopic
 import com.example.english4d.model.ResponseData
-import com.example.english4d.ui.wordstore.addtopic.AddWordUiState
+import com.example.english4d.ui.wordstore.addtopic.WordStoreUiState
 import com.example.english4d.ui.wordstore.addtopic.insertMyWordDatabase
 import com.example.englishe4.common.Trie
 import com.google.gson.Gson
@@ -34,15 +34,15 @@ class WordStoreViewModel(
     val topic: StateFlow<List<MyWordTopic>> =
         repository.getTopics().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    private val _uiState = MutableStateFlow(AddWordUiState())
-    val uiState: StateFlow<AddWordUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(WordStoreUiState())
+    val uiState: StateFlow<WordStoreUiState> = _uiState.asStateFlow()
     val trie = Trie()
     var gson: Gson? = null
 
     init {
         gson = Gson()
         readRawTextFile(context).forEach {
-            it.content?.let { it1 -> trie.insert(it1) }
+            it.let { it1 -> trie.insert(it1) }
         }
     }
 
@@ -52,9 +52,7 @@ class WordStoreViewModel(
             flow {
                 emit(trie.search(query.contentSearch)
                     .take(10)
-                    .map {
-                        WordCard(content = it)
-                    })
+                    )
             }.flowOn(Dispatchers.Default)
         }
         .stateIn(
@@ -63,13 +61,13 @@ class WordStoreViewModel(
             emptyList()
         )
 
-    private fun readRawTextFile(context: Context): List<WordCard> {
+    private fun readRawTextFile(context: Context): List<String> {
         val inputStream = context.resources.openRawResource(R.raw.wordlist)
         val reader = BufferedReader(InputStreamReader(inputStream))
-        val content = mutableListOf<WordCard>()
+        val content = mutableListOf<String>()
         var line: String?
         while (reader.readLine().also { line = it } != null) {
-            content.add(WordCard(content = line))
+            line?.let { content.add(it) }
         }
         reader.close()
         return content
@@ -91,13 +89,6 @@ class WordStoreViewModel(
         }
     }
 
-    fun onChangeTopic(newValue: String) {
-        _uiState.update {
-            it.copy(
-                topic = newValue
-            )
-        }
-    }
 
     fun submit(word: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -138,10 +129,10 @@ class WordStoreViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update {
                 it.copy(
-                    listItem = repository.getTopic(id).words
+                    topicWithWords = repository.getTopic(id)
                 )
             }
-            _uiState.value.listItem.forEach {
+            _uiState.value.topicWithWords.words.forEach {
                 getItemDetail(it.id)
             }
         }
@@ -159,19 +150,50 @@ class WordStoreViewModel(
             }
         }
     }
-}
 
-
-data class WordCard(
-    val content: String?
-) {
-    fun doesMatchSearchQuery(query: String): Boolean {
-        val matchingCombinations = listOf(
-            "$content",
-        )
-
-        return matchingCombinations.any {
-            it.contains(query, ignoreCase = true)
+    fun deleteWordResult(pos: Int) {
+        val listData: MutableList<DictionaryResponse> = _uiState.value.wordResult.toMutableList()
+        listData.removeAt(pos)
+        _uiState.update {
+            it.copy(
+                wordResult = listData
+            )
         }
     }
-}
+    fun showDeleteWordResult(isShow: Boolean) {
+        _uiState.update {
+            it.copy(
+                showRemoveWordResult = isShow
+            )
+        }
+    }
+        fun deleteItem(id: Long) {
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.deleteMyWord(id)
+            }
+        }
+
+        fun deleteTopic(id: Long) {
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.deleteTopic(id)
+            }
+        }
+
+        fun showDeleteTopic(isShow: Boolean) {
+            _uiState.update {
+                it.copy(
+                    showRemoveTopic = isShow
+                )
+            }
+        }
+
+        fun showDeleteWord(isShow: Boolean) {
+            _uiState.update {
+                it.copy(
+                    showRemoveWord = isShow
+                )
+            }
+        }
+    }
+
+

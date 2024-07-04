@@ -6,11 +6,13 @@ class OfflineMyWordRepository(
     val myWordDao: MyWordDao
 ) : MyWordRepository {
     override suspend fun insertTopic(topic: MyWordTopic): Long = myWordDao.insertTopic(topic)
-
+    override suspend fun deleteTopic(id: Long) = myWordDao.deleteTopic(id)
     override fun getTopics(): Flow<List<MyWordTopic>> = myWordDao.getTopics()
     override suspend fun getTopic(id: Long): TopicWithWords = myWordDao.getTopic(id)
 
     override suspend fun insertMyWord(word: MyWord): Long = myWordDao.insertMyWord(word)
+    override suspend fun deleteMyWord(id: Long)  = myWordDao.deleteMyWord(id)
+
     override suspend fun getMyWordDetail(id: Long): MyWordWithDetails = myWordDao.getMyWordDetail(id)
 
 

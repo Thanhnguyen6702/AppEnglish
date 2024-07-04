@@ -1,7 +1,8 @@
 package com.example.englishe4.presentation.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,17 +25,19 @@ import androidx.compose.ui.unit.dp
 import com.example.english4d.R
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ItemWordCardScreen(data: String, onClickNav: () -> Unit) {
+fun ItemWordCardScreen(modifier: Modifier,data: String,onLongClick: () -> Unit, onClickNav: () -> Unit) {
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp)
             .height(60.dp)
-            .clickable {
-                onClickNav()
-            }
+            .combinedClickable (
+                onClick = onClickNav,
+                onLongClick = onLongClick
+            )
             .background(color = colorResource(id = R.color.white)),
         shape = RoundedCornerShape(10.dp),
     ) {

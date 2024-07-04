@@ -5,15 +5,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,20 +25,17 @@ import com.example.english4d.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
-    type: String,
-    title : String,
-    onClick: () -> Unit,
+    type: String = "",
+    title: String,
+    onClickRight: () -> Unit,
+    onClickLeft: () -> Unit,
 ) {
     androidx.compose.material3.TopAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp),
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            // Access default colors
-            containerColor = Color.White,
-        ),
         title = {
-            Row (
+            Row(
                 modifier = Modifier
                     .height(60.dp)
                     .fillMaxWidth(),
@@ -46,11 +43,12 @@ fun TopAppBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = onClick) {
+                    onClick = onClickLeft
+                ) {
                     Icon(
                         modifier = Modifier
                             .size(20.dp),
-                        painter = painterResource(id = R.drawable.icon_backpress) ,
+                        painter = painterResource(id = R.drawable.icon_backpress),
                         contentDescription = "BACKPRESS"
                     )
                 }
@@ -63,23 +61,22 @@ fun TopAppBar(
                     )
 
                 )
-                if(type == "default") {
-                    IconButton(onClick = { /*TODO*/ }) {
+                if (type == "modifier") {
+                    IconButton(onClick = onClickRight) {
                         Icon(
-                            painter = painterResource(id = R.drawable.icon_book),
-                            contentDescription = "BOX"
+                            imageVector = Icons.Filled.EditNote,
+                            contentDescription = "edit"
                         )
                     }
-                }
-                else{
-                    IconButton(onClick = {
-                      //  navController.navigate(Screen.BottomBar.Home.bRouter)
-                    }) {
+                } else if (type == "add") {
+                    IconButton(onClick = onClickRight) {
                         Icon(
-                            painter = painterResource(id = R.drawable.icon_play),
-                            contentDescription = "BOX"
+                            painter = painterResource(id = R.drawable.ic_add_list),
+                            contentDescription = "add"
                         )
                     }
+                } else {
+                    Text(text = " ")
                 }
 
             }

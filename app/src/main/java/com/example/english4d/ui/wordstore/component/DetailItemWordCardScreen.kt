@@ -1,5 +1,6 @@
 package com.example.english4d.ui.wordstore.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,8 +37,8 @@ fun DetailItemWordCardScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(type = "backpress", title = "Chi tiết thẻ"){
-
+            TopAppBar( title = "Chi tiết thẻ", onClickRight = {}){
+                    navController.popBackStack()
             }
         }
     ) {
@@ -76,12 +77,12 @@ fun DetailItemWordCardScreen(
                         modifier = Modifier
                             .padding(top = 20.dp),
                     ) {
-                        Icon(
+                        Image(
                             modifier = Modifier
                                 .padding(end = 10.dp)
                                 .size(12.dp),
                             painter = painterResource(id = R.drawable.icon_usa),
-                            contentDescription = "Arrow"
+                            contentDescription = null
                         )
                         Text(
                             text = item.definition_en,
@@ -93,12 +94,12 @@ fun DetailItemWordCardScreen(
                         modifier = Modifier
                             .padding(top = 5.dp),
                     ) {
-                        Icon(
+                        Image(
                             modifier = Modifier
                                 .padding(end = 10.dp)
                                 .size(12.dp),
-                            painter = painterResource(id = R.drawable.icon_usa),
-                            contentDescription = "Arrow"
+                            painter = painterResource(id = R.drawable.icon_vietnam),
+                            contentDescription = null
                         )
 
                         Text(
@@ -142,17 +143,16 @@ fun ExampleItem(data: Example) {
         Row(
             modifier = Modifier
         ) {
-            Icon(
+            Image(
                 modifier = Modifier
                     .padding(end = 10.dp)
                     .size(12.dp),
                 painter = painterResource(id = R.drawable.icon_usa),
-                contentDescription = "Arrow"
+                contentDescription = null
             )
             data.exampleEN?.let {
                 Text(
                     text = it,
-
                 )
             }
         }
@@ -160,12 +160,12 @@ fun ExampleItem(data: Example) {
             modifier = Modifier
                 .padding(top = 5.dp),
         ) {
-            Icon(
+            Image(
                 modifier = Modifier
                     .padding(end = 10.dp)
                     .size(12.dp),
-                painter = painterResource(id = R.drawable.icon_usa),
-                contentDescription = "Arrow"
+                painter = painterResource(id = R.drawable.icon_vietnam),
+                contentDescription = null
             )
             data.exampleVI?.let {
                 Text(

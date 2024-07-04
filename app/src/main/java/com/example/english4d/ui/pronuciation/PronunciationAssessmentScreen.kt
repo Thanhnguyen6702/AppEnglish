@@ -249,9 +249,7 @@ fun PronunciationAssessmentScreen(
                             } else {
                                 permissionLauncher.launch(
                                     arrayOf(
-                                        Manifest.permission.RECORD_AUDIO,
-                                        Manifest.permission.INTERNET,
-                                        Manifest.permission.READ_EXTERNAL_STORAGE
+                                        Manifest.permission.RECORD_AUDIO
                                     )
                                 )
                             }
@@ -295,7 +293,6 @@ fun PronunciationAssessmentScreen(
                         )
                     }
                 }
-
             }
             ElevatedButton(
                 onClick = {
