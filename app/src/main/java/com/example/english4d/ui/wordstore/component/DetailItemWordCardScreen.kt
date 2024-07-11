@@ -37,14 +37,16 @@ fun DetailItemWordCardScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar( title = "Chi tiết thẻ", onClickRight = {}){
-                    navController.popBackStack()
+            TopAppBar(title = "Chi tiết thẻ", onClickRight = {
+
+            }) {
+                navController.popBackStack()
             }
         }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .padding(
                     20.dp
@@ -69,8 +71,7 @@ fun DetailItemWordCardScreen(
             Column(
                 modifier = Modifier
                     .padding(start = 20.dp)
-                    .wrapContentSize()
-                ,
+                    .wrapContentSize(),
             ) {
                 uiState.listItemDetail[uiState.position].definitions?.forEach { item ->
                     Row(
@@ -111,15 +112,23 @@ fun DetailItemWordCardScreen(
 
             }
 
-            Text(
-                modifier = Modifier
-                    .padding(top = 10.dp),
-                text = "Ví dụ :",
+//            Text(
+//                modifier = Modifier
+//                    .padding(top = 10.dp),
+//                text = "Ví dụ :",
+//
+//                )
 
-            )
-
-            uiState.listItemDetail[uiState.position].examples?.get(0)
-                ?.let { example -> ExampleItem(data = Example(example.example_en, example.example_vi)) }
+            uiState.listItemDetail[uiState.position].examples?.forEach {
+                it.let { example ->
+                    ExampleItem(
+                        data = Example(
+                            example.example_en,
+                            example.example_vi
+                        )
+                    )
+                }
+            }
         }
 
 
@@ -176,3 +185,4 @@ fun ExampleItem(data: Example) {
 
     }
 }
+

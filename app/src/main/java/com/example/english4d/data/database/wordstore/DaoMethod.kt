@@ -19,6 +19,15 @@ interface MyWordDao {
     @Transaction
     @Query("SELECT * FROM myword_topic WHERE id = :id")
     fun getTopic(id: Long): TopicWithWords
+    @Query("UPDATE myword_topic SET name = :name WHERE id = :id")
+    suspend fun updateTopic(id: Long, name: String)
+    @Query("UPDATE myword_topic SET is_study = :study WHERE id = :id")
+    suspend fun updateTopicStudy(id: Long, study: Int)
+    @Query("SELECT * FROM myword_topic WHERE name = :name")
+    suspend fun getTopicByName(name: String): MyWordTopic?
+    @Query("SELECT COUNT(*) FROM myword WHERE english = :english")
+    suspend fun isWordExist(english: String): Int
+
     @Transaction
     @Query("SELECT * FROM myword WHERE id = :id ")
     suspend fun getMyWordDetail(id: Long): MyWordWithDetails

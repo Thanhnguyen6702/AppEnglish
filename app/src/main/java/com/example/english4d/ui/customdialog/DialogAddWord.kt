@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,18 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.english4d.R
 import com.example.english4d.ui.theme.TypeText
-import kotlinx.coroutines.launch
 
 @Composable
-fun DialogRename(
+fun DialogAddWord(
     onDismiss: () -> Unit,
-    onRename: suspend (String) -> Boolean
+    addWord: (String) -> Unit
 ) {
     var text by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
-
     Dialog(
         onDismissRequest = onDismiss
     ) {
@@ -60,20 +56,16 @@ fun DialogRename(
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = "Nhập tên chủ đề",
+                    text = "Nhập từ muốn thêm",
                     style = TypeText.h5.copy(fontWeight = FontWeight.Medium)
                 )
                 OutlinedTextField(
                     value = text,
                     onValueChange = {
                         text = it
-                        if (isError) {
-                            isError = false
-                            errorMessage = ""
-                        }
                     },
-                    label = { Text(text = "Tên chủ đề") },
-                    isError = isError
+                    isError = isError,
+                    label = { Text(text = "Nhập từ") }
                 )
                 if (isError) {
                     Text(
@@ -89,21 +81,20 @@ fun DialogRename(
                     Button(
                         modifier = Modifier.width(120.dp),
                         onClick = {
-                            coroutineScope.launch {
-                                if (onRename(text)) {
-                                    isError = false
-                                    onDismiss()
-                                } else {
-                                    isError = true
-                                    errorMessage = "Chủ đề đã tồn tại"
-                                }
+                            if (text.isBlank()) {
+                                isError = true
+                                errorMessage = "Không được để trống"
+                            } else {
+                                isError = false
+                                addWord(text)
+                                onDismiss()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(id = R.color.green_100)
                         )
                     ) {
-                        Text(text = "Cập nhật")
+                        Text(text = "Thêm từ")
                     }
                     Button(
                         modifier = Modifier.width(120.dp),
@@ -122,8 +113,6 @@ fun DialogRename(
 
 @Preview(showBackground = true)
 @Composable
-fun DialogRenamePreview() {
-    DialogRename(onDismiss = {}, onRename = { true })
+fun DialogAddWordPreview() {
+    DialogAddWord(onDismiss = {}, addWord = {})
 }
-
-

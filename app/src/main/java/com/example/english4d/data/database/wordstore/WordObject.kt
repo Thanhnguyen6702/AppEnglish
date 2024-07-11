@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class DictionaryResponse(
     @SerializedName("entry") val entry: String?,
     @SerializedName("response") var response: String?,
+    @SerializedName("vietnamese") val vietnamese: String?,
     @SerializedName("status") val status: String?,
     @SerializedName("data") val data: DictionaryData?
 )

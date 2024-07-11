@@ -35,7 +35,7 @@ interface VocabularyDao {
         "SELECT Vocabulary.* FROM Vocabulary INNER JOIN Statistic ON Vocabulary.id = Statistic.id_vocab " +
                 "WHERE isStudy = 1"
     )
-    suspend fun getRevise(): List<Vocabulary>
+    fun getRevise(): Flow<List<Vocabulary>>
 
     @Query(
         "SELECT Vocabulary.* FROM Vocabulary " +

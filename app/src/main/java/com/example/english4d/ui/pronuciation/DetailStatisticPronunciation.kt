@@ -39,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.english4d.R
 import com.example.english4d.data.database.vocabulary.PronunciationWithVocabulary
+import com.example.english4d.navigation.PronunciationGraphScreen
 import com.example.english4d.ui.AppViewModelProvider
 import com.example.english4d.ui.theme.TypeText
 
@@ -120,11 +121,28 @@ fun DetailStatisticPronunciationScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Button(
-                    onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(
+                    onClick = {
+                        viewModel.getVocabWithoutPronun(
+                            when(uiState.optionSelect){
+                                StatisticPronunciation.LOWER -> 1
+                                StatisticPronunciation.MEDIUM -> 2
+                                StatisticPronunciation.HIGH -> 3
+                            })
+                        navController.navigate(PronunciationGraphScreen.Pronunciation.route)
+                    }, colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(
-                            id = R.color.green_100
+                            id = when(uiState.optionSelect){
+                                StatisticPronunciation.LOWER -> if (uiState.lower.isEmpty()) R.color.gray_100 else R.color.green_100
+                                StatisticPronunciation.MEDIUM ->  if (uiState.medium.isEmpty()) R.color.gray_100 else R.color.green_100
+                                StatisticPronunciation.HIGH -> if (uiState.high.isEmpty()) R.color.gray_100 else R.color.green_100
+                            }
                         )
-                    )
+                    ),
+                    enabled = when(uiState.optionSelect){
+                        StatisticPronunciation.LOWER -> uiState.lower.isNotEmpty()
+                        StatisticPronunciation.MEDIUM -> uiState.medium.isNotEmpty()
+                        StatisticPronunciation.HIGH -> uiState.high.isNotEmpty()
+                    }
                 ) {
                     Text(
                         text = "Học lại", style = TypeText.h5.copy(

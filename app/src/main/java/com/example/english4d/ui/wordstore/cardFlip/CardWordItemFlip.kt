@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.english4d.data.database.wordstore.MyWord
 import com.example.english4d.data.database.wordstore.MyWordWithDetails
 import com.wajahatkarim.flippable.FlipAnimationType
 import com.wajahatkarim.flippable.Flippable
@@ -33,10 +34,10 @@ fun CardWordItemFlip(word: MyWordWithDetails) {
             .height(200.dp)
             .padding(20.dp),
         frontSide = {
-            EnglishWordFrontSide(flipController, word.myword.english )
+            EnglishWordFrontSide(flipController, word.myword )
         },
         backSide = {
-            EnglishWordBackSide(flipController, word.myword.pronunciation ?: "not found")
+            EnglishWordBackSide(flipController, word.myword)
         },
         flipController = flipController,
         flipDurationMs = duration,
@@ -51,26 +52,28 @@ fun CardWordItemFlip(word: MyWordWithDetails) {
 @Composable
 fun EnglishWordFrontSide(
     flipController: FlippableController,
-    prompt: String
+    word: MyWord
 ) {
     CardFlip(
-        wordAndDefine = prompt,
         onFlip = {
             flipController.flip()
         },
+        word = word,
+        isFont = true
     )
 }
 
 @Composable
 fun EnglishWordBackSide(
     flipController: FlippableController,
-    answer: String
+    word: MyWord
 ) {
     CardFlip(
         onFlip = {
             flipController.flip()
         },
-        wordAndDefine = answer
+        word = word,
+        isFont = false
     )
 
 }

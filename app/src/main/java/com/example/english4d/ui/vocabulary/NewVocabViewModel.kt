@@ -111,8 +111,9 @@ class NewVocabViewModel(
                             vocabulary = vocabularies[index],
                             statusVocab = StatusVocab.UNCHOOSE
                         )
-                    }else{
-                        _uiState.value = _uiState.value.copy(isFinish = true)
+                        if(index == vocabularies.size-1) {
+                            _uiState.value = _uiState.value.copy(isFinish = true)
+                        }
                     }
                 }
             }

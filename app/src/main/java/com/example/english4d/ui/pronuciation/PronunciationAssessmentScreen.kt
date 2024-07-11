@@ -243,17 +243,20 @@ fun PronunciationAssessmentScreen(
                             },
                             shape = MaterialTheme.shapes.large
                         )
-                        .clickable {
-                            if (hasPermissions) {
-                                viewModel.startPronun()
-                            } else {
-                                permissionLauncher.launch(
-                                    arrayOf(
-                                        Manifest.permission.RECORD_AUDIO
+                        .clickable (onClick = {
+                                if (hasPermissions) {
+                                    viewModel.startPronun()
+                                } else {
+                                    permissionLauncher.launch(
+                                        arrayOf(
+                                            Manifest.permission.RECORD_AUDIO
+                                        )
                                     )
-                                )
-                            }
+                                }
                         },
+                            enabled = uiState.isRecording != RecordingState.PROCESSING
+                        )
+                        ,
                     contentAlignment = Alignment.Center
                 ) {
                     if (uiState.isRecording == RecordingState.NOTRECORDING) {
@@ -296,7 +299,11 @@ fun PronunciationAssessmentScreen(
             }
             ElevatedButton(
                 onClick = {
-                    viewModel.nextPronunciation()
+                    if (viewModel.isFinish.value) {
+                        navController.popBackStack()
+                    }else{
+                        viewModel.nextPronunciation()
+                    }
                 },
                 modifier = Modifier
                     .padding(vertical = dimensionResource(id = R.dimen.padding_hight))
@@ -306,7 +313,7 @@ fun PronunciationAssessmentScreen(
                 )
             ) {
                 Text(
-                    text = "Từ tiếp theo", style = TypeText.h6.copy(
+                    text =  if(viewModel.isFinish.value) "Hoàn thành" else "Từ tiếp theo", style = TypeText.h6.copy(
                         fontWeight = FontWeight.Bold, color = colorResource(
                             id = R.color.green_100
                         )

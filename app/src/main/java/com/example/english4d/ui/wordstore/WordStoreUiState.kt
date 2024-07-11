@@ -1,4 +1,4 @@
-package com.example.english4d.ui.wordstore.addtopic
+package com.example.english4d.ui.wordstore
 
 import com.example.english4d.data.database.wordstore.DictionaryResponse
 import com.example.english4d.data.database.wordstore.MyWordTopic
@@ -12,6 +12,8 @@ data class WordStoreUiState (
     val title: String = "",
     val contentSearch: String = "",
     val topic: String = "",
+    val numberLoading1: Int = 0,
+    val numberLoading2: Int = 0,
     val resultSearch: List<String> = listOf(),
     val wordResult: List<DictionaryResponse> = listOf(),
     val topicWithWords: TopicWithWords = TopicWithWords( MyWordTopic(name = ""), listOf()),

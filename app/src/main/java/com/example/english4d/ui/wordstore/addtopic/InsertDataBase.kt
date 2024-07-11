@@ -16,6 +16,7 @@ suspend fun insertMyWordDatabase(
     val word = MyWord(
         english = dictionaryMyWord.response ?: "",
         pronunciation = dictionaryMyWord.data?.phonetic,
+        vietnamese = dictionaryMyWord.vietnamese?:"",
         topic_id = topic_id
     )
     val wordId = repository.insertMyWord(word)
@@ -44,6 +45,7 @@ suspend fun insertMyWordDatabase(
     dictionaryMyWord.data?.antonyms?.forEach { item ->
         val antonym = MyWord(
             english = item.word ?: "",
+            vietnamese = "",
             pronunciation = item.phonetic ?: "",
             topic_id = null
         )

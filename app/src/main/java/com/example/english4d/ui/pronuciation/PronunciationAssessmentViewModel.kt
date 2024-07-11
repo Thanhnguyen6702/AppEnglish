@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.data.database.vocabulary.Pronunciation
@@ -38,6 +39,7 @@ class PronunciationAssessmentViewModel(
     val uiStateStatistic: StateFlow<PronunciationStatisticUiState> = _uiStateStatistic.asStateFlow()
     private lateinit var listVocab: List<Vocabulary>
     private var index = 0
+    val isFinish = mutableStateOf(false)
     private val pronunciationAssessment = PronunciationAssessment()
     private val playSound = TextToSpeechManager.getInstance(context)
     private var filePath: String? = context.getExternalFilesDir(null)?.absolutePath + "/record.wav"
@@ -49,7 +51,6 @@ class PronunciationAssessmentViewModel(
             Log.e("AppError", "External storage not available")
         }
         updateStatistic()
-        getVocabWithoutPronun()
         pronunciationAssessment.setRecordingListener(object : RecordingListener {
             override fun onRecordingStarted() {
                 viewModelScope.launch {
@@ -123,28 +124,44 @@ class PronunciationAssessmentViewModel(
     fun setOptionSelect(option: StatisticPronunciation){
         _uiStateStatistic.value = _uiStateStatistic.value.copy(optionSelect = option)
     }
-    private fun getVocabWithoutPronun() {
+    fun getVocabWithoutPronun(type: Int) {
+        index = 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                listVocab = vocabularyRepository.getVocabWithoutPronunciation()
+                when(type){
+                    0 -> listVocab = vocabularyRepository.getVocabWithoutPronunciation()
+                    1 -> listVocab = _uiStateStatistic.value.lower.map { it.vocabulary }
+                    2 -> listVocab = _uiStateStatistic.value.medium.map { it.vocabulary }
+                    3 -> listVocab = _uiStateStatistic.value.high.map { it.vocabulary }
+                }
                 if (listVocab.isNotEmpty()) {
+                    isFinish.value = false
                     _uiStateAssessment.value =
-                        _uiStateAssessment.value.copy(vocabulary = listVocab[index])
+                        _uiStateAssessment.value.copy(
+                            score = 0,
+                            vocabulary = listVocab[index],
+                            isListen = false
+                        )
+                }else{
+                    isFinish.value = true
                 }
             }
         }
     }
 
     fun nextPronunciation() {
-        if (_uiStateAssessment.value.isRecording == RecordingState.NOTRECORDING) {
-            index++
-            _uiStateAssessment.value =
-                _uiStateAssessment.value.copy(
-                    score = 0,
-                    vocabulary = listVocab[index],
-                    isListen = false
-                )
-        }
+        if (index < listVocab.lastIndex){
+            if (_uiStateAssessment.value.isRecording == RecordingState.NOTRECORDING) {
+                index++
+                if(index == listVocab.lastIndex) isFinish.value = true
+                _uiStateAssessment.value =
+                    _uiStateAssessment.value.copy(
+                        score = 0,
+                        vocabulary = listVocab[index],
+                        isListen = false
+                    )
+            }
+    }
     }
 
     fun startPronun() {
@@ -163,7 +180,7 @@ fun listeningAgain() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
-                    _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = false)
+                    _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = false, isSpeak = true, isRecording = RecordingState.PROCESSING)
                     val file = File(filePath)
                     val bufferSize = 8192
                     val audioAttributes = AudioAttributes.Builder()
@@ -195,7 +212,7 @@ fun listeningAgain() {
                     }
 
                     audioTrack.stop()
-                    _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = true)
+                    _uiStateAssessment.value = _uiStateAssessment.value.copy(isListen = true, isSpeak = false, isRecording = RecordingState.NOTRECORDING)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }

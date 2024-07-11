@@ -114,7 +114,6 @@ data class Examples(
 )
 data class Pronunciation(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
     val id_vocab: Int,
     val score: Int
 )

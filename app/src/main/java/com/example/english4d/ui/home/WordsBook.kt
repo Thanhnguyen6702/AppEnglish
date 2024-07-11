@@ -74,9 +74,9 @@ fun WordsBookScreen(
     }) { paddingValues ->
         val tabItems = listOf("Từ chưa thuộc", "Từ sắp thuộc", "Từ đã thuộc")
         var selectedTabIndex by remember { mutableIntStateOf(index) }
-        val pagerState = rememberPagerState (
+        val pagerState = rememberPagerState(
             initialPage = index,
-            pageCount = {tabItems.size}
+            pageCount = { tabItems.size }
         )
         Column(
             verticalArrangement = Arrangement.Top
@@ -84,10 +84,13 @@ fun WordsBookScreen(
             LaunchedEffect(selectedTabIndex) {
                 pagerState.animateScrollToPage(selectedTabIndex)
             }
-            LaunchedEffect(pagerState.currentPage ) {
+            LaunchedEffect(pagerState.currentPage) {
                 selectedTabIndex = pagerState.currentPage
             }
-            TabRow(selectedTabIndex = selectedTabIndex, modifier = Modifier.padding(paddingValues)) {
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                modifier = Modifier.padding(paddingValues)
+            ) {
                 tabItems.forEachIndexed { index, title ->
                     Tab(
                         modifier = Modifier.fillMaxWidth(1f / tabItems.size),
@@ -107,6 +110,7 @@ fun WordsBookScreen(
             ) { index ->
                 TabContent(
                     modifier = Modifier.fillMaxHeight(),
+                    viewModel = viewModel,
                     items = when (index) {
                         0 -> uiState.unlearned
                         1 -> uiState.learning
@@ -122,6 +126,7 @@ fun WordsBookScreen(
 
 @Composable
 fun ItemWordBook(
+    viewModel: HomeViewModel,
     vocabulary: Vocabulary,
     type: Int
 ) {
@@ -133,19 +138,23 @@ fun ItemWordBook(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                contentDescription = null,
-                tint = colorResource(
-                    id = R.color.green_100
-                ),
+            IconButton(
+                onClick = { viewModel.tts(vocabulary.english) },
                 modifier = Modifier.padding(
-                    top = dimensionResource(id = R.dimen.padding_hight),
-                    bottom = dimensionResource(id = R.dimen.padding_hight),
-                    end = dimensionResource(id = R.dimen.padding_medium),
-                    start = dimensionResource(id = R.dimen.padding_hight)
+                    top = dimensionResource(id = R.dimen.padding_medium),
+                    bottom = dimensionResource(id = R.dimen.padding_medium),
+                    end = dimensionResource(id = R.dimen.padding_small),
+                    start = dimensionResource(id = R.dimen.padding_medium)
                 )
-            )
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                    contentDescription = null,
+                    tint = colorResource(
+                        id = R.color.green_100
+                    )
+                )
+            }
             Column(
                 horizontalAlignment = Alignment.Start
             ) {
@@ -171,13 +180,18 @@ fun ItemWordBook(
 }
 
 @Composable
-fun TabContent(modifier:Modifier = Modifier,items: List<Vocabulary>, type: Int) {
+fun TabContent(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel,
+    items: List<Vocabulary>,
+    type: Int
+) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.Top
     ) {
         items(items) { item ->
-            ItemWordBook(vocabulary = item, type = type)
+            ItemWordBook(viewModel = viewModel, vocabulary = item, type = type)
         }
     }
 }

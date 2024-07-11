@@ -135,13 +135,13 @@ fun PronunciationStatisticScreen12(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, 0){
+            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, 0) {
 
             }
-            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, 0){
+            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, 0) {
 
             }
-            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, 0){
+            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, 0) {
 
             }
 
@@ -155,18 +155,20 @@ fun PronunciationStatisticScreen12(
 fun ItemStatisticPronunciation(
     type: StatisticPronunciation,
     number: Int,
-    onClick:()->Unit
+    onClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.background(
-            color = when (type) {
-                StatisticPronunciation.LOWER -> colorResource(id = R.color.red_10)
-                StatisticPronunciation.MEDIUM -> colorResource(id = R.color.yellow_10)
-                StatisticPronunciation.HIGH -> colorResource(id = R.color.green_10)
-            },
-            shape = MaterialTheme.shapes.large
-        ).clickable(onClick = onClick)
+        modifier = Modifier
+            .background(
+                color = when (type) {
+                    StatisticPronunciation.LOWER -> colorResource(id = R.color.red_10)
+                    StatisticPronunciation.MEDIUM -> colorResource(id = R.color.yellow_10)
+                    StatisticPronunciation.HIGH -> colorResource(id = R.color.green_10)
+                },
+                shape = MaterialTheme.shapes.large
+            )
+            .clickable(onClick = onClick)
     ) {
         Box(
             modifier = Modifier
@@ -215,13 +217,14 @@ fun ItemStatisticPronunciation(
         )
     }
 }
+
 @Composable
 fun PronunciationStatisticScreen(
     innerPadding: PaddingValues,
     viewModel: PronunciationAssessmentViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavController
 ) {
-    val uiState  by viewModel.uiStateStatistic.collectAsState()
+    val uiState by viewModel.uiStateStatistic.collectAsState()
     Column(
         modifier = Modifier
             .padding(bottom = innerPadding.calculateBottomPadding())
@@ -269,8 +272,9 @@ fun PronunciationStatisticScreen(
                 )
                 ElevatedButton(
                     onClick = {
-                              navController.navigate(PronunciationGraphScreen.Pronunciation.route)
-                              },
+                        viewModel.getVocabWithoutPronun(0)
+                        navController.navigate(PronunciationGraphScreen.Pronunciation.route)
+                    },
                     modifier = Modifier.size(width = 200.dp, height = 50.dp),
                     colors = ButtonDefaults.elevatedButtonColors(
                         containerColor = colorResource(id = R.color.green_100)
@@ -309,15 +313,15 @@ fun PronunciationStatisticScreen(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, uiState.lower.size){
+            ItemStatisticPronunciation(type = StatisticPronunciation.LOWER, uiState.lower.size) {
                 viewModel.setOptionSelect(StatisticPronunciation.LOWER)
                 navController.navigate(PronunciationGraphScreen.DetailStatisticPronunciation.route)
             }
-            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, uiState.medium.size){
+            ItemStatisticPronunciation(type = StatisticPronunciation.MEDIUM, uiState.medium.size) {
                 viewModel.setOptionSelect(StatisticPronunciation.MEDIUM)
                 navController.navigate(PronunciationGraphScreen.DetailStatisticPronunciation.route)
             }
-            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, uiState.high.size){
+            ItemStatisticPronunciation(type = StatisticPronunciation.HIGH, uiState.high.size) {
                 viewModel.setOptionSelect(StatisticPronunciation.HIGH)
                 navController.navigate(PronunciationGraphScreen.DetailStatisticPronunciation.route)
             }

@@ -15,18 +15,20 @@ import androidx.room.Relation
         childColumns = ["topic_id"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = ["english"], unique = true)]
+    indices = [Index(value = ["english","topic_id"], unique = true)]
     )
 data class MyWord(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val english: String,
+    val vietnamese: String,
     val pronunciation: String?,
     val topic_id: Long?
 )
 @Entity(tableName = "myword_topic", indices = [Index(value = ["name"], unique = true)])
 data class MyWordTopic(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String
+    val name: String,
+    val is_study: Int = 0
 )
 
 @Entity(
