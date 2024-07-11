@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
@@ -38,7 +39,7 @@ class ReviseViewModel(private val vocabularyRepository: VocabularyRepository,con
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 listVocabulary = vocabularyRepository.getVocabulary()
-                listVocabRevise = vocabularyRepository.getRevise()
+                listVocabRevise = vocabularyRepository.getRevise().first()
                 shuffleWords()
             }
         }

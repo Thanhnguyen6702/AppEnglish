@@ -3,6 +3,7 @@ package com.example.english4d.data.database.wordstore
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
@@ -11,19 +12,23 @@ import androidx.room.Relation
     foreignKeys = [ForeignKey(
         entity = MyWordTopic::class,
         parentColumns = ["id"],
-        childColumns = ["topic_id"]
-    )]
+        childColumns = ["topic_id"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index(value = ["english","topic_id"], unique = true)]
     )
 data class MyWord(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val english: String,
+    val vietnamese: String,
     val pronunciation: String?,
     val topic_id: Long?
 )
-@Entity(tableName = "myword_topic")
+@Entity(tableName = "myword_topic", indices = [Index(value = ["name"], unique = true)])
 data class MyWordTopic(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String
+    val name: String,
+    val is_study: Int = 0
 )
 
 @Entity(
@@ -31,8 +36,9 @@ data class MyWordTopic(
     foreignKeys = [ForeignKey(
         entity = MyWord::class,
         parentColumns = ["id"],
-        childColumns = ["myword_id"]
-    )]
+        childColumns = ["myword_id"],
+        onDelete = ForeignKey.CASCADE
+    )],
 )
 data class MyWordDefinition(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -47,7 +53,8 @@ data class MyWordDefinition(
     foreignKeys = [ForeignKey(
         entity = MyWordDefinition::class,
         parentColumns = ["id"],
-        childColumns = ["definition_id"]
+        childColumns = ["definition_id"],
+        onDelete = ForeignKey.CASCADE
     )]
 )
 data class MyWordExample(
@@ -61,14 +68,25 @@ data class MyWordExample(
     tableName = "myword_antonym",
     primaryKeys = ["vocab1_id", "vocab2_id"],
     foreignKeys = [
-        ForeignKey(entity = MyWord::class, parentColumns = ["id"], childColumns = ["vocab1_id"]),
-        ForeignKey(entity = MyWord::class, parentColumns = ["id"], childColumns = ["vocab2_id"])
+        ForeignKey(
+            entity = MyWord::class,
+            parentColumns = ["id"],
+            childColumns = ["vocab1_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = MyWord::class,
+            parentColumns = ["id"],
+            childColumns = ["vocab2_id"],
+            onDelete = ForeignKey.CASCADE
+        )
     ]
 )
 data class MyWordAntonym(
     val vocab1_id: Long,
     val vocab2_id: Long
 )
+
 
 data class TopicWithWords(
     @Embedded val topic: MyWordTopic,

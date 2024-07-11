@@ -378,7 +378,7 @@ fun CardStudy1(
     if (true) {
         Surface(
             tonalElevation = 3.dp, shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier.padding(all = 60.dp)
+            modifier = Modifier.padding(all = 60.dp)
 
         ) {
             Box(
@@ -418,7 +418,10 @@ fun CardStudy1(
                             )
                             Text(
                                 text = "Học từ mới",
-                                style = TypeText.h4.copy(color = Color.White, fontWeight = FontWeight.Bold),
+                                style = TypeText.h4.copy(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                ),
                                 maxLines = 2
                             )
                         }
@@ -550,7 +553,7 @@ fun LayoutInfo1() {
     Button(
         onClick = {},
         modifier = Modifier.padding(
-         all = 60.dp
+            all = 60.dp
         ),
         colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_100)),
         elevation = ButtonDefaults.buttonElevation(

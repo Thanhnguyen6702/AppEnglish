@@ -1,6 +1,5 @@
 package com.example.english4d.ui.wordstore.addtopic
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,13 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -29,18 +30,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.english4d.R
+import com.example.english4d.ui.theme.TypeText
 import com.example.english4d.ui.wordstore.WordStoreViewModel
+import com.example.english4d.utils.listColor
 import com.example.englishe4.presentation.component.ItemWordCardScreen
 import com.example.englishe4.presentation.component.TopAppBar
 
@@ -56,21 +62,28 @@ fun AddWordScreen(
     val active = remember {
         mutableStateOf(false)
     }
-    Log.d("data", "AddWordScreen: $resultSearch")
+    val focusRequester = remember { FocusRequester() }
+    var isError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
-            TopAppBar(type = "main", title = "Kho của tôi"){
-
+            TopAppBar(title = "Kho của tôi", isShowTick = uiState.showRemoveWordResult, onClickRight = {}, onClickFinish = {viewModel.showDeleteWordResult(false)}) {
+                navController.popBackStack()
             }
         },
         bottomBar = {
             Button(
                 onClick = {
-                    viewModel.addTopic(uiState.title)
+                    if(uiState.title.isNotBlank()) {
+                        viewModel.addTopic(uiState.title)
+                    }else{
+                        isError = true
+                        errorMessage = "Bạn chưa nhập tên chủ đề"
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp, bottom = 40.dp)
+                    .padding(start = 20.dp, end = 20.dp, bottom = 40.dp)
                     .height(50.dp),
                 shape = RoundedCornerShape(30.dp)
             ) {
@@ -103,8 +116,14 @@ fun AddWordScreen(
                 },
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth(),
-                isError = false
+                isError = isError
             )
+            if (isError) {
+                Text(
+                    text = errorMessage,
+                    color = colorResource(id = R.color.red)
+                )
+            }
             Spacer(modifier = Modifier.height(30.dp))
             Text(
                 modifier = Modifier.padding(bottom = 10.dp, start = 5.dp),
@@ -123,35 +142,31 @@ fun AddWordScreen(
                 onActiveChange = {
                     active.value = it
                 },
+                windowInsets = WindowInsets(top = (-40).dp),
                 colors = SearchBarDefaults.colors(Color.White),
                 placeholder = {
                     Text(
                         text = "Nhập vào từ cần thêm",
-                        fontSize = 14.sp,
+                        style = TypeText.h6.copy(fontWeight = FontWeight.Medium),
                     )
                 },
-                windowInsets = WindowInsets(top = -40.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(50.dp, 200.dp)
-                    .padding(all = 4.dp)
-                    .drawBehind {
-                        drawRoundRect(
-                            color = Color.Gray,
-                            size = size,
-                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(
-                                18.dp.toPx(),
-                                18.dp.toPx()
-                            ),
-                            style = Stroke(width = 1.dp.toPx())
-                        )
+                    .heightIn(max = 250.dp)
+                    .padding(all = dimensionResource(id = R.dimen.padding_small))
+                    .graphicsLayer(
+                        clip = true,
+                        shape = RoundedCornerShape(18.dp)
+                    )
+                    .focusRequester(focusRequester)
+                    .onFocusChanged {focusState ->
+                        if (!focusState.isFocused) {
+                            active.value = false // Update active state when focus is lost
+                        }
                     },
-                shape = RoundedCornerShape(if (active.value) 18.dp else 18.dp),
+                shape = RoundedCornerShape(18.dp),
 
                 ) {
-                if (active.value) {
-
-                }
                 Column(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState()),
@@ -160,48 +175,57 @@ fun AddWordScreen(
                         Row(
                             modifier = Modifier
                                 .clickable {
-                                    item.content?.let { it1 -> viewModel.submit(it1) }
+                                    item.let { it1 ->
+                                        viewModel.submit(it1)
+                                    }
                                     active.value = false
                                 },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            item.content?.let { it1 ->
-                                Text(
-                                    text = it1,
-                                    style = TextStyle(
-                                        fontSize = 14.sp,
-                                    ),
-                                    modifier = Modifier.padding(start = 10.dp)
+                            Text(
+                                text = item,
+                                style = TypeText.h6,
+                                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_hight))
+                            )
+                        }
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            uiState.wordResult.forEachIndexed { index, dictionaryResponse ->
+                dictionaryResponse.response?.let { it1 ->
+                    Row(
+                        Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ItemWordCardScreen(
+                            modifier = Modifier.weight(1f),
+                            data = it1,
+                            onLongClick = {
+                                viewModel.showDeleteWordResult(true)
+                            },
+                            colors = listColor[index % listColor.size],
+                            onClickNav = {
+                                // navController.navigate(ExtensionGraphScreen.DetailWord.route)
+                            })
+                        if (uiState.showRemoveWordResult) {
+                            IconButton(onClick = { viewModel.deleteWordResult(index) }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = null
                                 )
                             }
                         }
                     }
                 }
-
             }
-            Spacer(modifier = Modifier.height(10.dp))
-            if (uiState.wordResult.isEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .width(20.dp)
-                            .height(20.dp),
-                        strokeWidth = 1.dp,
-                        color = colorResource(id = R.color.purple_200)
-                    )
-                }
-
-            } else {
-                uiState.wordResult.forEach { item ->
-                    item.response?.let { it1 ->
-                        ItemWordCardScreen(data = it1) {
-                        }
-                    }
+            for(i in 0..< uiState.numberLoading1){
+                ItemWordCardScreen( data = "",
+                    colors = listColor[i % listColor.size],
+                    onLongClick = {  }) {
                 }
             }
         }

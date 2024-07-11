@@ -10,7 +10,7 @@ interface VocabularyRepository {
    fun getMaster(): Flow<List<Vocabulary>>
 
    //get review data
-   suspend fun getRevise(): List<Vocabulary>
+   fun getRevise(): Flow<List<Vocabulary>>
    suspend fun getVocabulary(): List<Vocabulary>
    //get new Vocabulary
    suspend fun getNewVocabulary(topicID: Int?): List<Vocabulary>

@@ -10,11 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.english4d.data.database.wordstore.MyWord
+import com.example.english4d.ui.theme.TypeText
 
 
 @Composable
-fun CardFlip(onFlip : ()-> Unit,  wordAndDefine: String){
+fun CardFlip(onFlip : ()-> Unit,  word: MyWord,isFont: Boolean){
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -28,12 +32,12 @@ fun CardFlip(onFlip : ()-> Unit,  wordAndDefine: String){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = wordAndDefine,
-
-
-            )
-
+            if(isFont){
+                Text(text = word.english, style = TypeText.h6.copy(fontWeight = FontWeight.Medium))
+            }else{
+                Text(text = word.vietnamese, style = TypeText.h6.copy(fontWeight = FontWeight.Medium))
+                Text(text = word.pronunciation?:"", style = TypeText.h7.copy(fontStyle = FontStyle.Italic))
+            }
         }
 
 

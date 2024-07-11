@@ -18,7 +18,7 @@ class OfflineVocabularyRepository(
 
     override fun getMaster(): Flow<List<Vocabulary>> = vocabularyDao.getMaster()
 
-    override suspend fun getRevise(): List<Vocabulary> = vocabularyDao.getRevise()
+    override fun getRevise(): Flow<List<Vocabulary>> = vocabularyDao.getRevise()
     override suspend fun getVocabulary(): List<Vocabulary> = vocabularyDao.getVocabulary()
     override suspend fun getNewVocabulary(topicID: Int?): List<Vocabulary> = vocabularyDao.getNewVocab(topicID)
     override suspend fun getTopic(topicID: Int): Topics = topicsDAO.getTopic(topicID)

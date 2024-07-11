@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class DictionaryResponse(
     @SerializedName("entry") val entry: String?,
     @SerializedName("response") var response: String?,
+    @SerializedName("vietnamese") val vietnamese: String?,
     @SerializedName("status") val status: String?,
     @SerializedName("data") val data: DictionaryData?
 )
@@ -19,7 +20,7 @@ data class Definition(
     @SerializedName("partOfSpeech") val partOfSpeech: String?,
     @SerializedName("definition_en") val definitionEN: String?,
     @SerializedName("definition_vi") val definitionVI: String?,
-    @SerializedName("examples") val examples: Example?
+    @SerializedName("example") val examples: Example?
 )
 
 data class Example(

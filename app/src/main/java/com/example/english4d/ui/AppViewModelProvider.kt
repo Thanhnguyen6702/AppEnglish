@@ -29,7 +29,6 @@ object AppViewModelProvider {
         }
         initializer {
             HomeViewModel(
-                dataApplication().container.workerRepository,
                 dataApplication().container.vocabularyRepository,
                 dataApplication().applicationContext
             )
@@ -71,7 +70,7 @@ object AppViewModelProvider {
         }
 
         initializer {
-            WordStoreViewModel(dataApplication().container.myWordRepository, dataApplication().applicationContext)
+            WordStoreViewModel(dataApplication().container.workerRepository,dataApplication().container.myWordRepository, dataApplication().applicationContext)
         }
     }
 }

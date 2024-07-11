@@ -10,12 +10,12 @@ class WorkerManagerRepository(context: Context) :
     VocabWorkerRepository {
     private val workerManager = WorkManager.getInstance(context)
     override fun applyVocab() {
-            val vocabBuilder = PeriodicWorkRequestBuilder<VocabWorker>(2,TimeUnit.HOURS)
+            val vocabBuilder = PeriodicWorkRequestBuilder<VocabWorker>(4,TimeUnit.HOURS)
             workerManager.enqueue(vocabBuilder.build())
     }
 
     override fun cancelWork() {
-        TODO("Not yet implemented")
+
     }
 
 }

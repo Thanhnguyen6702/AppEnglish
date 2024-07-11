@@ -5,25 +5,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english4d.PreferencesManager
 import com.example.english4d.data.database.vocabulary.VocabularyRepository
-import com.example.english4d.data.workers.VocabWorkerRepository
+import com.example.english4d.utils.TextToSpeechManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(
-    workerRepository: VocabWorkerRepository,
     private val vocabularyRepository: VocabularyRepository,
     context: Context
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
-
+    private val playSound = TextToSpeechManager.getInstance(context)
     init {
         updateStatistic(context = context)
-        workerRepository.applyVocab()
     }
 
     private fun updateLayout() {
@@ -45,9 +44,11 @@ class HomeViewModel(
                     }
                 }
                 launch {
-                    val listRevise = vocabularyRepository.getRevise()
-                    _uiState.value =
-                        _uiState.value.copy(revise = listRevise, isRevise = listRevise.isNotEmpty())
+                    vocabularyRepository.getRevise().collect{ listVocab->
+                        _uiState.update {
+                            it.copy(revise = listVocab, isRevise = listVocab.isNotEmpty())
+                        }
+                    }
                 }
                 launch {
                     val listVocab = vocabularyRepository.getNewVocabulary(null)
@@ -81,5 +82,8 @@ class HomeViewModel(
         } else {
             updateLayout()
         }
+    }
+    fun tts(text: String) {
+        playSound.speak(text)
     }
 }
